@@ -1,0 +1,340 @@
+@import "tailwindcss";
+
+/* ========================================
+   DESIGN TOKENS — CSS Custom Properties
+   ======================================== */
+:root {
+  /* Background palette */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-card: #161616;
+
+  /* Text palette */
+  --text-primary: #e7e3de;
+  --text-secondary: #a09b93;
+  --text-muted: #6b6560;
+
+  /* Accent — Gold */
+  --gold: #c9a96e;
+  --gold-light: #d4ba85;
+  --gold-dark: #a8894e;
+  --gold-glow: rgba(201, 169, 110, 0.15);
+
+  /* Neutrals */
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Sensory Journey — Section tonal backgrounds */
+  --bg-warm: #16130e;
+  --bg-forest: #0b100d;
+  --bg-plum: #120e10;
+  --bg-navy: #0d0e14;
+  --bg-amber: #14110c;
+
+  /* Typography */
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+body {
+  background-color: var(--bg-primary);
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--gold);
+  color: var(--black);
+}
+
+/* ========================================
+   TYPOGRAPHY UTILITIES
+   ======================================== */
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* ========================================
+   GOLD ACCENT UTILITIES
+   ======================================== */
+.gold-gradient-text {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gold-border {
+  border-color: var(--gold);
+}
+
+.gold-border-subtle {
+  border-color: rgba(201, 169, 110, 0.2);
+}
+
+.gold-glow {
+  box-shadow: 0 0 20px var(--gold-glow), 0 0 40px rgba(201, 169, 110, 0.05);
+}
+
+/* ========================================
+   FILM GRAIN OVERLAY
+   ======================================== */
+.grain-overlay::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -10%);
+  }
+  20% {
+    transform: translate(-15%, 5%);
+  }
+  30% {
+    transform: translate(7%, -25%);
+  }
+  40% {
+    transform: translate(-5%, 25%);
+  }
+  50% {
+    transform: translate(-15%, 10%);
+  }
+  60% {
+    transform: translate(15%, 0%);
+  }
+  70% {
+    transform: translate(0%, 15%);
+  }
+  80% {
+    transform: translate(3%, 35%);
+  }
+  90% {
+    transform: translate(-10%, 10%);
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-hint {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-scroll-hint {
+  animation: scroll-hint 2s ease-in-out infinite;
+}
+
+/* ========================================
+   CUSTOM CURSOR (desktop only)
+   ======================================== */
+@media (pointer: fine) {
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+/* ========================================
+   PERSPECTIVE CONTAINERS
+   ======================================== */
+.perspective-container {
+  perspective: 1000px;
+}
+
+.perspective-card {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+/* ========================================
+   SECTION TRANSITION BRIDGES
+   ======================================== */
+
+/* Warm (About) */
+.bridge-to-warm {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-primary), var(--bg-warm));
+}
+.bridge-from-warm {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-warm), var(--bg-primary));
+}
+
+/* Forest (Philosophy) */
+.bridge-to-forest {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-primary), var(--bg-forest));
+}
+.bridge-from-forest {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-forest), var(--bg-primary));
+}
+
+/* Plum (Services) */
+.bridge-to-plum {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-primary), var(--bg-plum));
+}
+.bridge-from-plum {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-plum), var(--bg-primary));
+}
+
+/* Navy (Experience) */
+.bridge-to-navy {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-primary), var(--bg-navy));
+}
+.bridge-from-navy {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-navy), var(--bg-primary));
+}
+
+/* Amber (CTA) */
+.bridge-to-amber {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-primary), var(--bg-amber));
+}
+.bridge-from-amber {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-amber), var(--bg-primary));
+}
+
+/* ========================================
+   SCROLLBAR
+   ======================================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 169, 110, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 169, 110, 0.5);
+}
