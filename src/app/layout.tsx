@@ -18,26 +18,32 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Prime | Premium Experience",
+  title: "Prime Tiles Industries — Nepal's No.1 Tile Manufacturer",
   description:
-    "Premium experience crafted with care and attention to detail.",
-  keywords: ["prime", "premium", "luxury", "experience"],
+    "Premium wall and floor tiles powered by Italian SACMI technology. Nepal's first manufacturer of both wall and floor tiles. ISO certified. 300mm to 1200mm formats.",
+  keywords: [
+    "Prime Tiles",
+    "tiles Nepal",
+    "floor tiles Nepal",
+    "wall tiles Nepal",
+    "ceramic tiles",
+    "vitrified tiles",
+    "porcelain tiles",
+    "Prime Ceramics",
+    "SACMI technology",
+    "tile manufacturer Nepal",
+    "Kathmandu tiles",
+    "Spirit of Nepal tiles",
+  ],
   openGraph: {
-    title: "Prime | Premium Experience",
-    description: "Premium experience crafted with care and attention to detail.",
+    title: "Prime Tiles Industries — Nepal's No.1 Tile Manufacturer",
+    description:
+      "Premium wall and floor tiles powered by Italian SACMI technology. Nepal's first manufacturer of both wall and floor tiles.",
     type: "website",
     locale: "en_US",
-    siteName: "Prime",
+    siteName: "Prime Tiles Industries",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Prime | Premium Experience",
-    description: "Premium experience crafted with care and attention to detail.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -62,6 +68,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${cormorant.variable} ${inter.className} antialiased`}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[10000] focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-white focus:text-sm"
+        >
+          Skip to content
+        </a>
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -7,19 +7,20 @@ ENV=${1:-dev}
 if [ "$ENV" == "prod" ]; then
     COMPOSE_FILE="docker-compose.yml"
     CONTAINER_NAME="prime-web-prod"
-    URL="DOMAIN_HERE"
+    URL="prime-tiles.zunkireelabs.com"
     echo "⚠️  PRODUCTION DEPLOYMENT to $URL"
     read -p "Are you sure? (y/n): " confirm
     if [ "$confirm" != "y" ]; then exit 1; fi
 else
     COMPOSE_FILE="docker-compose.dev.yml"
     CONTAINER_NAME="prime-web-dev"
-    URL="DEV_DOMAIN_HERE"
+    URL="dev-primetiles.zunkireelabs.com"
     echo "🚧 DEVELOPMENT DEPLOYMENT to $URL"
 fi
 
 echo "1. Building Next.js App..."
 npm install
+rm -rf .next out
 npm run build
 
 if [ ! -d "out" ]; then

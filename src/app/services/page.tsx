@@ -3,14 +3,18 @@
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import ServicesSection from "@/components/sections/ServicesSection";
+import SectionTransition from "@/components/ui/SectionTransition";
+import CollectionsGrid from "@/components/sections/CollectionsGrid";
+import CTASection from "@/components/sections/CTASection";
 
 export default function ServicesPage() {
   return (
     <SmoothScroll>
       <Header />
-      <main className="grain-overlay pt-20">
-        <ServicesSection />
+      <main id="main-content" className="pt-24">
+        <CollectionsGrid />
+        <CTASection />
+        <SectionTransition from="light" to="dark" variant="wave" />
       </main>
       <Footer />
     </SmoothScroll>

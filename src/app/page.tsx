@@ -4,73 +4,82 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LoadingScreen from "@/components/ui/LoadingScreen";
-import HeroSection from "@/components/sections/HeroSection";
-import MarqueeStrip from "@/components/sections/MarqueeStrip";
-import AboutSection from "@/components/sections/AboutSection";
-import PhilosophySection from "@/components/sections/PhilosophySection";
-import ServicesTeaser from "@/components/sections/ServicesTeaser";
-import GallerySection from "@/components/sections/GallerySection";
-import ExperienceSection from "@/components/sections/ExperienceSection";
-import LocationsSection from "@/components/sections/LocationsSection";
-import TestimonialsSection from "@/components/sections/TestimonialsSection";
+import SectionTransition from "@/components/ui/SectionTransition";
+import VideoOverlay from "@/components/sections/VideoOverlay";
+import HeroMain from "@/components/sections/HeroMain";
+import BrandIntro from "@/components/sections/BrandIntro";
+import FindBySpace from "@/components/sections/FindBySpace";
+import BrowseBy from "@/components/sections/BrowseBy";
+import StatsBar from "@/components/sections/StatsBar";
+import SpiritSection from "@/components/sections/SpiritSection";
+import CollectionsGrid from "@/components/sections/CollectionsGrid";
 import CTASection from "@/components/sections/CTASection";
-import SectionTransition from "@/components/animations/SectionTransition";
+import ProductShowcase from "@/components/sections/ProductShowcase";
+import FactoryBanner from "@/components/sections/FactoryBanner";
+import VirtualShowroom from "@/components/sections/VirtualShowroom";
+import ClientsSection from "@/components/sections/ClientsSection";
+import DealerNetwork from "@/components/sections/DealerNetwork";
 
 export default function Home() {
-  const handleLoadingComplete = () => {
-    window.dispatchEvent(new CustomEvent("prime-loading-complete"));
-  };
-
   return (
     <SmoothScroll>
-      <LoadingScreen onComplete={handleLoadingComplete} />
+      <LoadingScreen />
       <Header />
 
-      <main className="grain-overlay">
-        {/* Mystery: arrival */}
-        <HeroSection />
-        <MarqueeStrip />
+      <main id="main-content">
+        {/* Video Ad — scrollable section, user scrolls past it */}
+        <VideoOverlay />
 
-        {/* Warmth: candlelit room */}
-        <div className="bridge-to-warm" />
-        <AboutSection />
-        <div className="bridge-from-warm" />
+        {/* ═══ BLOCK 1 — Hero (dark) ═══ */}
+        <HeroMain />
 
-        {/* Nature: roots */}
-        <div className="bridge-to-forest" />
-        <PhilosophySection />
-        <div className="bridge-from-forest" />
+        {/* ═══ BLOCK 2 — Light: About + Browsing ═══ */}
+        <BrandIntro />
+        <FindBySpace />
+        <ProductShowcase />
 
-        <SectionTransition variant="wave" />
+        {/* Factory banner + Stats — connected dark unit */}
+        <FactoryBanner />
+        <StatsBar />
 
-        {/* Luxury: indulgence */}
-        <div className="bridge-to-plum" />
-        <ServicesTeaser />
-        <div className="bridge-from-plum" />
+        {/* ─── Transition: Dark → Light ─── */}
+        <SectionTransition from="dark" to="light" variant="diagonal" />
 
-        {/* Clean: photos speak */}
-        <GallerySection />
+        <BrowseBy />
 
-        <SectionTransition variant="diamond" />
+        {/* ═══ BLOCK 3 — Dark Showcase ═══ */}
+        <SpiritSection />
+        
+        {/* ─── Transition: Dark → Light ─── */}
+        <SectionTransition from="dark" to="light" variant="diagonal" />
+        
+        <CollectionsGrid />
 
-        {/* Trust: credibility */}
-        <div className="bridge-to-navy" />
-        <ExperienceSection />
-        <div className="bridge-from-navy" />
+        {/* ─── Transition: Light → Dark (wave — like flowing ceramic) ─── */}
+        <SectionTransition from="light" to="dark" variant="wave" />
 
-        {/* Voices: social proof */}
-        <TestimonialsSection />
+        {/* ═══ Virtual Showroom — The Invitation (dark) ═══ */}
+        <VirtualShowroom />
 
-        <SectionTransition variant="ornament" />
+        {/* ─── Transition: Dark → Light ─── */}
+        <SectionTransition from="dark" to="light" variant="wave" />
 
-        {/* Clean: informational */}
-        <LocationsSection />
+        <ClientsSection />
 
-        <SectionTransition variant="fade-gradient" />
+        {/* ─── Transition: Light → Dark ─── */}
+        <SectionTransition from="light" to="dark" variant="mosaic" />
 
-        {/* Invitation: warm welcome */}
-        <div className="bridge-to-amber" />
+        {/* ═══ Dealer Network (dark) ═══ */}
+        <DealerNetwork />
+
+        {/* ─── Transition: Dark → Light ─── */}
+        <SectionTransition from="dark" to="light" variant="diagonal" />
+
+        {/* ═══ CTA — Light section for contrast ═══ */}
         <CTASection />
+
+        {/* ─── Transition: Light → Dark ─── */}
+        <SectionTransition from="light" to="dark" variant="wave" />
       </main>
 
       <Footer />

@@ -7,7 +7,7 @@ services:
       - hosting
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.prime-web-prod.rule=Host(`DOMAIN_HERE`)"
+      - "traefik.http.routers.prime-web-prod.rule=Host(`prime-tiles.zunkireelabs.com`)"
       - "traefik.http.routers.prime-web-prod.entrypoints=websecure"
       - "traefik.http.routers.prime-web-prod.tls.certresolver=letsencrypt"
       - "traefik.http.services.prime-web-prod.loadbalancer.server.port=80"
