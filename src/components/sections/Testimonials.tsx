@@ -74,7 +74,7 @@ export default function Testimonials() {
           <div className="flex items-center justify-center gap-4 mt-12">
             <button
               onClick={() => goTo((i - 1 + items.length) % items.length)}
-              className="w-10 h-10 border border-[var(--ink-faint)] flex items-center justify-center text-[var(--ink-light)] hover:border-[var(--ink)] hover:text-[var(--ink)] transition-all duration-300"
+              className="w-11 h-11 border border-[var(--ink-faint)] flex items-center justify-center text-[var(--ink-light)] hover:border-[var(--ink)] hover:text-[var(--ink)] transition-all duration-300"
               aria-label="Previous testimonial"
             >
               <ChevronLeft size={14} />
@@ -98,7 +98,7 @@ export default function Testimonials() {
 
             <button
               onClick={() => goTo((i + 1) % items.length)}
-              className="w-10 h-10 border border-[var(--ink-faint)] flex items-center justify-center text-[var(--ink-light)] hover:border-[var(--ink)] hover:text-[var(--ink)] transition-all duration-300"
+              className="w-11 h-11 border border-[var(--ink-faint)] flex items-center justify-center text-[var(--ink-light)] hover:border-[var(--ink)] hover:text-[var(--ink)] transition-all duration-300"
               aria-label="Next testimonial"
             >
               <ChevronRight size={14} />

@@ -167,7 +167,7 @@ export default function FindBySpace() {
 
       {/* ─── MOBILE (< lg) — Swipeable fullscreen carousel ─── */}
       <div
-        className="lg:hidden relative h-[75vh] min-h-[500px]"
+        className="lg:hidden relative h-[75vh] min-h-[400px]"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >

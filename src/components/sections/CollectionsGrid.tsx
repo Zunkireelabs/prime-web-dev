@@ -40,7 +40,7 @@ export default function CollectionsGrid() {
             <a
               key={`${c.name}-${i}`}
               href={`/catalog?collection=${encodeURIComponent(c.slug)}`}
-              className="group relative block w-[260px] md:w-[300px] lg:w-[320px] flex-shrink-0"
+              className="group relative block w-[220px] sm:w-[260px] md:w-[300px] lg:w-[320px] flex-shrink-0"
             >
               {/* Image */}
               <div className="relative aspect-[3/4] overflow-hidden bg-[var(--bg)] mb-4">

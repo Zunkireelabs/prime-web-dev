@@ -433,7 +433,7 @@ export default function AboutCinematic() {
             <p className="eyebrow text-[var(--ink-muted)] mb-10 md:mb-12 text-center">Certifications &amp; Partners</p>
           </FadeIn>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16 md:mb-20">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-16 md:mb-20">
             {certifications.map((cert, i) => {
               const Icon = certIconMap[cert.icon];
               return (

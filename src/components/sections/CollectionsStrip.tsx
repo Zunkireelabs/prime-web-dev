@@ -30,14 +30,14 @@ export default function CollectionsStrip() {
           <div className="flex gap-2">
             <button
               onClick={() => scroll("l")}
-              className="w-10 h-10 border border-[var(--ink-on-dark)]/10 flex items-center justify-center text-[var(--ink-on-dark-light)] hover:border-[var(--accent)]/40 hover:text-[var(--accent-light)] transition-all duration-300"
+              className="w-11 h-11 border border-[var(--ink-on-dark)]/10 flex items-center justify-center text-[var(--ink-on-dark-light)] hover:border-[var(--accent)]/40 hover:text-[var(--accent-light)] transition-all duration-300"
               aria-label="Scroll left"
             >
               <ArrowLeft size={14} />
             </button>
             <button
               onClick={() => scroll("r")}
-              className="w-10 h-10 border border-[var(--ink-on-dark)]/10 flex items-center justify-center text-[var(--ink-on-dark-light)] hover:border-[var(--accent)]/40 hover:text-[var(--accent-light)] transition-all duration-300"
+              className="w-11 h-11 border border-[var(--ink-on-dark)]/10 flex items-center justify-center text-[var(--ink-on-dark-light)] hover:border-[var(--accent)]/40 hover:text-[var(--accent-light)] transition-all duration-300"
               aria-label="Scroll right"
             >
               <ArrowRight size={14} />
@@ -46,10 +46,10 @@ export default function CollectionsStrip() {
         </FadeIn>
       </div>
 
-      <div ref={ref} className="flex gap-4 pl-[var(--gutter)] overflow-x-auto no-scrollbar pb-2">
+      <div ref={ref} className="flex gap-4 pl-[var(--gutter)] pr-[var(--gutter)] overflow-x-auto no-scrollbar pb-2">
         {stripCollections.map((c, i) => (
           <FadeIn key={c.name} delay={i * 0.05} direction="left" distance={20}>
-            <a href={`/catalog?collection=${encodeURIComponent(c.slug)}`} className="block shrink-0 w-[260px] md:w-[300px] group">
+            <a href={`/catalog?collection=${encodeURIComponent(c.slug)}`} className="block shrink-0 w-[220px] sm:w-[260px] md:w-[300px] group">
               {/* Image with number overlay */}
               <div className="aspect-[3/4] img-gs mb-4 relative overflow-hidden">
                 <img src={c.image} alt={c.name} loading="lazy" className="w-full h-full object-cover" />

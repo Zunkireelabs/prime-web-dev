@@ -30,14 +30,14 @@ export default function CollectionStrip() {
             <div className="flex gap-2">
               <button
                 onClick={() => scroll("left")}
-                className="w-10 h-10 border border-[var(--ink-on-dark)]/15 flex items-center justify-center text-[var(--ink-on-dark-secondary)] hover:text-[var(--ink-on-dark)] hover:border-[var(--ink-on-dark)]/40 transition-all duration-300"
+                className="w-11 h-11 border border-[var(--ink-on-dark)]/15 flex items-center justify-center text-[var(--ink-on-dark-secondary)] hover:text-[var(--ink-on-dark)] hover:border-[var(--ink-on-dark)]/40 transition-all duration-300"
                 aria-label="Scroll left"
               >
                 <ArrowLeft size={16} />
               </button>
               <button
                 onClick={() => scroll("right")}
-                className="w-10 h-10 border border-[var(--ink-on-dark)]/15 flex items-center justify-center text-[var(--ink-on-dark-secondary)] hover:text-[var(--ink-on-dark)] hover:border-[var(--ink-on-dark)]/40 transition-all duration-300"
+                className="w-11 h-11 border border-[var(--ink-on-dark)]/15 flex items-center justify-center text-[var(--ink-on-dark-secondary)] hover:text-[var(--ink-on-dark)] hover:border-[var(--ink-on-dark)]/40 transition-all duration-300"
                 aria-label="Scroll right"
               >
                 <ArrowRight size={16} />
@@ -50,13 +50,13 @@ export default function CollectionStrip() {
       {/* Horizontal scroll */}
       <div
         ref={scrollRef}
-        className="flex gap-5 px-[var(--gutter)] overflow-x-auto scrollbar-none"
+        className="flex gap-5 pl-[var(--gutter)] pr-[var(--gutter)] overflow-x-auto scrollbar-none"
         style={{ scrollbarWidth: "none" }}
       >
         {tiles.map((tile, i) => (
           <FadeIn key={tile.name} delay={i * 0.06} direction="left" distance={30}>
             <div
-              className="shrink-0 w-[280px] md:w-[320px] group cursor-pointer"
+              className="shrink-0 w-[240px] sm:w-[280px] md:w-[320px] group cursor-pointer"
               data-hover
             >
               <div className="aspect-[3/4] overflow-hidden mb-4 relative">

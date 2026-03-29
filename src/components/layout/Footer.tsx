@@ -22,7 +22,7 @@ export default function Footer() {
       {/* Main content */}
       <div className="container pt-20 pb-10 md:pt-24 md:pb-12">
         {/* ── Row 1: Brand + Navigation ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-14 lg:gap-8">
           {/* Brand — 4 cols */}
           <div className="lg:col-span-4">
             <FadeIn>
@@ -47,7 +47,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={s.name}
-                    className="w-10 h-10 border border-white/8 flex items-center justify-center text-white/30 hover:border-[var(--accent)]/40 hover:text-[var(--accent-light)] transition-all duration-300 text-[0.6rem] font-medium tracking-wider uppercase"
+                    className="w-11 h-11 border border-white/8 flex items-center justify-center text-white/30 hover:border-[var(--accent)]/40 hover:text-[var(--accent-light)] transition-all duration-300 text-[0.6rem] font-medium tracking-wider uppercase"
                   >
                     {s.abbr}
                   </a>
