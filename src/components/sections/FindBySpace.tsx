@@ -65,6 +65,8 @@ export default function FindBySpace() {
               return (
                 <div
                   key={space.name}
+                  role="button"
+                  tabIndex={0}
                   className="relative overflow-hidden cursor-pointer group"
                   style={{
                     flex: isActive ? "5" : "1",
@@ -73,6 +75,8 @@ export default function FindBySpace() {
                   onMouseEnter={() => goTo(i)}
                   onMouseLeave={() => setAutoCycle(true)}
                   onClick={() => goTo(i)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTo(i); } }}
+                  aria-label={`Explore ${space.name}`}
                 >
                   {/* Background image */}
                   <img

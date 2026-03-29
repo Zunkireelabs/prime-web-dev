@@ -68,6 +68,43 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${cormorant.variable} ${inter.className} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Prime Tiles Industries",
+                "alternateName": "Prime Ceramics",
+                "url": "https://prime-tiles.zunkireelabs.com",
+                "logo": "https://prime-tiles.zunkireelabs.com/images/prime-logo.png",
+                "description": "Nepal's No.1 tile manufacturer. First to manufacture both wall and floor tiles with Italian SACMI technology.",
+                "foundingDate": "2021",
+                "numberOfEmployees": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 100,
+                },
+                "areaServed": "Nepal",
+                "sameAs": [],
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "name": "Prime Tiles Industries Pvt. Ltd.",
+                "description": "Nepal's largest tile manufacturing facility with 4M sq m annual capacity.",
+                "url": "https://prime-tiles.zunkireelabs.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Rautahat",
+                  "addressRegion": "Madhesh Pradesh",
+                  "addressCountry": "NP",
+                },
+                "priceRange": "$$",
+              },
+            ]),
+          }}
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[10000] focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-white focus:text-sm"
