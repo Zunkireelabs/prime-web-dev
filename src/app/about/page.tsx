@@ -16,7 +16,7 @@ export default function AboutPage() {
       <main id="main-content">
         <AboutCinematic />
 
-        {/* ─── Transition: Light → Dark (footer) ─── */}
+        {/* ─── Transition: Alt → Dark (footer) ─── */}
         <SectionTransition from="light" to="dark" variant="wave" />
       </main>
 

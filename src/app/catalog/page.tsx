@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { Suspense, useState, useCallback, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
@@ -13,9 +14,27 @@ const CatalogStats = dynamic(() => import("@/components/sections/CatalogStats"),
 const CatalogGrid = dynamic(() => import("@/components/sections/CatalogGrid"), { ssr: false });
 const CTASection = dynamic(() => import("@/components/sections/CTASection"), { ssr: false });
 
-export default function CatalogPage() {
-  const [activeFilter, setActiveFilter] = useState("all");
+/* Map URL ?collection= values to CatalogFilter tab values */
+const collectionFilterMap: Record<string, string> = {
+  "spirit-of-nepal": "spirit",
+};
+
+function CatalogContent() {
+  const searchParams = useSearchParams();
+  const collectionParam = searchParams.get("collection");
+  const initialFilter = (collectionParam && collectionFilterMap[collectionParam]) || "all";
+
+  const [activeFilter, setActiveFilter] = useState(initialFilter);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  /* Scroll to grid when arriving with a collection filter */
+  useEffect(() => {
+    if (initialFilter !== "all") {
+      setTimeout(() => {
+        gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 600);
+    }
+  }, [initialFilter]);
 
   const handleViewCollection = useCallback((filterValue: string) => {
     setActiveFilter(filterValue);
@@ -28,30 +47,25 @@ export default function CatalogPage() {
     <SmoothScroll>
       <Header />
       <main id="main-content">
-        {/* 1. Hero — dark, room scene, emotional hook */}
         <CatalogHero />
-
-        {/* Dark → Light transition */}
         <SectionTransition from="dark" to="light" variant="diagonal" />
-
-        {/* 2. Showcase — light bg, featured + grid cards */}
         <CatalogShowcase onViewCollection={handleViewCollection} />
-
-        {/* 3. Stat strip — dark, thin, rhythm break */}
         <CatalogStats />
-
-        {/* 4. Explorer — alt bg, filter + grid */}
         <div ref={gridRef}>
           <CatalogGrid initialSize={activeFilter} />
         </div>
-
-        {/* 5. CTA — light bg */}
         <CTASection />
-
-        {/* Light → Dark transition */}
         <SectionTransition from="light" to="dark" variant="wave" />
       </main>
       <Footer />
     </SmoothScroll>
+  );
+}
+
+export default function CatalogPage() {
+  return (
+    <Suspense>
+      <CatalogContent />
+    </Suspense>
   );
 }
