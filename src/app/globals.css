@@ -523,15 +523,107 @@ a:hover > span.absolute {
 }
 
 /* ========================================
-   LUXURY DESIGN TOKENS
+   LUXURY DESIGN SYSTEM — Reusable Patterns
    ======================================== */
 
-/* Gold border utility */
-.border-gold {
-  border-color: rgba(181, 138, 82, 0.18);
+/* ── 1. Section Surfaces ── */
+
+/* Light section (default warm ivory) */
+.surface-light {
+  background: var(--bg);
+  color: var(--ink);
 }
 
-/* Luxury card base */
+/* Alt light section (soft beige) */
+.surface-alt {
+  background: var(--bg-alt);
+  color: var(--ink);
+}
+
+/* Dark section with subtle radial glow */
+.surface-dark {
+  background: var(--bg-dark);
+  color: var(--ink-on-dark);
+  position: relative;
+}
+.surface-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(181, 138, 82, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── 2. Section Inner Max-Width ── */
+
+.section-narrow {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-mid {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── 3. Premium Heading Group ──
+   Usage: .heading-group > .eyebrow + .h2 + optional .body-lg
+   Centers text, adds flanking gold lines to eyebrow */
+.heading-group {
+  text-align: center;
+  margin-bottom: clamp(48px, 5vw, 80px);
+}
+
+.heading-group .eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.heading-group .eyebrow::before,
+.heading-group .eyebrow::after {
+  content: "";
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.heading-group .h2 {
+  margin-bottom: 20px;
+}
+
+.heading-group .body-lg {
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Left-aligned variant */
+.heading-group-left {
+  text-align: left;
+  margin-bottom: clamp(40px, 4vw, 64px);
+}
+
+.heading-group-left .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.heading-group-left .eyebrow::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── 4. Luxury Card ── */
+
 .luxury-card {
   background: var(--bg-card);
   border: 1px solid rgba(181, 138, 82, 0.12);
@@ -546,7 +638,54 @@ a:hover > span.absolute {
   border-color: rgba(181, 138, 82, 0.3);
 }
 
-/* Premium gold-filled button */
+/* Dark variant for dark surfaces */
+.luxury-card-dark {
+  background: var(--bg-dark-alt);
+  border: 1px solid rgba(181, 138, 82, 0.1);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+  transition: transform var(--duration-base) var(--ease-out),
+              box-shadow var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out);
+}
+.luxury-card-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  border-color: rgba(181, 138, 82, 0.25);
+}
+
+/* ── 5. Gold Accent Dividers ── */
+
+.gold-divider {
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), rgba(181, 138, 82, 0.3));
+}
+
+.gold-divider-center {
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(181, 138, 82, 0.3), var(--accent), rgba(181, 138, 82, 0.3));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gold-divider-full {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(181, 138, 82, 0.2), transparent);
+}
+
+/* Border utilities */
+.border-gold {
+  border-color: rgba(181, 138, 82, 0.18);
+}
+.border-gold-strong {
+  border-color: rgba(181, 138, 82, 0.35);
+}
+
+/* ── 6. Premium Buttons ── */
+
+/* Primary: gold-filled with dark text */
 .btn-gold {
   display: inline-flex;
   align-items: center;
@@ -558,9 +697,11 @@ a:hover > span.absolute {
   text-transform: uppercase;
   text-decoration: none;
   background: var(--accent);
-  color: #0f0c09;
+  color: var(--bg-dark);
   border: 1px solid var(--accent);
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
   transition: all var(--duration-base) var(--ease-out);
 }
 .btn-gold:hover {
@@ -569,8 +710,11 @@ a:hover > span.absolute {
   transform: translateY(-1px);
   box-shadow: 0 6px 24px rgba(181, 138, 82, 0.25);
 }
+.btn-gold:active {
+  transform: translateY(0);
+}
 
-/* Gold outline button */
+/* Secondary: gold outline */
 .btn-gold-outline {
   display: inline-flex;
   align-items: center;
@@ -585,6 +729,8 @@ a:hover > span.absolute {
   color: var(--accent);
   border: 1px solid rgba(181, 138, 82, 0.3);
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
   transition: all var(--duration-base) var(--ease-out);
 }
 .btn-gold-outline:hover {
@@ -593,8 +739,138 @@ a:hover > span.absolute {
   background: rgba(181, 138, 82, 0.04);
 }
 
-/* Stats bar on dark */
+/* ── 7. Stats Strip ── */
+
+/* Wrapper: gold-bordered horizontal bar */
 .stat-bar {
   border-top: 1px solid rgba(181, 138, 82, 0.15);
   border-bottom: 1px solid rgba(181, 138, 82, 0.15);
+}
+
+/* Individual stat item */
+.stat-item {
+  text-align: center;
+  padding: clamp(40px, 5vw, 72px) 0;
+}
+
+/* Vertical gold separator between stat items */
+.stat-item + .stat-item {
+  border-left: 1px solid rgba(181, 138, 82, 0.1);
+}
+
+/* Stat number styling */
+.stat-number {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1;
+  color: var(--ink-on-dark);
+  margin-bottom: 12px;
+  transition: color var(--duration-slow) var(--ease-out);
+}
+
+.stat-item:hover .stat-number {
+  color: var(--accent-light);
+}
+
+.stat-label {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-light);
+}
+
+.stat-sub {
+  font-size: 0.55rem;
+  color: var(--ink-on-dark-muted);
+  margin-top: 4px;
+}
+
+/* ── 8. Editorial Quote Block ── */
+
+.quote-block {
+  position: relative;
+  text-align: center;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Large decorative quote mark */
+.quote-block::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.6em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(12rem, 22vw, 24rem);
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+}
+
+.quote-block blockquote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+  line-height: 1.55;
+  color: var(--ink);
+  margin-bottom: 32px;
+}
+
+.quote-block cite {
+  font-style: normal;
+}
+
+.quote-block .quote-author {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.quote-block .quote-role {
+  font-size: 0.6rem;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+.quote-block .quote-project {
+  font-size: 0.55rem;
+  color: var(--accent);
+  font-style: italic;
+  margin-top: 10px;
+}
+
+/* ── 9. Gold Icon Circle ── */
+
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(181, 138, 82, 0.2);
+  background: rgba(181, 138, 82, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-light);
+  flex-shrink: 0;
+}
+
+.icon-circle-lg {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(181, 138, 82, 0.15);
+  background: rgba(181, 138, 82, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
 }
