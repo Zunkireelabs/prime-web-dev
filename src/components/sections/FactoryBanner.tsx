@@ -40,6 +40,7 @@ export default function FactoryBanner() {
       <img
         src="/images/factory.jpg"
         alt="Prime Tiles Factory — Rautahat, Nepal"
+        loading="lazy"
         className="absolute inset-0 w-full h-[120%] object-cover will-change-transform"
         style={{ transform: `translateY(${offset}px)` }}
       />

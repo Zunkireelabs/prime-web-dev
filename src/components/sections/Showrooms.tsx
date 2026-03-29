@@ -28,7 +28,7 @@ export default function Showrooms() {
             <FadeIn key={l.name} delay={i * 0.08}>
               <a href="/dealers" className="block group">
                 <div className="aspect-[4/3] img-gs mb-4 relative overflow-hidden">
-                  <img src={l.image} alt={l.name} className="w-full h-full object-cover" />
+                  <img src={l.image} alt={l.name} loading="lazy" className="w-full h-full object-cover" />
                   {/* Hover overlay with pin */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-500 flex items-center justify-center">
                     <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300">

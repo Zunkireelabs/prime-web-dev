@@ -43,6 +43,7 @@ export default function DealersHero() {
         src="/images/spaces/living-room.jpg"
         alt=""
         aria-hidden="true"
+        loading="lazy"
         className="absolute inset-0 w-full h-[115%] object-cover will-change-transform"
         style={{ transform: `translateY(${offset}px)`, filter: "brightness(0.4)" }}
       />

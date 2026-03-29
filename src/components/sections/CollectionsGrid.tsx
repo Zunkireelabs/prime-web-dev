@@ -47,6 +47,7 @@ export default function CollectionsGrid() {
                 <img
                   src={c.image}
                   alt={c.name}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
                 />
                 {/* Hover overlay */}

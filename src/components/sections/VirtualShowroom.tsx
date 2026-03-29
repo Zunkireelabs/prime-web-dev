@@ -189,6 +189,7 @@ export default function VirtualShowroom() {
                      <img
                         src="/images/spaces/vr-showroom.jpg"
                         alt="Immersive Interior"
+                        loading="lazy"
                         className="absolute inset-[-15%] w-[130%] h-[130%] object-cover transform-gpu transition-transform duration-150 ease-out"
                         style={{
                           transform: "translate3d(var(--px), var(--py), 0)",

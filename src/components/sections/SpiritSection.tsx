@@ -57,6 +57,7 @@ export default function SpiritSection() {
                 <img
                   src="/images/hero/slide-2.jpg"
                   alt="Spirit of Nepal Collection"
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -78,6 +79,7 @@ export default function SpiritSection() {
                     <img
                       src={item.image}
                       alt={item.name}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white/50 group-hover:text-white transition-colors">

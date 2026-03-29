@@ -16,8 +16,6 @@ import { ArrowRight, MoveUpRight, ShieldCheck, Leaf, BadgeCheck, Cog } from "luc
 import Image from "next/image";
 import SectionTransition from "@/components/ui/SectionTransition";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const certIconMap: Record<string, typeof ShieldCheck> = { ShieldCheck, Leaf, BadgeCheck, Cog };
 
 export default function AboutCinematic() {
@@ -72,6 +70,7 @@ export default function AboutCinematic() {
           <img
             src="/images/about-factory.jpg"
             alt="Prime Ceramics factory — aerial view"
+            loading="lazy"
             className="w-full h-full object-cover will-change-transform"
           />
           {/* Overlays for text readability */}
@@ -144,6 +143,7 @@ export default function AboutCinematic() {
                     <img
                       src="/images/about-factory.jpg"
                       alt="Prime Ceramics manufacturing facility"
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)]"
                     />
                   </div>
@@ -268,6 +268,7 @@ export default function AboutCinematic() {
               <img
                 src="/images/about-factory.jpg"
                 alt="Prime Ceramics factory"
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -387,6 +388,7 @@ export default function AboutCinematic() {
                   <img
                     src={item.image}
                     alt={item.name}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
                   />
                 </div>

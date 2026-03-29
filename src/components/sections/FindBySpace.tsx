@@ -78,6 +78,7 @@ export default function FindBySpace() {
                   <img
                     src={space.image}
                     alt={space.name}
+                    loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 ease-linear"
                     style={{
                       transform: isActive ? "scale(1.05)" : "scale(1.15)",
@@ -179,6 +180,7 @@ export default function FindBySpace() {
             <img
               src={space.image}
               alt={space.name}
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           </div>

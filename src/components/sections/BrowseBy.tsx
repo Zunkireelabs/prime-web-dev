@@ -65,6 +65,7 @@ export default function BrowseBy() {
               <img
                 src={featured.image}
                 alt={featured.name}
+                loading="lazy"
                 className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.03]"
                 key={featured.name}
                 style={{ animation: "fadeSlideUp 0.4s ease forwards" }}
@@ -110,6 +111,7 @@ export default function BrowseBy() {
                     <img
                       src={item.image}
                       alt={item.name}
+                      loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-[0.8s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
                     />
                     {/* Accent corner on hover */}
@@ -148,6 +150,7 @@ export default function BrowseBy() {
                   <img
                     src={item.image}
                     alt={item.name}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
                   />
                 </div>

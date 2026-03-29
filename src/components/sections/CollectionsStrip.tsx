@@ -52,7 +52,7 @@ export default function CollectionsStrip() {
             <a href={`/catalog?collection=${encodeURIComponent(c.slug)}`} className="block shrink-0 w-[260px] md:w-[300px] group">
               {/* Image with number overlay */}
               <div className="aspect-[3/4] img-gs mb-4 relative overflow-hidden">
-                <img src={c.image} alt={c.name} className="w-full h-full object-cover" />
+                <img src={c.image} alt={c.name} loading="lazy" className="w-full h-full object-cover" />
                 {/* Editorial number */}
                 <span className="absolute top-3 left-4 text-[0.55rem] font-medium tracking-[0.2em] text-white/30">
                   {String(i + 1).padStart(2, "0")}

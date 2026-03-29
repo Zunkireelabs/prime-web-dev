@@ -1,24 +1,26 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LoadingScreen from "@/components/ui/LoadingScreen";
-import SectionTransition from "@/components/ui/SectionTransition";
 import VideoOverlay from "@/components/sections/VideoOverlay";
 import HeroMain from "@/components/sections/HeroMain";
 import BrandIntro from "@/components/sections/BrandIntro";
-import FindBySpace from "@/components/sections/FindBySpace";
-import BrowseBy from "@/components/sections/BrowseBy";
-import StatsBar from "@/components/sections/StatsBar";
-import SpiritSection from "@/components/sections/SpiritSection";
-import CollectionsGrid from "@/components/sections/CollectionsGrid";
-import CTASection from "@/components/sections/CTASection";
-import ProductShowcase from "@/components/sections/ProductShowcase";
-import FactoryBanner from "@/components/sections/FactoryBanner";
-import VirtualShowroom from "@/components/sections/VirtualShowroom";
-import ClientsSection from "@/components/sections/ClientsSection";
-import DealerNetwork from "@/components/sections/DealerNetwork";
+
+const SectionTransition = dynamic(() => import("@/components/ui/SectionTransition"), { ssr: false });
+const FindBySpace = dynamic(() => import("@/components/sections/FindBySpace"), { ssr: false });
+const BrowseBy = dynamic(() => import("@/components/sections/BrowseBy"), { ssr: false });
+const StatsBar = dynamic(() => import("@/components/sections/StatsBar"), { ssr: false });
+const SpiritSection = dynamic(() => import("@/components/sections/SpiritSection"), { ssr: false });
+const CollectionsGrid = dynamic(() => import("@/components/sections/CollectionsGrid"), { ssr: false });
+const CTASection = dynamic(() => import("@/components/sections/CTASection"), { ssr: false });
+const ProductShowcase = dynamic(() => import("@/components/sections/ProductShowcase"), { ssr: false });
+const FactoryBanner = dynamic(() => import("@/components/sections/FactoryBanner"), { ssr: false });
+const VirtualShowroom = dynamic(() => import("@/components/sections/VirtualShowroom"), { ssr: false });
+const ClientsSection = dynamic(() => import("@/components/sections/ClientsSection"), { ssr: false });
+const DealerNetwork = dynamic(() => import("@/components/sections/DealerNetwork"), { ssr: false });
 
 export default function Home() {
   return (

@@ -1,11 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import SectionTransition from "@/components/ui/SectionTransition";
 import CollectionsGrid from "@/components/sections/CollectionsGrid";
-import CTASection from "@/components/sections/CTASection";
+
+const SectionTransition = dynamic(() => import("@/components/ui/SectionTransition"), { ssr: false });
+const CTASection = dynamic(() => import("@/components/sections/CTASection"), { ssr: false });
 
 export default function ServicesPage() {
   return (

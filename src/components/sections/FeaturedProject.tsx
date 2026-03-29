@@ -37,6 +37,7 @@ export default function FeaturedProject() {
       <img
         src={featuredProject.image}
         alt={featuredProject.title}
+        loading="lazy"
         className="w-full h-[110%] object-cover absolute top-0 left-0 will-change-transform"
         style={{ transform: `translateY(${offset}px)` }}
       />

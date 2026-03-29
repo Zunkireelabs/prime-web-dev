@@ -26,6 +26,7 @@ function CatalogCard({
           <img
             src={cat.image}
             alt={cat.name}
+            loading="lazy"
             className="w-full h-full object-cover"
             style={isComingSoon ? { filter: "grayscale(0.8) brightness(0.75)" } : undefined}
           />

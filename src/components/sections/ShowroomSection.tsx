@@ -35,6 +35,7 @@ export default function ShowroomSection() {
                   <img
                     src={s.image}
                     alt={s.name}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                   />
                 </div>

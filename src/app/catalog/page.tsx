@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import SectionTransition from "@/components/ui/SectionTransition";
 import CatalogHero from "@/components/sections/CatalogHero";
-import CatalogShowcase from "@/components/sections/CatalogShowcase";
-import CatalogStats from "@/components/sections/CatalogStats";
-import CatalogGrid from "@/components/sections/CatalogGrid";
-import CTASection from "@/components/sections/CTASection";
+
+const SectionTransition = dynamic(() => import("@/components/ui/SectionTransition"), { ssr: false });
+const CatalogShowcase = dynamic(() => import("@/components/sections/CatalogShowcase"), { ssr: false });
+const CatalogStats = dynamic(() => import("@/components/sections/CatalogStats"), { ssr: false });
+const CatalogGrid = dynamic(() => import("@/components/sections/CatalogGrid"), { ssr: false });
+const CTASection = dynamic(() => import("@/components/sections/CTASection"), { ssr: false });
 
 export default function CatalogPage() {
   const [activeFilter, setActiveFilter] = useState("all");

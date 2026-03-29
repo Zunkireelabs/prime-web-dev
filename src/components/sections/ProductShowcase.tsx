@@ -70,6 +70,7 @@ function StickyCard({
               <img
                 src={item.image}
                 alt={item.name}
+                loading="lazy"
                 className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-[1s] ease-[cubic-bezier(0.22,1,0.36,1)]"
               />
             </div>
