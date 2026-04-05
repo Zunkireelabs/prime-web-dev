@@ -43,11 +43,7 @@ function StickyCard({
     >
       <div
         ref={cardRef}
-        className="overflow-hidden mb-5 border border-[var(--ink-faint)]/30"
-        style={{
-          background: "var(--bg-alt)",
-          boxShadow: "0 4px 40px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.03)",
-        }}
+        className="overflow-hidden mb-8 border border-ink-faint/30 bg-surface-alt shadow-[0_4px_40px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.03)]"
       >
         <div
           className={`grid grid-cols-1 md:grid-cols-12 gap-0 items-stretch ${
@@ -57,7 +53,7 @@ function StickyCard({
           {/* Image side — 6 cols */}
           <div className="md:col-span-6 relative overflow-hidden md:[direction:ltr]">
             <div
-              className="h-full min-h-[250px] md:min-h-[340px] max-h-[420px]"
+              className="h-full min-h-[260px] md:min-h-[380px] max-h-[460px]"
               style={{
                 opacity: visible ? 1 : 0,
                 transform: visible
@@ -90,24 +86,15 @@ function StickyCard({
 
           {/* Content side — 6 cols */}
           <div
-            className="md:col-span-6 flex flex-col justify-center px-6 py-8 md:px-10 md:py-10 lg:px-14 lg:py-12 relative overflow-hidden md:[direction:ltr]"
+            className="md:col-span-6 flex flex-col justify-center relative overflow-hidden md:[direction:ltr]"
+            style={{ padding: "clamp(48px, 6vw, 80px) clamp(32px, 7vw, 96px)" }}
           >
-            {/* Subtle tile-grid texture */}
-            <div
-              className="absolute inset-0 pointer-events-none opacity-[0.03]"
-              style={{
-                backgroundImage: `
-                  linear-gradient(to right, var(--ink) 1px, transparent 1px),
-                  linear-gradient(to bottom, var(--ink) 1px, transparent 1px)
-                `,
-                backgroundSize: "40px 40px",
-              }}
-            />
-
             {/* Small index + category tag */}
             <div
-              className="flex items-center gap-3 mb-6"
+              className="flex items-center"
               style={{
+                gap: "16px",
+                marginBottom: "24px",
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(15px)",
                 transition:
@@ -115,22 +102,23 @@ function StickyCard({
                 transitionDelay: "0.1s",
               }}
             >
-              <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-[var(--ink-muted)]">
+              <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-ink-muted">
                 {indexLabel}
               </span>
-              <span className="w-8 h-[1px] bg-[var(--accent)]" />
-              <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-[var(--accent)]">
+              <span className="w-8 h-[1px] bg-accent" />
+              <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-accent">
                 {item.label}
               </span>
             </div>
 
             {/* Category name */}
             <h3
-              className="font-serif font-light text-[var(--ink)] uppercase mb-2"
+              className="font-serif font-light text-ink uppercase"
               style={{
-                fontSize: "clamp(1.8rem, 3vw, 2.8rem)",
+                fontSize: "clamp(2rem, 3.5vw, 3.2rem)",
                 letterSpacing: "0.06em",
                 lineHeight: 1,
+                marginBottom: "24px",
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(25px)",
                 transition:
@@ -143,8 +131,8 @@ function StickyCard({
 
             {/* Accent divider */}
             <div
-              className="mb-5"
               style={{
+                marginBottom: "32px",
                 opacity: visible ? 1 : 0,
                 width: visible ? "48px" : "0px",
                 transition:
@@ -152,16 +140,17 @@ function StickyCard({
                 transitionDelay: "0.25s",
               }}
             >
-              <div className="h-[1.5px] bg-[var(--accent)]" />
+              <div className="h-[1.5px] bg-accent" />
             </div>
 
             {/* Description */}
             <p
-              className="text-[var(--ink-light)] max-w-md leading-[1.8] mb-7"
+              className="text-ink-light max-w-md leading-[1.85]"
               style={{
-                fontSize: "clamp(0.82rem, 1vw, 0.9rem)",
-                letterSpacing: "0.01em",
+                fontSize: "clamp(0.85rem, 1.05vw, 0.95rem)",
+                letterSpacing: "0.015em",
                 wordSpacing: "0.05em",
+                marginBottom: "48px",
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(18px)",
                 transition:
@@ -182,16 +171,11 @@ function StickyCard({
                 transitionDelay: "0.4s",
               }}
             >
-              <a href={`/catalog?type=${encodeURIComponent(item.name.toLowerCase().replace(/\s+/g, '-'))}`} className="link-arrow text-[0.65rem]">
-                Explore {item.name} <ArrowRight size={12} />
+              <a href={`/catalog?type=${encodeURIComponent(item.name.toLowerCase().replace(/\s+/g, '-'))}`} className="link-arrow text-[0.7rem]">
+                Explore {item.name} <ArrowRight size={13} />
               </a>
             </div>
 
-            {/* Decorative corner accent — thin L-shape */}
-            <div className="absolute bottom-0 right-0 w-16 h-16 pointer-events-none">
-              <div className="absolute bottom-0 right-0 w-full h-[1px] bg-[var(--accent)] opacity-20" />
-              <div className="absolute bottom-0 right-0 w-[1px] h-full bg-[var(--accent)] opacity-20" />
-            </div>
           </div>
         </div>
       </div>
@@ -201,52 +185,20 @@ function StickyCard({
 
 export default function ProductShowcase() {
   return (
-    <section className="section-pad relative" style={{ background: "var(--bg)" }}>
-      {/* Full-section tile texture background — uses clip-path instead of overflow-hidden to preserve sticky */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: 0.02, clipPath: "inset(0)" }}
-      >
-        {/* Large grid */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, var(--ink) 1px, transparent 1px),
-              linear-gradient(to bottom, var(--ink) 1px, transparent 1px)
-            `,
-            backgroundSize: "120px 120px",
-          }}
-        />
-        {/* Diagonal accent lines */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `repeating-linear-gradient(
-              45deg,
-              transparent,
-              transparent 169px,
-              var(--accent) 169px,
-              var(--accent) 170px
-            )`,
-            opacity: 0.4,
-          }}
-        />
-      </div>
-
+    <section className="relative bg-surface" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
       <div className="container relative z-[1]">
         {/* Section header */}
-        <div className="mb-12 md:mb-16">
-          <p className="eyebrow text-[var(--accent)] mb-4">
+        <div style={{ marginBottom: "64px" }}>
+          <p className="eyebrow text-accent" style={{ marginBottom: "16px" }}>
             Our Collections
           </p>
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between" style={{ gap: "16px" }}>
             <h2 className="h2">Crafted for Every Surface</h2>
             <a href="/catalog" className="link-arrow text-[0.65rem]">
               View All Collections <ArrowRight size={12} />
             </a>
           </div>
-          <div className="mt-6 h-[1px] bg-[var(--ink-faint)]" />
+          <div style={{ marginTop: "24px", height: "1px" }} className="bg-ink-faint" />
         </div>
 
         {/* Sticky stacking cards */}

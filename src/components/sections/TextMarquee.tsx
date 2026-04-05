@@ -41,7 +41,7 @@ export default function TextMarquee({
     ));
 
   return (
-    <div className={`overflow-hidden py-10 md:py-14 ${isDark ? "bg-[var(--bg-dark)]" : "bg-[var(--bg)]"} ${className}`}>
+    <div className={`overflow-hidden py-10 md:py-14 ${isDark ? "bg-surface-dark" : "bg-surface"} ${className}`}>
       <div
         className="flex animate-marquee"
         style={{ animationDuration: `${speed}s` }}

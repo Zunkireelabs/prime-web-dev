@@ -38,16 +38,16 @@ export default function FindBySpace() {
   };
 
   return (
-    <section className="bg-[var(--bg)] overflow-hidden">
+    <section className="bg-surface overflow-hidden" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
       {/* Section header */}
-      <div className="container pt-[var(--section-gap)]">
+      <div className="container">
         <FadeIn>
-          <div className="flex items-end justify-between mb-10 md:mb-14">
+          <div className="flex items-end justify-between" style={{ marginBottom: "clamp(40px, 5vw, 56px)" }}>
             <div>
-              <p className="eyebrow text-[var(--accent)] mb-4">
+              <p className="eyebrow text-accent" style={{ marginBottom: "16px" }}>
                 Find Tiles By Space
               </p>
-              <h2 className="h2 text-[var(--ink)]">Explore By Room</h2>
+              <h2 className="h2 text-ink">Explore By Room</h2>
             </div>
             <a href="/catalog" className="link-arrow text-[0.65rem] hidden md:flex">
               View All Spaces <ArrowRight size={12} />
@@ -57,9 +57,9 @@ export default function FindBySpace() {
       </div>
 
       {/* ─── DESKTOP ACCORDION (lg+) ─── */}
-      <div className="hidden lg:block pb-[var(--section-gap)]">
+      <div className="hidden lg:block">
         <div className="container">
-          <div className="flex h-[520px] xl:h-[580px] gap-2">
+          <div className="flex h-[520px] xl:h-[580px] gap-4">
             {spaces.map((space, i) => {
               const isActive = i === active;
               return (
@@ -103,11 +103,11 @@ export default function FindBySpace() {
 
                   {/* ── Collapsed state: vertical text ── */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500"
+                    className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-[600ms]"
                     style={{ opacity: isActive ? 0 : 1, pointerEvents: isActive ? "none" : "auto" }}
                   >
                     {/* Number */}
-                    <span className="text-[0.5rem] font-medium tracking-[0.2em] text-[var(--accent-light)] mb-3">
+                    <span className="text-[0.5rem] font-medium tracking-[0.2em] text-accent-light" style={{ marginBottom: "12px", display: "block" }}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     {/* Vertical name */}
@@ -121,19 +121,20 @@ export default function FindBySpace() {
 
                   {/* ── Expanded state: full content ── */}
                   <div
-                    className="absolute inset-0 flex flex-col justify-end p-8 xl:p-10 transition-opacity duration-500"
+                    className="absolute inset-0 flex flex-col justify-end p-12 xl:p-16 transition-opacity duration-[600ms]"
                     style={{
                       opacity: isActive ? 1 : 0,
                       pointerEvents: isActive ? "auto" : "none",
                     }}
                   >
-                    <p className="text-[0.55rem] font-medium tracking-[0.35em] uppercase text-[var(--accent-light)] mb-3">
+                    <p className="text-[0.55rem] font-medium tracking-[0.35em] uppercase text-accent-light" style={{ marginBottom: "12px" }}>
                       {String(i + 1).padStart(2, "0")} / {String(spaces.length).padStart(2, "0")}
                     </p>
                     <h3
-                      className="font-serif font-light text-white leading-[1.05] mb-3"
+                      className="font-serif font-light text-white leading-[1.05]"
                       style={{
                         fontSize: "clamp(1.8rem, 3vw, 2.8rem)",
+                        marginBottom: "16px",
                         transform: isActive ? "translateY(0)" : "translateY(20px)",
                         transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s",
                       }}
@@ -141,8 +142,9 @@ export default function FindBySpace() {
                       {space.name}
                     </h3>
                     <p
-                      className="text-sm text-white/45 max-w-sm mb-5 leading-relaxed"
+                      className="text-sm text-white/45 max-w-sm leading-relaxed"
                       style={{
+                        marginBottom: "32px",
                         transform: isActive ? "translateY(0)" : "translateY(15px)",
                         opacity: isActive ? 1 : 0,
                         transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s",
@@ -152,7 +154,7 @@ export default function FindBySpace() {
                     </p>
                     <a
                       href={`/catalog?space=${encodeURIComponent(space.name.toLowerCase())}`}
-                      className="link-arrow text-white/50 hover:text-[var(--accent-light)] text-[0.6rem]"
+                      className="link-arrow text-white/50 hover:text-accent-light text-[0.6rem]"
                       style={{
                         transform: isActive ? "translateY(0)" : "translateY(10px)",
                         opacity: isActive ? 1 : 0,
@@ -178,7 +180,7 @@ export default function FindBySpace() {
         {spaces.map((space, i) => (
           <div
             key={space.name}
-            className="absolute inset-0 transition-opacity duration-500"
+            className="absolute inset-0 transition-opacity duration-[600ms]"
             style={{ opacity: i === mobileIndex ? 1 : 0 }}
           >
             <img
@@ -192,29 +194,29 @@ export default function FindBySpace() {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/20 z-[1]" />
 
-        <div className="absolute inset-0 z-10 flex flex-col justify-end p-6 pb-10">
-          <p className="text-[0.55rem] font-medium tracking-[0.35em] uppercase text-[var(--accent-light)] mb-3">
+        <div className="absolute inset-0 z-10 flex flex-col justify-end" style={{ padding: "32px 40px 48px" }}>
+          <p className="text-[0.55rem] font-medium tracking-[0.35em] uppercase text-accent-light" style={{ marginBottom: "12px" }}>
             Find Tiles By Space
           </p>
 
-          <p className="text-[0.6rem] font-medium tracking-[0.2em] text-white/30 mb-2">
-            <span className="text-[var(--accent-light)]">{String(mobileIndex + 1).padStart(2, "0")}</span>
-            <span className="mx-1.5">/</span>
+          <p className="text-[0.6rem] font-medium tracking-[0.2em] text-white/30" style={{ marginBottom: "8px" }}>
+            <span className="text-accent-light">{String(mobileIndex + 1).padStart(2, "0")}</span>
+            <span style={{ marginLeft: "6px", marginRight: "6px" }}>/</span>
             {String(spaces.length).padStart(2, "0")}
           </p>
 
           <h2
-            className="font-serif font-light text-white leading-[1.05] mb-2"
-            style={{ fontSize: "clamp(2.2rem, 8vw, 3rem)" }}
+            className="font-serif font-light text-white leading-[1.05]"
+            style={{ fontSize: "clamp(2.2rem, 8vw, 3rem)", marginBottom: "16px" }}
           >
             {spaces[mobileIndex].name}
           </h2>
 
-          <p className="text-sm text-white/50 mb-6">
+          <p className="text-sm text-white/50" style={{ marginBottom: "32px" }}>
             {spaces[mobileIndex].subtitle}
           </p>
 
-          <div className="flex gap-2 mb-6">
+          <div className="flex" style={{ gap: "10px", marginBottom: "32px" }}>
             {spaces.map((_, i) => (
               <button
                 key={i}
@@ -222,7 +224,7 @@ export default function FindBySpace() {
                 className="h-[2px] transition-all duration-300"
                 style={{
                   width: i === mobileIndex ? "28px" : "10px",
-                  background: i === mobileIndex ? "var(--accent-light)" : "rgba(255,255,255,0.2)",
+                  background: i === mobileIndex ? "var(--color-accent-light)" : "rgba(255,255,255,0.2)",
                 }}
                 aria-label={`Go to ${spaces[i].name}`}
               />

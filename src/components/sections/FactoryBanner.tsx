@@ -9,7 +9,8 @@ export default function FactoryBanner() {
   const [offset, setOffset] = useState(0);
   const rafId = useRef<number>(0);
 
-  // Parallax
+  const [scale, setScale] = useState(1);
+
   const handleScroll = useCallback(() => {
     cancelAnimationFrame(rafId.current);
     rafId.current = requestAnimationFrame(() => {
@@ -18,7 +19,8 @@ export default function FactoryBanner() {
       const viewH = window.innerHeight;
       if (rect.bottom > 0 && rect.top < viewH) {
         const progress = (viewH - rect.top) / (viewH + rect.height);
-        setOffset((progress - 0.5) * 50);
+        setOffset((progress - 0.5) * 60);
+        setScale(1 + progress * 0.1);
       }
     });
   }, []);
@@ -34,62 +36,67 @@ export default function FactoryBanner() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[70vh] md:h-[80vh] lg:h-[85vh] min-h-[500px] max-h-[800px] overflow-hidden"
+      className="relative h-[60vh] md:h-[70vh] lg:h-[75vh] min-h-[450px] max-h-[700px] overflow-hidden"
     >
       {/* Parallax image */}
       <img
         src="/images/factory.jpg"
         alt="Prime Tiles Factory — Rautahat, Nepal"
         loading="lazy"
-        className="absolute inset-0 w-full h-[120%] object-cover will-change-transform"
-        style={{ transform: `translateY(${offset}px)` }}
+        className="absolute inset-0 w-full h-[125%] object-cover will-change-transform"
+        style={{ transform: `translateY(${offset}px) scale(${scale})` }}
       />
 
       {/* Gradient overlays — cinematic depth */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/15" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,101,66,0.08)_0%,transparent_60%)]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,101,66,0.1)_0%,transparent_60%)]" />
 
       {/* Content */}
-      <div className="container relative z-10 h-full flex flex-col justify-end pb-12 md:pb-16 lg:pb-20">
-        {/* Eyebrow */}
+      <div className="container relative z-10 h-full flex flex-col justify-center">
         <FadeIn>
-          <p className="eyebrow text-[var(--accent-light)] mb-4">
-            Our Manufacturing Plant
-          </p>
+          <div className="flex items-center gap-4" style={{ marginBottom: "16px" }}>
+            <div className="w-10 h-[1px] bg-accent-light/50" />
+            <p className="eyebrow text-accent-light">
+              Our Manufacturing Plant
+            </p>
+          </div>
         </FadeIn>
 
-        {/* Headline */}
         <FadeIn delay={0.1}>
           <h2
-            className="font-serif font-light text-white leading-[1] tracking-[-0.01em] mb-4 max-w-2xl"
-            style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
+            className="font-serif font-light text-white leading-[1] tracking-[-0.01em] max-w-2xl"
+            style={{ fontSize: "clamp(2rem, 5vw, 4rem)", marginBottom: "24px" }}
           >
             Nepal&apos;s No.1<br />
-            <span className="text-white/60">Tile Manufacturing Facility</span>
+            <span className="text-white/75">Tile Manufacturing Facility</span>
           </h2>
         </FadeIn>
 
-        {/* Description */}
+        <FadeIn delay={0.15}>
+          <div className="w-14 h-[1.5px] bg-accent/60" style={{ marginBottom: "24px" }} />
+        </FadeIn>
+
         <FadeIn delay={0.2}>
-          <p className="text-sm md:text-[0.95rem] text-white/45 max-w-lg mb-8 leading-relaxed">
+          <p className="body-lg text-white/80 max-w-lg" style={{ marginBottom: "40px" }}>
             Spread across 50 bigha in Rautahat, our state-of-the-art facility is
             powered by Italian SACMI technology — producing premium ceramic, vitrified,
             and porcelain tiles that meet international quality standards.
           </p>
         </FadeIn>
 
-        {/* CTA */}
         <FadeIn delay={0.3}>
           <a
             href="#craft"
-            className="link-arrow text-white/70 hover:text-white mb-10 md:mb-12"
+            className="link-arrow text-white/75 hover:text-accent-light"
           >
             Learn About Our Process <ArrowRight size={12} />
           </a>
         </FadeIn>
-
       </div>
+
+      {/* Bottom gradient blend into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/15 to-transparent" />
     </section>
   );
 }

@@ -1,111 +1,152 @@
 "use client";
 
-import FadeIn from "@/components/animations/FadeIn";
-import SplitHeading from "@/components/animations/SplitHeading";
-import MaskReveal from "@/components/animations/MaskReveal";
-import { ArrowRight, MoveUpRight } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ScrollReveal from "@/components/animations/ScrollReveal";
+import TextRevealByWord from "@/components/animations/TextRevealByWord";
+import TiltCard from "@/components/ui/TiltCard";
+import { ArrowRight, MapPin } from "lucide-react";
 import { spiritItems } from "@/data/spirit";
 
+gsap.registerPlugin(ScrollTrigger);
+
+const locationMap: Record<string, string> = {
+  "Lumbini White": "Lumbini, Nepal",
+  "Kathmandu Clay": "Kathmandu Valley",
+  "Everest Slate": "Sagarmatha, Nepal",
+};
+
 export default function SpiritSection() {
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!cardsRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const cards = cardsRef.current?.querySelectorAll(".spirit-card");
+      if (cards?.length) {
+        gsap.fromTo(
+          cards,
+          { y: 60, opacity: 0, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            stagger: 0.15,
+            ease: "none",
+            scrollTrigger: {
+              trigger: cardsRef.current,
+              start: "top 80%",
+              end: "top 35%",
+              scrub: true,
+            },
+          }
+        );
+      }
+    }, cardsRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="bg-[var(--bg-dark)] relative overflow-hidden">
-      {/* ── Hero Block — full-width cinematic ── */}
-      <div className="relative min-h-[70vh] flex items-center">
-        {/* Background: Spirit of Nepal tile as texture */}
-        <div className="absolute inset-0">
-          <img
-            src="/images/tiles/spirit-of-nepal.webp"
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-dark)] via-[var(--bg-dark)]/85 to-[var(--bg-dark)]/60" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-dark)] via-transparent to-[var(--bg-dark)]/40" />
-        </div>
+    <section className="bg-surface-red relative overflow-hidden" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
+      {/* Ambient */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(245,221,213,0.06) 0%, transparent 70%)" }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(245,221,213,0.04) 0%, transparent 70%)" }} />
+      <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }} />
 
-        <div className="container relative z-10 py-24 md:py-32">
-          <div className="max-w-2xl">
-            <FadeIn>
-              <p className="eyebrow text-[var(--accent-light)] mb-5">
-                Exclusive Series
-              </p>
-            </FadeIn>
+      <div className="container relative z-10">
+        {/* ── Two-column header ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-end" style={{ gap: "40px", columnGap: "80px", marginBottom: "64px" }}>
+          {/* Left — Display heading */}
+          <div>
+            <ScrollReveal from={{ y: 20, opacity: 0 }} to={{ y: 0, opacity: 1 }} start="top 88%" end="top 65%">
+              <div className="flex items-center" style={{ gap: "16px", marginBottom: "24px" }}>
+                <div className="w-10 h-px bg-ink-on-red/30" />
+                <p className="eyebrow text-ink-on-red/70">Exclusive Series</p>
+              </div>
+            </ScrollReveal>
 
-            <SplitHeading as="h2" className="display text-white mb-4">
+            <TextRevealByWord as="h2" className="display text-ink-on-red" start="top 85%" end="top 55%">
               Spirit of Nepal
-            </SplitHeading>
+            </TextRevealByWord>
+          </div>
 
-            <FadeIn delay={0.15}>
-              <div className="w-16 h-[1.5px] bg-[var(--accent)] mb-8" />
-            </FadeIn>
-
-            <FadeIn delay={0.25}>
-              <p className="body-lg text-white/50 max-w-lg mb-10 leading-relaxed">
-                Heritage forged in fire. From the serene plains of Lumbini to the
-                rugged peaks of the Himalayas — surfaces that carry the soul of our land.
+          {/* Right — Description + CTA */}
+          <div>
+            <ScrollReveal from={{ y: 30, opacity: 0 }} to={{ y: 0, opacity: 1 }} start="top 82%" end="top 55%">
+              <p className="text-ink-on-red-muted leading-[1.85]" style={{ fontSize: "clamp(0.95rem, 1.1vw, 1.08rem)", marginBottom: "32px" }}>
+                Heritage forged in fire. From the serene plains of Lumbini to
+                the rugged peaks of the Himalayas — surfaces that carry the
+                soul of our land.
               </p>
-            </FadeIn>
-
-            <FadeIn delay={0.35}>
-              <a
-                href="/catalog?collection=spirit-of-nepal"
-                className="link-arrow text-white/60 hover:text-[var(--accent-light)]"
-              >
-                Explore Collection
-                <ArrowRight size={14} />
+            </ScrollReveal>
+            <ScrollReveal from={{ y: 20, opacity: 0 }} to={{ y: 0, opacity: 1 }} start="top 78%" end="top 52%">
+              <a href="/catalog?collection=spirit-of-nepal" className="link-arrow text-ink-on-red hover:text-white">
+                Explore Collection <ArrowRight size={14} />
               </a>
-            </FadeIn>
+            </ScrollReveal>
           </div>
         </div>
-      </div>
 
-      {/* ── Tile Cards Grid ── */}
-      <div className="container pb-20 md:pb-28">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-          {spiritItems.map((item, i) => (
-            <FadeIn key={item.name} delay={0.1 + i * 0.12} direction="up" distance={30}>
-              <a
-                href={`/catalog?collection=spirit-of-nepal`}
-                className="group block relative overflow-hidden"
-              >
-                {/* Tile texture image — portrait ratio */}
-                <div className="aspect-[3/4] overflow-hidden bg-[#1a1815]">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.04] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                  />
-                </div>
+        {/* ── Divider ── */}
+        <ScrollReveal from={{ scaleX: 0 }} to={{ scaleX: 1 }} start="top 75%" end="top 55%">
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-ink-on-red/20 to-transparent origin-center" style={{ marginBottom: "64px" }} />
+        </ScrollReveal>
 
-                {/* Bottom gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        {/* ── Tile Cards ── */}
+        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: "32px" }}>
+          {spiritItems.map((item) => {
+            const location = locationMap[item.name] || "Nepal";
 
-                {/* Content — always visible, bottom-aligned */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                  <p className="text-[0.55rem] font-medium tracking-[0.25em] uppercase text-[var(--accent-light)] mb-2">
-                    {item.type} · {item.size}
-                  </p>
-                  <h3 className="text-white font-serif text-xl md:text-2xl font-light mb-2">
-                    {item.name}
-                  </h3>
-                  <p className="text-white/40 text-sm leading-relaxed max-w-[240px] opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                    {item.desc}
-                  </p>
-                </div>
+            return (
+              <div key={item.name} className="spirit-card opacity-0">
+                <TiltCard intensity={5}>
+                  <a href="/catalog?collection=spirit-of-nepal" className="group block">
+                    {/* Image — landscape ratio */}
+                    <div className="relative aspect-[16/12] overflow-hidden rounded-sm" style={{ marginBottom: "20px" }}>
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                      />
 
-                {/* Arrow icon — top right */}
-                <div className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center text-white/30 group-hover:text-white group-hover:bg-[var(--accent)]/80 transition-all duration-500">
-                  <MoveUpRight size={16} />
-                </div>
-              </a>
-            </FadeIn>
-          ))}
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                      {/* Location tag — top left */}
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/30 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5">
+                        <MapPin size={10} className="text-accent-light" />
+                        <p className="text-[0.45rem] font-medium tracking-[0.15em] uppercase text-white/80">
+                          {location}
+                        </p>
+                      </div>
+
+                      {/* Gold line at bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                    </div>
+
+                    {/* Info below image — always visible */}
+                    <div>
+                      <h3 className="font-serif font-light text-ink-on-red group-hover:text-white transition-colors duration-300" style={{ fontSize: "clamp(1.15rem, 1.6vw, 1.4rem)", marginBottom: "8px" }}>
+                        {item.name}
+                      </h3>
+                      <p className="text-[0.55rem] font-medium tracking-[0.2em] uppercase text-ink-on-red/50" style={{ marginBottom: "12px" }}>
+                        {item.type} · {item.size}
+                      </p>
+                      <p className="text-[0.85rem] text-ink-on-red-muted leading-[1.7]">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </a>
+                </TiltCard>
+              </div>
+            );
+          })}
         </div>
       </div>
-
-      {/* Bottom accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)]/20 to-transparent" />
     </section>
   );
 }

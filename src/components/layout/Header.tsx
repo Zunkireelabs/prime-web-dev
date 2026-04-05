@@ -50,29 +50,34 @@ export default function Header() {
     megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
   };
 
+  const blendVideo = videoAdVisible && !scrolled;
+
   return (
     <>
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-          scrolled
-            ? "bg-[var(--bg)]/97 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.04),0_4px_20px_rgba(0,0,0,0.03)]"
-            : "bg-gradient-to-b from-black/50 via-black/25 to-transparent backdrop-blur-[2px]"
+          blendVideo
+            ? "bg-transparent"
+            : "bg-white",
+          !blendVideo && (scrolled
+            ? "shadow-[0_1px_0_rgba(0,0,0,0.04),0_4px_20px_rgba(0,0,0,0.03)]"
+            : "shadow-[0_1px_0_rgba(0,0,0,0.06)]")
         )}
       >
-        <div className="container flex items-center justify-between h-[72px] md:h-20">
+        <div className="container flex items-center justify-between" style={{ height: "clamp(64px, 8vw, 88px)" }}>
           {/* Logo */}
           <a href="/" className="relative z-50">
             <img
               src="/images/prime-logo.png"
               alt="Prime Tiles"
-              className="h-12 md:h-14 w-auto transition-[filter] duration-300"
-              style={scrolled ? undefined : { filter: "brightness(0) invert(1)" }}
+              className="h-12 md:h-16 w-auto transition-[filter] duration-300"
+              style={blendVideo ? { filter: "brightness(0) invert(1)" } : undefined}
             />
           </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-10">
+          <nav className="hidden lg:flex items-center" style={{ gap: "40px" }}>
             {navItems.map((item) => {
               const hasDropdown = !!item.dropdown?.length;
               return (
@@ -96,10 +101,8 @@ export default function Header() {
                   <a
                     href={item.href}
                     className={cn(
-                      "relative text-[0.7rem] font-medium tracking-[0.18em] uppercase transition-colors duration-300 py-7 inline-flex items-center gap-1.5",
-                      scrolled
-                        ? "text-[var(--ink)] hover:text-[var(--accent)]"
-                        : "text-white/70 hover:text-white"
+                      "relative text-[0.8rem] font-medium tracking-[0.18em] uppercase transition-colors duration-300 py-7 inline-flex items-center gap-1.5",
+                      blendVideo ? "text-white/80 hover:text-white" : "text-ink hover:text-accent"
                     )}
                   >
                     {item.label}
@@ -109,31 +112,73 @@ export default function Header() {
                       </svg>
                     )}
                     {/* Hover underline */}
-                    <span className={cn(
-                      "absolute bottom-5 left-0 right-0 h-[1.5px] scale-x-0 transition-transform duration-300 origin-left",
-                      scrolled ? "bg-[var(--accent)]" : "bg-white"
-                    )} />
+                    <span className={cn("absolute bottom-5 left-0 right-0 h-[1.5px] scale-x-0 transition-transform duration-300 origin-left", blendVideo ? "bg-white" : "bg-accent")} />
                   </a>
 
                   {/* Dropdown menu */}
                   {hasDropdown && (
                     <div
                       className={cn(
-                        "absolute top-full left-0 pt-2 transition-all duration-200",
-                        activeDropdown === item.label ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none -translate-y-1"
+                        "absolute top-full left-1/2 transition-all duration-300 linear",
+                        activeDropdown === item.label ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none -translate-y-2"
                       )}
+                      style={{ transform: activeDropdown === item.label ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(-8px)", paddingTop: "12px" }}
                     >
-                      <div className="bg-[var(--bg)] border border-[var(--ink)]/6 shadow-[0_12px_40px_rgba(0,0,0,0.08)] min-w-[240px] py-3">
-                        {item.dropdown!.map((link) => (
+                      <div
+                        className="relative overflow-hidden"
+                        style={{
+                          background: "linear-gradient(165deg, #1a1714 0%, #0f0c09 100%)",
+                          border: "1px solid rgba(150, 112, 76, 0.12)",
+                          boxShadow: "0 20px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.03)",
+                          minWidth: "280px",
+                          padding: "8px 0",
+                        }}
+                      >
+                        {/* Top accent line */}
+                        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1.5px", background: "linear-gradient(90deg, transparent, rgba(215,185,138,0.4), transparent)" }} />
+
+                        {/* Subtle corner glow */}
+                        <div style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "radial-gradient(circle at top right, rgba(150,112,76,0.06), transparent 70%)", pointerEvents: "none" }} />
+
+                        {item.dropdown!.map((link, idx) => (
                           <a
                             key={link.href}
                             href={link.href}
-                            className="group flex items-center justify-between px-6 py-3 text-[0.8rem] text-[var(--ink-light)] hover:text-[var(--ink)] hover:bg-[var(--bg-alt)] transition-all duration-200"
+                            className="group flex items-center justify-between transition-all duration-300"
+                            style={{
+                              padding: "14px 28px",
+                              margin: "0 8px",
+                              borderRadius: "2px",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = "rgba(150,112,76,0.08)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "transparent";
+                            }}
                           >
-                            {link.label}
-                            <ArrowRight size={12} className="opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-200" />
+                            <span
+                              className="group-hover:translate-x-1 transition-transform duration-300"
+                              style={{
+                                fontSize: "0.82rem",
+                                letterSpacing: "0.04em",
+                                color: "#a89d8e",
+                              }}
+                              onMouseEnter={(e) => { e.currentTarget.style.color = "#d7b98a"; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.color = "#a89d8e"; }}
+                            >
+                              {link.label}
+                            </span>
+                            <ArrowRight
+                              size={13}
+                              className="opacity-0 -translate-x-2 group-hover:opacity-70 group-hover:translate-x-0 transition-all duration-300"
+                              style={{ color: "#d7b98a" }}
+                            />
                           </a>
                         ))}
+
+                        {/* Bottom accent */}
+                        <div style={{ position: "absolute", bottom: 0, left: "20%", right: "20%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(215,185,138,0.1), transparent)" }} />
                       </div>
                     </div>
                   )}
@@ -143,33 +188,27 @@ export default function Header() {
           </nav>
 
           {/* Right side */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center" style={{ gap: "24px" }}>
             <button
               onClick={() => setSearchOpen(true)}
-              className={cn(
-                "transition-colors duration-300",
-                scrolled
-                  ? "text-[var(--ink-light)] hover:text-[var(--ink)]"
-                  : "text-white/50 hover:text-white"
-              )}
+              className={cn("transition-colors duration-300", blendVideo ? "text-white/60 hover:text-white" : "text-ink-light hover:text-ink")}
               aria-label="Search"
             >
               <Search size={17} strokeWidth={1.5} />
             </button>
-            <div className={cn("w-px h-4", scrolled ? "bg-[var(--ink)]/10" : "bg-white/15")} />
+            <div className={cn("w-px h-4", blendVideo ? "bg-white/20" : "bg-ink/10")} />
             <a
               href="#showrooms"
               className={cn(
-                "text-[0.65rem] font-medium tracking-[0.15em] uppercase px-5 py-2 border transition-all duration-300",
-                scrolled
-                  ? "border-[var(--ink)]/15 text-[var(--ink)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                  : "border-white/20 text-white/70 hover:border-white/50 hover:text-white"
+                "text-[0.7rem] font-medium tracking-[0.15em] uppercase border transition-all duration-300",
+                blendVideo ? "border-white/25 text-white/80 hover:border-white/50 hover:text-white" : "border-ink/15 text-ink hover:border-accent hover:text-accent"
               )}
+              style={{ padding: "10px 20px" }}
             >
               Where to Buy
             </a>
 
-            {/* Close video button — only visible during video */}
+            {/* Close video button — far right */}
             {videoAdVisible && !scrolled && (
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent("dismiss-video-ad"))}
@@ -192,56 +231,62 @@ export default function Header() {
                 <X size={16} strokeWidth={1.5} />
               </button>
             )}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Menu"
-            >
-              {mobileOpen ? (
-                <X size={22} className="text-[var(--ink-on-dark)]" />
-              ) : (
-                <Menu size={22} className={scrolled ? "text-[var(--ink)]" : "text-white"} />
-              )}
-            </button>
+            {!mobileOpen && (
+              <button
+                onClick={() => setMobileOpen(true)}
+                aria-label="Open menu"
+              >
+                <Menu size={22} className={blendVideo ? "text-white" : "text-ink"} />
+              </button>
+            )}
           </div>
         </div>
 
         {/* ─── Mega Dropdown ─── */}
         <div
           className={cn(
-            "hidden lg:block absolute top-full left-0 right-0 transition-all duration-300 overflow-hidden",
-            megaOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+            "hidden lg:block absolute top-full left-0 right-0 transition-[opacity,transform] duration-300 linear",
+            megaOpen
+              ? "opacity-100 translate-y-0 pointer-events-auto"
+              : "opacity-0 -translate-y-2 pointer-events-none"
           )}
           onMouseEnter={openMega}
           onMouseLeave={closeMega}
         >
-          <div className="bg-[var(--bg)] border-b border-[var(--ink)]/5 shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
-            <div className="container py-10">
-              <div className="grid grid-cols-12 gap-8">
+          <div className="bg-surface-dark border-b border-accent/15 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative">
+            {/* Top gold accent line */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
+
+            <div className="container" style={{ padding: "36px 0 40px" }}>
+              <div className="grid grid-cols-12" style={{ gap: "40px" }}>
                 {/* Left — Featured image */}
-                <div className="col-span-4">
-                  <div className="aspect-[4/3] img-gs overflow-hidden">
+                <div className="col-span-3 flex">
+                  <div className="w-full min-h-[260px] overflow-hidden group relative">
                     <img
                       src="/images/services/service-1.jpg"
                       alt="Premium tile collection"
-                      className="w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                    <div className="absolute" style={{ bottom: "32px", left: "32px", right: "32px" }}>
+                      <p className="text-[0.5rem] font-medium tracking-[0.25em] uppercase text-accent-light mb-1.5">Featured</p>
+                      <p className="text-[0.9rem] text-white/90 font-serif leading-snug">Calacatta Luxe</p>
+                      <p className="text-[0.7rem] text-white/40 mt-1">Our flagship collection</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-[var(--ink-muted)] mt-3 tracking-wide">
-                    Calacatta Luxe — Our flagship collection
-                  </p>
                 </div>
 
                 {/* Right — Link columns */}
-                <div className="col-span-8 grid grid-cols-4 gap-6">
+                <div className="col-span-9 grid grid-cols-4" style={{ gap: "32px" }}>
                   {/* By Space */}
                   <div>
-                    <p className="text-[0.6rem] font-medium tracking-[0.25em] uppercase text-[var(--accent)] mb-5">By Space</p>
-                    <ul className="space-y-2.5">
+                    <p className="text-[0.7rem] font-medium tracking-[0.3em] uppercase text-accent/80 border-b border-accent/10" style={{ paddingBottom: "16px", marginBottom: "28px" }}>By Space</p>
+                    <ul className="space-y-0">
                       {spaces.map((s) => (
                         <li key={s}>
-                          <a href={`/catalog?space=${encodeURIComponent(s.toLowerCase())}`} className="group flex items-center gap-1.5 text-[0.8rem] text-[var(--ink-light)] hover:text-[var(--ink)] transition-colors duration-200">
+                          <a href={`/catalog?space=${encodeURIComponent(s.toLowerCase())}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <span>{s}</span>
-                            <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all duration-200" />
+                            <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                           </a>
                         </li>
                       ))}
@@ -250,17 +295,17 @@ export default function Header() {
 
                   {/* By Collection */}
                   <div>
-                    <p className="text-[0.6rem] font-medium tracking-[0.25em] uppercase text-[var(--accent)] mb-5">Collections</p>
-                    <ul className="space-y-2.5">
+                    <p className="text-[0.7rem] font-medium tracking-[0.3em] uppercase text-accent/80 border-b border-accent/10" style={{ paddingBottom: "16px", marginBottom: "28px" }}>Collections</p>
+                    <ul className="space-y-0">
                       {collections.map((c) => (
                         <li key={c}>
-                          <a href={`/catalog?collection=${encodeURIComponent(c.toLowerCase())}`} className="group flex items-center justify-between text-[0.8rem] text-[var(--ink-light)] hover:text-[var(--ink)] transition-colors duration-200">
+                          <a href={`/catalog?collection=${encodeURIComponent(c.toLowerCase())}`} className="group flex items-center justify-between text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <div className="flex items-center gap-1.5">
-                              <span className={c === "Spirit of Nepal" ? "text-[var(--accent)] font-medium" : ""}>{c}</span>
-                              <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all duration-200" />
+                              <span className={c === "Spirit of Nepal" ? "text-accent-light font-medium" : ""}>{c}</span>
+                              <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                             </div>
                             {c === "Spirit of Nepal" && (
-                              <span className="text-[0.5rem] tracking-[0.1em] uppercase bg-[var(--accent)]/10 text-[var(--accent)] px-1.5 py-0.5 rounded-sm">New</span>
+                              <span className="text-[0.45rem] tracking-[0.15em] uppercase bg-accent/15 text-accent-light px-2 py-0.5">New</span>
                             )}
                           </a>
                         </li>
@@ -270,13 +315,13 @@ export default function Header() {
 
                   {/* By Finish */}
                   <div>
-                    <p className="text-[0.6rem] font-medium tracking-[0.25em] uppercase text-[var(--accent)] mb-5">By Finish</p>
-                    <ul className="space-y-2.5">
+                    <p className="text-[0.7rem] font-medium tracking-[0.3em] uppercase text-accent/80 border-b border-accent/10" style={{ paddingBottom: "16px", marginBottom: "28px" }}>By Finish</p>
+                    <ul className="space-y-0">
                       {finishes.map((f) => (
                         <li key={f}>
-                          <a href={`/catalog?finish=${encodeURIComponent(f.toLowerCase())}`} className="group flex items-center gap-1.5 text-[0.8rem] text-[var(--ink-light)] hover:text-[var(--ink)] transition-colors duration-200">
+                          <a href={`/catalog?finish=${encodeURIComponent(f.toLowerCase())}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <span>{f}</span>
-                            <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all duration-200" />
+                            <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                           </a>
                         </li>
                       ))}
@@ -285,13 +330,13 @@ export default function Header() {
 
                   {/* By Size */}
                   <div>
-                    <p className="text-[0.6rem] font-medium tracking-[0.25em] uppercase text-[var(--accent)] mb-5">By Size</p>
-                    <ul className="space-y-2.5">
+                    <p className="text-[0.7rem] font-medium tracking-[0.3em] uppercase text-accent/80 border-b border-accent/10" style={{ paddingBottom: "16px", marginBottom: "28px" }}>By Size</p>
+                    <ul className="space-y-0">
                       {sizes.map((s) => (
                         <li key={s}>
-                          <a href={`/catalog?size=${encodeURIComponent(s)}`} className="group flex items-center gap-1.5 text-[0.8rem] text-[var(--ink-light)] hover:text-[var(--ink)] transition-colors duration-200">
+                          <a href={`/catalog?size=${encodeURIComponent(s)}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <span>{s}</span>
-                            <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all duration-200" />
+                            <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                           </a>
                         </li>
                       ))}
@@ -307,12 +352,21 @@ export default function Header() {
       {/* ─── Mobile Menu ─── */}
       <div
         className={cn(
-          "lg:hidden fixed inset-0 z-40 bg-[var(--bg-dark)] transition-opacity duration-500",
+          "lg:hidden fixed inset-0 z-40 bg-surface-dark transition-opacity duration-500",
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
-        <div className="h-full overflow-y-auto pt-24 pb-16 px-8">
-          <nav className="space-y-0 mb-10">
+        {/* Close button — top left */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          aria-label="Close menu"
+          className="absolute top-6 left-6 z-50 w-12 h-12 rounded-full border border-ink-on-dark/15 flex items-center justify-center text-ink-on-dark hover:text-white hover:border-ink-on-dark/40 transition-all duration-300"
+        >
+          <X size={22} />
+        </button>
+
+        <div className="h-full overflow-y-auto" style={{ padding: "96px 32px 64px" }}>
+          <nav className="space-y-0" style={{ marginBottom: "40px" }}>
             {navItems.map((item, i) => (
               <div key={item.label}>
                 <a
@@ -325,26 +379,26 @@ export default function Header() {
                     setMobileOpen(false);
                   }}
                   className={cn(
-                    "flex items-center justify-between py-5 border-b border-[var(--ink-on-dark)]/6 h2 text-[var(--ink-on-dark)] transition-all duration-500",
+                    "flex items-center justify-between py-5 border-b border-ink-on-dark/6 h2 text-ink-on-dark transition-all duration-500",
                     mobileOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   )}
                   style={{ transitionDelay: mobileOpen ? `${120 + i * 50}ms` : "0ms" }}
                 >
                   {item.label}
-                  <ChevronRight size={18} className={cn("text-[var(--ink-on-dark-muted)] transition-transform duration-200", item.dropdown?.length && activeDropdown === item.label ? "rotate-90" : "")} />
+                  <ChevronRight size={18} className={cn("text-ink-on-dark-muted transition-transform duration-200", item.dropdown?.length && activeDropdown === item.label ? "rotate-90" : "")} />
                 </a>
                 {/* Mobile sub-links */}
                 {item.dropdown?.length && activeDropdown === item.label && (
-                  <div className="pl-6 border-b border-[var(--ink-on-dark)]/6">
+                  <div className="pl-6 border-b border-ink-on-dark/6">
                     {item.dropdown.map((link) => (
                       <a
                         key={link.href}
                         href={link.href}
                         onClick={() => setMobileOpen(false)}
-                        className="flex items-center justify-between py-4 text-[1rem] font-serif text-[var(--ink-on-dark-light)] hover:text-white transition-colors duration-200"
+                        className="flex items-center justify-between py-4 text-[1rem] font-serif text-ink-on-dark-light hover:text-white transition-colors duration-200"
                       >
                         {link.label}
-                        <ArrowRight size={14} className="text-[var(--ink-on-dark-muted)]" />
+                        <ArrowRight size={14} className="text-ink-on-dark-muted" />
                       </a>
                     ))}
                   </div>
@@ -355,13 +409,13 @@ export default function Header() {
 
           {/* Mobile CTA */}
           <div
-            className={cn("transition-all duration-500 mb-10", mobileOpen ? "opacity-100" : "opacity-0")}
-            style={{ transitionDelay: mobileOpen ? "380ms" : "0ms" }}
+            className={cn("transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
+            style={{ marginBottom: "40px", transitionDelay: mobileOpen ? "380ms" : "0ms" }}
           >
             <a
               href="#showrooms"
               onClick={() => setMobileOpen(false)}
-              className="inline-block text-[0.65rem] font-medium tracking-[0.15em] uppercase px-6 py-3 border border-[var(--accent-light)]/30 text-[var(--accent-light)] hover:border-[var(--accent-light)] transition-all duration-300"
+              className="inline-block text-[0.65rem] font-medium tracking-[0.15em] uppercase px-6 py-3 border border-accent-light/30 text-accent-light hover:border-accent-light transition-all duration-300"
             >
               Where to Buy
             </a>
@@ -372,7 +426,7 @@ export default function Header() {
             className={cn("transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
             style={{ transitionDelay: mobileOpen ? "450ms" : "0ms" }}
           >
-            <div className="space-y-2 body-sm text-[var(--ink-on-dark-muted)]">
+            <div className="space-y-2 body-sm text-ink-on-dark-muted">
               <p>info@primeceramics.com.np</p>
               <p>+977-1-5978860/61/62</p>
               <p>Tripureshwor, Kathmandu</p>
@@ -384,27 +438,27 @@ export default function Header() {
       {/* ─── Search Overlay ─── */}
       <div
         className={cn(
-          "fixed inset-0 z-[60] bg-[var(--bg)]/98 backdrop-blur-xl transition-opacity duration-400",
+          "fixed inset-0 z-[60] bg-surface/98 backdrop-blur-xl transition-opacity duration-400",
           searchOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
         <div className="container h-full flex flex-col items-center justify-center">
           <button
             onClick={() => setSearchOpen(false)}
-            className="absolute top-6 right-6 text-[var(--ink-light)] hover:text-[var(--ink)]"
+            className="absolute top-6 right-6 text-ink-light hover:text-ink"
             aria-label="Close search"
           >
             <X size={24} />
           </button>
 
-          <p className="eyebrow text-[var(--accent)] mb-6">Search</p>
+          <p className="eyebrow text-accent" style={{ marginBottom: "24px" }}>Search</p>
           <input
             type="text"
             placeholder="Search tiles, collections, finishes..."
-            className="w-full max-w-xl text-center text-2xl md:text-3xl font-serif font-light text-[var(--ink)] bg-transparent border-b border-[var(--ink-faint)] pb-4 outline-none placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] transition-colors"
+            className="w-full max-w-xl text-center text-2xl md:text-3xl font-serif font-light text-ink bg-transparent border-b border-ink-faint pb-4 outline-none placeholder:text-ink-muted focus:border-accent transition-colors"
             autoFocus={searchOpen}
           />
-          <p className="body-sm text-[var(--ink-muted)] mt-6">
+          <p className="body-sm text-ink-muted" style={{ marginTop: "24px" }}>
             Try: &ldquo;bathroom tiles&rdquo;, &ldquo;large format&rdquo;, &ldquo;porcelain&rdquo;
           </p>
         </div>

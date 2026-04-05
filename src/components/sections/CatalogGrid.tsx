@@ -20,7 +20,7 @@ function TileCard({ product }: { product: CatalogProduct }) {
   return (
     <div className="group">
       {/* Swatch — 4:5, labeled sample */}
-      <div className="relative aspect-[4/5] overflow-hidden mb-4">
+      <div className="relative aspect-[4/5] overflow-hidden" style={{ marginBottom: "16px" }}>
         <div
           className="absolute inset-0"
           style={{ background: `linear-gradient(155deg, hsl(${hue}, 12%, 89%), hsl(${hue}, 8%, 83%), hsl(${hue}, 5%, 79%))` }}
@@ -53,14 +53,14 @@ function TileCard({ product }: { product: CatalogProduct }) {
         </span>
 
         {/* Hover accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent)] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-left" />
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-left" />
       </div>
 
       {/* Info */}
-      <p className="text-[0.5rem] font-medium tracking-[0.18em] uppercase text-[var(--ink-muted)] mb-1">
+      <p className="text-[0.5rem] font-medium tracking-[0.18em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
         {product.size.replace(" mm", "")} / {product.series}
       </p>
-      <h3 className="font-serif font-light text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors duration-500 text-[0.95rem] leading-snug">
+      <h3 className="font-serif font-light text-ink group-hover:text-accent transition-colors duration-500 text-[0.95rem] leading-snug">
         {product.name}
       </h3>
     </div>
@@ -113,13 +113,13 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
   return (
     <div id="explorer">
       {/* Section header — per section-composer: eyebrow→heading→description */}
-      <section className="bg-[var(--bg-alt)] pt-[var(--section-gap)]">
+      <section className="bg-surface-alt" style={{ paddingTop: "clamp(80px, 10vw, 140px)" }}>
         <div className="container">
           <FadeIn>
-            <p className="eyebrow text-[var(--accent)] mb-4">All Products</p>
+            <p className="eyebrow text-accent" style={{ marginBottom: "16px" }}>All Products</p>
           </FadeIn>
           <FadeIn delay={0.06}>
-            <h2 className="h2 mb-6">Explore Every Tile</h2>
+            <h2 className="h2" style={{ marginBottom: "24px" }}>Explore Every Tile</h2>
           </FadeIn>
           <FadeIn delay={0.1}>
             <p className="body-lg max-w-lg">
@@ -130,7 +130,7 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
       </section>
 
       {/* Spacing: description → content = mb-10 md:mb-14 per spacing-rhythm */}
-      <div className="bg-[var(--bg-alt)] h-10 md:h-14" aria-hidden="true" />
+      <div className="bg-surface-alt" style={{ height: "clamp(40px, 5vw, 56px)" }} aria-hidden="true" />
 
       {/* Filter */}
       <CatalogFilter
@@ -142,11 +142,11 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
       />
 
       {/* Grid — per product-grid-master: 4/3/2 cols, gap-x-5 gap-y-8 min */}
-      <section className="bg-[var(--bg-alt)] section-pad">
+      <section className="bg-surface-alt" style={{ padding: "clamp(48px, 6vw, 80px) 0 clamp(100px, 12vw, 180px)" }}>
         <div className="container">
           {filtered.length > 0 ? (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8 md:gap-x-6 md:gap-y-10">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4" style={{ columnGap: "clamp(20px, 3vw, 24px)", rowGap: "clamp(32px, 4vw, 40px)" }}>
                 {visible.map((p, i) => (
                   <FadeIn key={p.slug} delay={Math.min(i * 0.02, 0.2)} direction="up" distance={12}>
                     <TileCard product={p} />
@@ -156,7 +156,7 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
 
               {/* Load More — per product-grid-master: centered, btn-line, mt-16 */}
               {more && (
-                <div className="mt-16 text-center">
+                <div style={{ marginTop: "64px", textAlign: "center" }}>
                   <button onClick={() => setCount((c) => c + BATCH)} className="btn-line">
                     Show More ({filtered.length - count})
                   </button>
@@ -165,9 +165,9 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
             </>
           ) : (
             /* Empty state — per product-grid-master */
-            <div className="py-24 text-center">
-              <p className="h3 text-[var(--ink-muted)] mb-3">No tiles found</p>
-              <p className="body-sm mb-8 max-w-xs mx-auto">
+            <div style={{ padding: "96px 0", textAlign: "center" }}>
+              <p className="h3 text-ink-muted" style={{ marginBottom: "16px" }}>No tiles found</p>
+              <p className="body-sm" style={{ marginBottom: "32px", maxWidth: "280px", marginLeft: "auto", marginRight: "auto" }}>
                 Adjust your filters or search to discover more surfaces.
               </p>
               <button

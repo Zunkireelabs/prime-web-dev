@@ -1,121 +1,138 @@
 "use client";
 
 import FadeIn from "@/components/animations/FadeIn";
-import SplitHeading from "@/components/animations/SplitHeading";
-import CountUp from "@/components/animations/CountUp";
-import { MapPin, ArrowRight, Globe, Users } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { dealers, dealerProvinces } from "@/data/dealers";
 
-const provinceCount = dealerProvinces.filter((p) => p !== "All").length;
+const provinces = dealerProvinces.filter((p) => p !== "All");
+const totalDealers = dealers.length;
+
+const dealersByProvince = provinces
+  .map((province) => ({
+    name: province,
+    count: dealers.filter((d) => d.province === province).length,
+  }))
+  .sort((a, b) => b.count - a.count);
 
 export default function DealerNetwork() {
   return (
     <section
-      className="section-padding"
-      style={{ backgroundColor: "var(--bg-dark)", color: "var(--ink-on-dark)" }}
+      className="relative overflow-hidden bg-surface-dark"
+      style={{ padding: "clamp(100px, 12vw, 180px) 0" }}
     >
-      <div className="container">
+      {/* Ambient warm glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 30% 0%, rgba(181,138,82,0.07) 0%, transparent 55%), radial-gradient(ellipse at 70% 100%, rgba(181,138,82,0.04) 0%, transparent 55%)",
+        }}
+      />
 
-        {/* ── Header ── */}
-        <div className="text-center mb-16 md:mb-20">
+      <div className="container relative z-10">
+
+        {/* ══ HEADER ══ */}
+        <div style={{ textAlign: "center", marginBottom: "56px" }}>
           <FadeIn>
-            <p className="eyebrow text-[var(--accent-light)] mb-4">
-              Dealer Network
-            </p>
+            <div className="flex items-center justify-center gap-4" style={{ marginBottom: "16px" }}>
+              <div className="w-10 h-px bg-accent-light/30" />
+              <p className="eyebrow text-accent-light">Dealer Network</p>
+              <div className="w-10 h-px bg-accent-light/30" />
+            </div>
           </FadeIn>
-          <SplitHeading as="h2" className="h1 text-white mb-6">
-            Find a Dealer Near You
-          </SplitHeading>
-          <FadeIn delay={0.2}>
-            <p className="body-lg text-white/50 max-w-xl mx-auto">
-              Our authorized dealers bring Prime Ceramics to every corner
-              of Nepal — {provinceCount} provinces, one standard of excellence.
-            </p>
-          </FadeIn>
-        </div>
 
-        {/* ── Stats Strip ── */}
-        <FadeIn delay={0.3}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 border-y border-white/10 py-10 md:py-12 mb-16 md:mb-20">
-            {[
-              { value: dealers.length, suffix: "+", label: "Authorized Dealers", icon: Users },
-              { value: provinceCount, suffix: "", label: "Provinces Covered", icon: Globe },
-              { value: dealers.length, suffix: "+", label: "Cities & Towns", icon: MapPin },
-              { value: 100, suffix: "%", label: "Nationwide Reach", icon: ArrowRight },
-            ].map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <div
-                  key={stat.label}
-                  className={`text-center md:px-8 ${
-                    i < 3 ? "md:border-r md:border-white/10" : ""
-                  }`}
-                >
-                  <Icon
-                    size={20}
-                    className="text-[var(--accent)] mx-auto mb-4"
-                    strokeWidth={1.5}
-                  />
-                  <p className="text-3xl md:text-4xl font-serif font-light text-white leading-none mb-2">
-                    <CountUp target={stat.value} suffix={stat.suffix} />
-                  </p>
-                  <p className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-white/40">
-                    {stat.label}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </FadeIn>
-
-        {/* ── Province Grid ── */}
-        <FadeIn delay={0.4}>
-          <p className="text-[0.6rem] font-medium tracking-[0.25em] uppercase text-white/30 mb-6 text-center">
-            Browse by Province
-          </p>
-        </FadeIn>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-16 md:mb-20">
-          {dealerProvinces
-            .filter((p) => p !== "All")
-            .map((province, i) => {
-              const count = dealers.filter(
-                (d) => d.province === province
-              ).length;
-              return (
-                <FadeIn key={province} delay={0.4 + i * 0.06} direction="up" distance={20}>
-                  <a
-                    href={`/dealers?province=${province}`}
-                    className="group block p-6 md:p-8 border border-white/8 hover:border-[var(--accent)]/40 hover:bg-white/[0.03] transition-all duration-500 text-center"
-                  >
-                    <MapPin
-                      size={22}
-                      className="text-[var(--accent)] mx-auto mb-4 opacity-60 group-hover:opacity-100 transition-opacity duration-300"
-                      strokeWidth={1.5}
-                    />
-                    <h3 className="text-[1rem] md:text-[1.1rem] font-serif font-light text-white group-hover:text-[var(--accent-light)] transition-colors duration-300 mb-2">
-                      {province}
-                    </h3>
-                    <p className="text-[0.7rem] font-medium tracking-[0.15em] uppercase text-white/35 group-hover:text-white/60 transition-colors duration-300">
-                      {count} Dealers
-                    </p>
-                  </a>
-                </FadeIn>
-              );
-            })}
-        </div>
-
-        {/* ── CTA ── */}
-        <FadeIn delay={0.7}>
-          <div className="text-center">
-            <a
-              href="/dealers"
-              className="inline-flex items-center gap-3 px-10 py-4 text-[0.7rem] font-medium tracking-[0.2em] uppercase bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] transition-all duration-500 hover:shadow-[0_4px_20px_rgba(139,101,66,0.3)]"
+          <FadeIn delay={0.06}>
+            <h2
+              className="h1 text-white"
+              style={{ textAlign: "center", marginBottom: "32px", textWrap: "balance" }}
             >
-              View All Dealers <ArrowRight size={14} />
-            </a>
+              Find a Dealer Near You
+            </h2>
+          </FadeIn>
+
+          <FadeIn delay={0.1}>
+            <p
+              className="body-lg text-ink-on-dark"
+              style={{
+                textAlign: "center",
+                maxWidth: "640px",
+                marginLeft: "auto",
+                marginRight: "auto",
+                marginBottom: "48px",
+                textWrap: "balance",
+              }}
+            >
+              Our authorized dealers bring Prime Ceramics to every
+              corner of Nepal — {provinces.length} provinces, one standard of excellence.
+            </p>
+          </FadeIn>
+
+          <FadeIn delay={0.12}>
+            <div className="gold-divider-center" />
+          </FadeIn>
+        </div>
+
+        {/* ══ PROVINCE CARDS ══ */}
+        <FadeIn delay={0.15}>
+          <div
+            className="flex flex-wrap justify-center"
+            style={{ gap: "40px 32px" }}
+          >
+            {dealersByProvince.map((province) => (
+              <a
+                key={province.name}
+                href={`/dealers?province=${province.name}`}
+                className="group relative block border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/20 transition-all duration-300 cursor-pointer overflow-hidden"
+                style={{
+                  textAlign: "center",
+                  width: "calc(25% - 24px)",
+                  minWidth: "260px",
+                  padding: "56px 40px",
+                }}
+              >
+                {/* Bottom accent line on hover */}
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+
+                <h3
+                  className="font-serif font-light text-white group-hover:text-accent-light transition-colors duration-300 leading-tight"
+                  style={{ fontSize: "clamp(1.3rem, 1.6vw, 1.55rem)", marginBottom: "16px" }}
+                >
+                  {province.name}
+                </h3>
+
+                <p className="text-[0.75rem] font-medium tracking-[0.22em] uppercase text-white/30 group-hover:text-white/55 transition-colors duration-300">
+                  {province.count} {province.count === 1 ? "Dealer" : "Dealers"}
+                </p>
+              </a>
+            ))}
           </div>
         </FadeIn>
+
+        {/* ══ CTA ══ */}
+        <div style={{ marginTop: "80px" }}>
+          <div
+            className="bg-gradient-to-r from-transparent via-white/[0.08] to-transparent"
+            style={{ height: "1px", marginBottom: "56px" }}
+          />
+
+          <FadeIn delay={0.2}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+              <p className="eyebrow text-accent-light" style={{ marginBottom: "32px" }}>
+                Explore the Network
+              </p>
+              <a href="/dealers" className="btn-gold group">
+                View All Dealers
+                <ArrowRight
+                  size={13}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </a>
+              <p className="body-sm text-ink-on-dark-light/40" style={{ marginTop: "32px" }}>
+                {totalDealers} authorized dealers across Nepal
+              </p>
+            </div>
+          </FadeIn>
+        </div>
 
       </div>
     </section>

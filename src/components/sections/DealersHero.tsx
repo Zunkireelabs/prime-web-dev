@@ -35,8 +35,8 @@ export default function DealersHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[var(--bg-dark)]"
-      style={{ minHeight: "50vh", maxHeight: "70vh", height: "60vh" }}
+      className="relative overflow-hidden bg-surface-dark"
+      style={{ minHeight: "55vh", maxHeight: "75vh", height: "65vh" }}
     >
       {/* Parallax background image */}
       <img
@@ -53,33 +53,33 @@ export default function DealersHero() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
 
       {/* Content — left-aligned, bottom-weighted */}
-      <div className="container relative z-10 h-full flex flex-col justify-end pb-12 md:pb-16 lg:pb-20">
+      <div className="container relative z-10 h-full flex flex-col justify-end" style={{ paddingBottom: "clamp(80px, 8vw, 120px)" }}>
         <FadeIn>
-          <p className="eyebrow text-[var(--accent-light)] mb-4">
+          <p className="eyebrow text-accent-light" style={{ marginBottom: "16px" }}>
             Dealer Network
           </p>
         </FadeIn>
 
         <FadeIn delay={0.08}>
-          <h1 className="h1 text-white mb-5 max-w-2xl">
+          <h1 className="h1 text-white max-w-2xl" style={{ marginBottom: "24px" }}>
             Find an Authorized<br />
             <span className="text-white/70">Dealer Near You</span>
           </h1>
         </FadeIn>
 
         <FadeIn delay={0.14}>
-          <p className="body-lg text-white/50 max-w-lg mb-8 leading-relaxed">
+          <p className="body-lg text-white/50 max-w-lg leading-relaxed" style={{ marginBottom: "40px" }}>
             Explore our network of trusted dealers across Nepal. Each one
             carries the full range of Prime Ceramics collections.
           </p>
         </FadeIn>
 
         <FadeIn delay={0.2}>
-          <div className="flex items-center gap-6">
+          <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
             <a href="#dealers-grid" className="link-arrow text-white/80 hover:text-white">
               Browse Dealers <ArrowRight size={12} />
             </a>
-            <div className="h-4 w-px bg-white/20" />
+            <div style={{ height: "16px", width: "1px", background: "rgba(255,255,255,0.2)" }} />
             <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-white/35">
               <CountUp target={dealers.length} suffix="+" /> Dealers &middot; {nepalProvinces.length} Provinces
             </span>

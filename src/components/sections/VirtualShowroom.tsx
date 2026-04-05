@@ -75,12 +75,12 @@ export default function VirtualShowroom() {
   };
 
   return (
-    <section className="bg-[var(--bg-dark)] section-pad overflow-hidden relative">
+    <section className="bg-surface-dark overflow-hidden relative" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
       {/* Dynamic Background Glow - follows mouse slightly */}
       <div 
         className="absolute w-[1000px] h-[1000px] rounded-full blur-[150px] pointer-events-none transition-all duration-1000 ease-out"
         style={{
-          background: "radial-gradient(circle, var(--accent) 0%, transparent 70%)",
+          background: "radial-gradient(circle, var(--color-accent) 0%, transparent 70%)",
           opacity: isHovering ? 0.12 : 0.05,
           left: `calc(70% + ${mousePos.x * 50}px)`,
           top: `calc(50% + ${mousePos.y * 50}px)`,
@@ -89,30 +89,30 @@ export default function VirtualShowroom() {
       />
 
       <div className="container relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: "64px", columnGap: "80px" }}>
           
           {/* ─── LEFT: Typography & Interface ─── */}
           <div className="lg:col-span-5 relative z-20">
             <FadeIn>
-              <div className="flex items-center gap-3 mb-8">
+              <div className="flex items-center" style={{ gap: "16px", marginBottom: "24px" }}>
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
                 </span>
-                <p className="eyebrow text-[var(--accent-light)]">
+                <p className="eyebrow text-accent-light">
                   VR INTERFACE // ACTIVE
                 </p>
               </div>
             </FadeIn>
 
             <FadeIn delay={0.1}>
-              <h2 className="font-serif font-light italic text-white leading-[1.05] tracking-[-0.025em] mb-8" style={{ fontSize: "clamp(3.5rem, 6vw, 5.5rem)" }}>
-                Virtual <br /> <span className="text-[var(--accent-light)] not-italic">Showroom</span>
+              <h2 className="font-serif font-light italic text-white leading-[1.05] tracking-[-0.025em]" style={{ fontSize: "clamp(3.5rem, 6vw, 5.5rem)", marginBottom: "40px" }}>
+                Virtual <br /> <span className="text-accent-light not-italic">Showroom</span>
               </h2>
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <div className="border-l-2 border-[var(--accent)]/30 pl-6 mb-10 bg-gradient-to-r from-white/5 to-transparent py-4 rounded-r-lg">
+              <div className="border-l-2 border-accent/30 bg-gradient-to-r from-white/5 to-transparent rounded-r-lg" style={{ paddingLeft: "32px", marginBottom: "48px", paddingTop: "24px", paddingBottom: "24px" }}>
                 <p className="body-lg text-white/90 max-w-md leading-relaxed font-light">
                   Step inside our spaces before they exist. 
                   Experience Prime Ceramics through an immersive, high-fidelity lens. 
@@ -122,9 +122,9 @@ export default function VirtualShowroom() {
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <div className="flex flex-wrap items-center gap-8">
-                <a href="/dealers" className="group relative inline-flex items-center gap-4 px-8 py-4 bg-[var(--accent)] text-white overflow-hidden transition-all duration-500 hover:pr-12">
-                  <span className="relative z-10 flex items-center gap-3 text-[0.7rem] font-bold tracking-[0.2em] uppercase">
+              <div className="flex flex-wrap items-center" style={{ gap: "32px" }}>
+                <a href="/dealers" className="group relative inline-flex items-center gap-4 px-8 py-4 bg-accent text-white overflow-hidden transition-all duration-500 hover:pr-12">
+                  <span className="relative z-10 flex items-center gap-4 text-[0.7rem] font-bold tracking-[0.2em] uppercase">
                     <Play size={14} fill="currentColor" /> Initialize 360°
                   </span>
                   <ArrowRight size={16} className="absolute right-4 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500" />
@@ -138,15 +138,15 @@ export default function VirtualShowroom() {
             </FadeIn>
             
             <FadeIn delay={0.4}>
-              <div className="mt-16 grid grid-cols-2 gap-10 border-t border-white/10 pt-8">
+              <div className="grid grid-cols-2 border-t border-white/10" style={{ marginTop: "48px", gap: "48px", paddingTop: "32px" }}>
                 <div>
-                  <p className="text-[0.55rem] uppercase tracking-[0.3em] text-[var(--accent-light)] mb-2 flex items-center gap-2 font-bold">
+                  <p className="text-[0.55rem] uppercase tracking-[0.3em] text-accent-light mb-2 flex items-center gap-2 font-bold">
                     <MapPin size={10}/> COORDINATES
                   </p>
                   <p className="font-serif text-white text-lg tracking-wider">27.7172° N, 85.3240° E</p>
                 </div>
                 <div>
-                  <p className="text-[0.55rem] uppercase tracking-[0.3em] text-[var(--accent-light)] mb-2 flex items-center gap-2 font-bold">
+                  <p className="text-[0.55rem] uppercase tracking-[0.3em] text-accent-light mb-2 flex items-center gap-2 font-bold">
                     <Crosshair size={10}/> RENDER MODE
                   </p>
                   <p className="font-serif text-white text-lg tracking-wider">ULTRA-HD RT</p>
@@ -172,8 +172,7 @@ export default function VirtualShowroom() {
                 } as React.CSSProperties}
               >
                 {/* Outter Glass Glow */}
-                <div className={`absolute inset-[-20px] rounded-[60px] blur-[40px] transition-opacity duration-700 ${isHovering ? "opacity-20" : "opacity-0"}`} 
-                     style={{ background: "var(--accent)" }} />
+                <div className={`absolute inset-[-20px] rounded-[60px] blur-[40px] transition-opacity duration-700 bg-accent ${isHovering ? "opacity-20" : "opacity-0"}`} />
 
                 {/* 3D Wrapper */}
                 <div 
@@ -219,7 +218,7 @@ export default function VirtualShowroom() {
                     </defs>
 
                     {/* Solid Dark Border around lenses - perfectly matched to bg-dark */}
-                    <path d={INVERTED_MASK} fill="var(--bg-dark)" fillRule="evenodd" />
+                    <path d={INVERTED_MASK} fill="var(--color-surface-dark)" fillRule="evenodd" />
                     
                     {/* Lens Reflective Layer */}
                     <path d={VR_MASK_PATH} fill="url(#lensGradient)" />
@@ -236,7 +235,7 @@ export default function VirtualShowroom() {
                     <path
                       d={VR_MASK_PATH}
                       fill="none"
-                      stroke="var(--accent)"
+                      stroke="var(--color-accent)"
                       strokeWidth="1.5"
                       style={{ 
                         opacity: isHovering ? 0.8 : 0.3,
@@ -248,20 +247,20 @@ export default function VirtualShowroom() {
                     {/* HUD Elements - Left Lens */}
                     <g className={`transition-all duration-500 ${isHovering ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
                       {/* Reticle */}
-                      <circle cx="350" cy="200" r="30" fill="none" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="2 6" />
-                      <path d="M 335 200 L 365 200 M 350 185 L 350 215" stroke="var(--accent)" strokeWidth="1" />
-                      <text x="310" y="245" fill="var(--accent)" fontSize="8" fontFamily="monospace" fontWeight="bold">LOCK_ON // P-01</text>
+                      <circle cx="350" cy="200" r="30" fill="none" stroke="var(--color-accent)" strokeWidth="0.5" strokeDasharray="2 6" />
+                      <path d="M 335 200 L 365 200 M 350 185 L 350 215" stroke="var(--color-accent)" strokeWidth="1" />
+                      <text x="310" y="245" fill="var(--color-accent)" fontSize="8" fontFamily="monospace" fontWeight="bold">LOCK_ON // P-01</text>
                     </g>
 
                     {/* HUD Elements - Right Lens */}
                     <g className={`transition-all duration-500 ${isHovering ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
                       {/* Technical brackets */}
-                      <path d="M 1000 120 L 1050 120 M 1000 120 L 1000 140" fill="none" stroke="var(--accent)" strokeWidth="1.5" />
-                      <path d="M 1150 280 L 1100 280 M 1150 280 L 1150 260" fill="none" stroke="var(--accent)" strokeWidth="1.5" />
+                      <path d="M 1000 120 L 1050 120 M 1000 120 L 1000 140" fill="none" stroke="var(--color-accent)" strokeWidth="1.5" />
+                      <path d="M 1150 280 L 1100 280 M 1150 280 L 1150 260" fill="none" stroke="var(--color-accent)" strokeWidth="1.5" />
                       
                       {/* Data Stream */}
                       <rect x="1030" y="240" width="80" height="2" fill="rgba(255,255,255,0.1)" />
-                      <rect x="1030" y="240" width="45" height="2" fill="var(--accent)">
+                      <rect x="1030" y="240" width="45" height="2" fill="var(--color-accent)">
                          <animate attributeName="width" values="0;80;45" dur="3s" repeatCount="indefinite" />
                       </rect>
                       <text x="1030" y="235" fill="white" fontSize="9" fontFamily="monospace" opacity="0.6">TILE_DENSITY_SCAN</text>
@@ -269,7 +268,7 @@ export default function VirtualShowroom() {
 
                     {/* Center 360 Badge */}
                     <g className="transition-transform duration-500" style={{ transform: isHovering ? "translateY(-5px)" : "none" }}>
-                      <circle cx="700" cy="360" r="22" fill="rgba(0,0,0,0.8)" stroke="var(--accent)" strokeWidth="1" />
+                      <circle cx="700" cy="360" r="22" fill="rgba(0,0,0,0.8)" stroke="var(--color-accent)" strokeWidth="1" />
                       <text x="700" y="364" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold" letterSpacing="0.05em">360°</text>
                     </g>
                   </svg>
@@ -297,21 +296,19 @@ export default function VirtualShowroom() {
                     }}
                   >
                     <span
-                      className="absolute"
+                      className="absolute bg-accent"
                       style={{
                         height: 2,
                         width: 30,
-                        background: "var(--accent)",
                         ...(pos.includes("t") ? { top: 0 } : { bottom: 0 }),
                         ...(pos.includes("l") ? { left: 0 } : { right: 0 }),
                       }}
                     />
                     <span
-                      className="absolute"
+                      className="absolute bg-accent"
                       style={{
                         width: 2,
                         height: 30,
-                        background: "var(--accent)",
                         ...(pos.includes("t") ? { top: 0 } : { bottom: 0 }),
                         ...(pos.includes("l") ? { left: 0 } : { right: 0 }),
                       }}

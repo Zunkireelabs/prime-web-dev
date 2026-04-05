@@ -50,12 +50,15 @@ function CatalogContent() {
         <CatalogHero />
         <SectionTransition from="dark" to="light" variant="diagonal" />
         <CatalogShowcase onViewCollection={handleViewCollection} />
+        <SectionTransition from="light" to="dark" variant="wave" />
         <CatalogStats />
+        <SectionTransition from="dark" to="light-alt" variant="wave" />
         <div ref={gridRef}>
           <CatalogGrid initialSize={activeFilter} />
         </div>
+        <SectionTransition from="light-alt" to="red" variant="diagonal" />
         <CTASection />
-        <SectionTransition from="light" to="dark" variant="wave" />
+        <SectionTransition from="red" to="dark" variant="wave" />
       </main>
       <Footer />
     </SmoothScroll>

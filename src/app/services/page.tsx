@@ -13,10 +13,10 @@ export default function ServicesPage() {
   return (
     <SmoothScroll>
       <Header />
-      <main id="main-content" className="pt-24">
+      <main id="main-content" style={{ paddingTop: "96px" }}>
         <CollectionsGrid />
         <CTASection />
-        <SectionTransition from="light" to="dark" variant="wave" />
+        <SectionTransition from="red" to="dark" variant="wave" />
       </main>
       <Footer />
     </SmoothScroll>
