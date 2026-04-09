@@ -21,6 +21,11 @@ fi
 echo "1. Building Next.js App..."
 npm install
 
+# Load env vars for Sanity data generation
+if [ -f .env.local ]; then
+    export $(grep -v '^#' .env.local | xargs)
+fi
+
 echo "1b. Fetching catalog data from Sanity..."
 npx tsx scripts/generate-catalog-data.ts
 
