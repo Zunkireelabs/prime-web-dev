@@ -49,7 +49,7 @@ export default function SoundInvitation({ onEnable, onDismiss }: SoundInvitation
         transition: "all 0.3s linear",
       }}
     >
-      <div className="bg-white/[0.07] backdrop-blur-xl border border-white/[0.08] px-6 py-4 md:px-8 md:py-5 flex items-center gap-5 md:gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+      <div className="bg-white/[0.07] backdrop-blur-xl border border-white/[0.08] px-6 py-4 md:px-8 md:py-5 flex items-center gap-6 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
         {/* Animated sound wave icon */}
         <button
           onClick={handleEnable}

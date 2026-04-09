@@ -1,4 +1,4 @@
-import type { Collection, ProductCategory, BrowseData, CategoryStrip } from "./types";
+import type { Collection, ProductCategory, BrowseData } from "./types";
 
 // ── Collections (used in CollectionsGrid, CollectionsStrip marquee) ──
 
@@ -100,13 +100,3 @@ export const browseData: BrowseData = {
   ],
 };
 
-// ── Category Strip (used in CollectionStrip) ──
-
-export const categoryStrips: CategoryStrip[] = [
-  { name: "Porcelain", count: "48 designs", image: "/images/services/service-1.jpg" },
-  { name: "Natural Stone", count: "32 designs", image: "/images/services/service-2.jpg" },
-  { name: "Wood Effect", count: "24 designs", image: "/images/services/service-3.jpg" },
-  { name: "Concrete Effect", count: "18 designs", image: "/images/services/service-4.jpg" },
-  { name: "Large Format", count: "36 designs", image: "/images/services/service-5.jpg" },
-  { name: "Mosaics", count: "28 designs", image: "/images/services/service-6.jpg" },
-];

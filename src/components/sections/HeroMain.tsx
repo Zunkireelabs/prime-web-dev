@@ -147,7 +147,7 @@ export default function HeroMain() {
           {/* Eyebrow */}
           <div className="flex items-center justify-center gap-4" style={{ marginBottom: "24px" }}>
             <div className="w-10 h-[1px] bg-accent/40" />
-            <p className="text-[0.6rem] font-medium tracking-[0.4em] uppercase text-accent-light">
+            <p className="text-[0.65rem] md:text-[0.6rem] font-medium tracking-[0.4em] uppercase text-accent-light">
               {slide.collection}
             </p>
             <div className="w-10 h-[1px] bg-accent/40" />
@@ -160,7 +160,7 @@ export default function HeroMain() {
             {slide.tagline}
           </h1>
 
-          <p className="text-white/35 text-[0.85rem] font-light tracking-wide leading-relaxed" style={{ marginBottom: "48px", maxWidth: "480px", marginLeft: "auto", marginRight: "auto" }}>
+          <p className="text-white/35 text-[0.9rem] md:text-[0.85rem] font-light tracking-wide leading-relaxed" style={{ marginBottom: "48px", maxWidth: "480px", marginLeft: "auto", marginRight: "auto" }}>
             Premium ceramics for extraordinary spaces
           </p>
 
@@ -207,7 +207,7 @@ export default function HeroMain() {
                 <button
                   key={i}
                   onClick={() => goTo(i)}
-                  className={`relative text-[0.6rem] md:text-[0.65rem] font-medium tracking-[0.25em] uppercase transition-all duration-500 pb-3 ${
+                  className={`relative text-[0.7rem] md:text-[0.65rem] font-medium tracking-[0.25em] uppercase transition-all duration-500 pb-3 ${
                     i === current
                       ? "text-white"
                       : "text-white/20 hover:text-white/45"

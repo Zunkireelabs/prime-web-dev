@@ -8,8 +8,7 @@ import Footer from "@/components/layout/Footer";
 import DealersHero from "@/components/sections/DealersHero";
 
 const SectionTransition = dynamic(() => import("@/components/ui/SectionTransition"), { ssr: false });
-const NepalMap = dynamic(() => import("@/components/sections/NepalMap"), { ssr: false });
-const DealersGrid = dynamic(() => import("@/components/sections/DealersGrid"), { ssr: false });
+const DealersExplorer = dynamic(() => import("@/components/sections/DealersExplorer"), { ssr: false });
 const CTASection = dynamic(() => import("@/components/sections/CTASection"), { ssr: false });
 
 export default function DealersPage() {
@@ -20,17 +19,13 @@ export default function DealersPage() {
       <Header />
       <main id="main-content">
         <DealersHero />
-        <NepalMap
-          activeProvince={activeProvince}
-          onProvinceSelect={setActiveProvince}
-        />
-        <SectionTransition from="light" to="light" variant="mosaic" />
-        <DealersGrid
+        <SectionTransition from="dark" to="light" variant="diagonal" />
+        <DealersExplorer
           activeProvince={activeProvince}
           onProvinceChange={setActiveProvince}
         />
+        <SectionTransition from="light" to="dark" variant="diagonal" />
         <CTASection />
-        <SectionTransition from="light" to="dark" variant="wave" />
       </main>
       <Footer />
     </SmoothScroll>

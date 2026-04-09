@@ -23,25 +23,34 @@ export default function BrowseBy() {
       <div className="container">
         {/* Header + Pill tabs in one row */}
         <FadeIn>
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between" style={{ gap: "24px", marginBottom: "48px" }}>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between" style={{ gap: "24px", marginBottom: "48px" }}>
             <div>
               <p className="eyebrow text-accent" style={{ marginBottom: "16px" }}>Browse Tiles</p>
               <h2 className="h2">Explore By Category</h2>
             </div>
 
-            {/* Pill tabs */}
-            <div className="flex flex-wrap" style={{ gap: "16px" }}>
+            {/* Filter tabs */}
+            <div className="flex flex-wrap" style={{ gap: "8px" }}>
               {tabs.map((tab) => {
                 const isActive = tab === active;
                 return (
                   <button
                     key={tab}
                     onClick={() => switchTab(tab)}
-                    className={`px-5 py-2.5 text-[0.65rem] font-medium tracking-[0.12em] uppercase transition-all duration-500 border ${
-                      isActive
-                        ? "bg-ink text-surface border-ink shadow-[0_2px_10px_rgba(0,0,0,0.1)]"
-                        : "bg-transparent text-ink-muted border-ink-faint"
-                    }`}
+                    style={{
+                      padding: "10px 24px",
+                      fontSize: "0.6rem",
+                      fontWeight: 500,
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      borderRadius: "100px",
+                      border: "1px solid",
+                      borderColor: isActive ? "var(--color-accent)" : "rgba(61, 58, 54, 0.15)",
+                      background: isActive ? "var(--color-accent)" : "transparent",
+                      color: isActive ? "#fff" : "var(--color-ink-light)",
+                      transition: "all 0.3s linear",
+                      cursor: "pointer",
+                    }}
                   >
                     {tab}
                   </button>

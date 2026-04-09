@@ -153,7 +153,7 @@ export default function AboutHero() {
             { label: "Established", value: "2021" },
             { label: "Technology", value: "SACMI" },
             { label: "Capacity", value: "4M sq m" },
-            { label: "Dealers", value: "120+" },
+            { label: "Dealers", value: "200+" },
           ].map((f, i) => (
             <div key={f.label} className={`fact-item opacity-0 ${i > 0 ? "border-l border-accent/10" : ""} group hover:bg-white/[0.02] transition-colors duration-300`} style={{ padding: "clamp(24px, 3vw, 32px) 0", textAlign: "center" }}>
               <p className="text-[0.5rem] font-medium tracking-[0.3em] uppercase text-accent-light/50" style={{ marginBottom: "8px" }}>{f.label}</p>

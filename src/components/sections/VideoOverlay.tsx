@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Volume2, VolumeX, ChevronDown } from "lucide-react";
+import { Volume2, VolumeX, ChevronDown, X } from "lucide-react";
 
 export default function VideoOverlay() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -100,8 +100,10 @@ export default function VideoOverlay() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen w-full overflow-hidden bg-[var(--bg-dark)]"
+      className="relative w-full overflow-hidden bg-surface-dark"
+      style={{ height: "100svh" }}
     >
+      {/* Desktop: cover fills viewport. Mobile: contain shows full video, centered vertically */}
       <video
         ref={videoRef}
         autoPlay
@@ -110,7 +112,8 @@ export default function VideoOverlay() {
         playsInline
         preload="auto"
         onLoadedData={() => setLoaded(true)}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${loaded ? "opacity-100" : "opacity-0"}`}
+        onPause={() => !dismissed && videoRef.current?.play().catch(() => {})}
+        className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${loaded ? "opacity-100" : "opacity-0"}`}
         poster="/images/hero/hero-bg.jpg"
       >
         <source src="/video/hero.mp4" type="video/mp4" />
@@ -119,22 +122,39 @@ export default function VideoOverlay() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-      {/* Controls */}
-      <div className="absolute bottom-8 right-8 z-10 flex flex-col items-center gap-3">
+      {/* Responsive video fit */}
+      <style jsx>{`
+        video {
+          object-fit: contain;
+          object-position: center center;
+        }
+        @media (min-width: 768px) {
+          video {
+            object-fit: cover;
+          }
+        }
+      `}</style>
+
+      {/* Skip Video — top right, below header */}
+      <div className="absolute z-10" style={{ top: "clamp(80px, 10vw, 110px)", right: "clamp(16px, 3vw, 32px)" }}>
+        <button
+          onClick={dismiss}
+          className="flex items-center bg-black/40 backdrop-blur-md border border-white/15 text-white/70 hover:text-white hover:border-white/30 hover:bg-black/60 transition-all duration-300"
+          style={{ gap: "8px", padding: "10px 20px" }}
+        >
+          <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase">Skip Video</span>
+          <X size={14} strokeWidth={1.5} />
+        </button>
+      </div>
+
+      {/* Sound toggle — bottom right */}
+      <div className="absolute z-10" style={{ bottom: "32px", right: "clamp(16px, 3vw, 32px)" }}>
         <button
           onClick={toggleSound}
           className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 transition-all duration-300 bg-black/20 backdrop-blur-sm"
           aria-label={muted ? "Unmute" : "Mute"}
         >
           {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-        </button>
-
-        <button
-          onClick={scrollDown}
-          className="flex flex-col items-center gap-1 text-white/30 hover:text-white/60 transition-colors"
-        >
-          <span className="text-[0.45rem] tracking-[0.2em] uppercase">Scroll</span>
-          <ChevronDown size={14} className="animate-bounce" />
         </button>
       </div>
     </section>

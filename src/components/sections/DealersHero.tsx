@@ -36,7 +36,7 @@ export default function DealersHero() {
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-surface-dark"
-      style={{ minHeight: "55vh", maxHeight: "75vh", height: "65vh" }}
+      style={{ minHeight: "40vh", maxHeight: "55vh", height: "50vh" }}
     >
       {/* Parallax background image */}
       <img
@@ -53,7 +53,7 @@ export default function DealersHero() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
 
       {/* Content — left-aligned, bottom-weighted */}
-      <div className="container relative z-10 h-full flex flex-col justify-end" style={{ paddingBottom: "clamp(80px, 8vw, 120px)" }}>
+      <div className="container relative z-10 h-full flex flex-col justify-center" style={{ paddingTop: "clamp(80px, 10vw, 120px)" }}>
         <FadeIn>
           <p className="eyebrow text-accent-light" style={{ marginBottom: "16px" }}>
             Dealer Network

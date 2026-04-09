@@ -224,14 +224,6 @@ export interface NavItem {
   dropdown?: NavDropdownLink[];
 }
 
-// ── Category Strip ──
-
-export interface CategoryStrip {
-  name: string;
-  count: string;
-  image: string;
-}
-
 // ── Nepal Map ──
 
 export interface ProvinceMapPath {

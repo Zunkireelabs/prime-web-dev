@@ -26,25 +26,3 @@ export const showrooms: Showroom[] = [
   },
 ];
 
-// ── Locations (Showrooms component — office, factory, dealers) ──
-
-export const locations: Showroom[] = [
-  {
-    name: "Corporate Office",
-    city: "Kathmandu",
-    address: "Level 4, Saket Complex, Tripureshwor",
-    image: "/images/locations/location-1.jpg",
-  },
-  {
-    name: "Factory",
-    city: "Rautahat",
-    address: "Sakhuwa Dhamaura, Brindavan Municipality-6",
-    image: "/images/locations/location-2.jpg",
-  },
-  {
-    name: "Dealer Network",
-    city: "Nationwide",
-    address: "Authorized dealers across Nepal",
-    image: "/images/locations/location-3.jpg",
-  },
-];

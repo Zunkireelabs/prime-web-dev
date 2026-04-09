@@ -16,7 +16,6 @@ export default function ServicesPage() {
       <main id="main-content" style={{ paddingTop: "96px" }}>
         <CollectionsGrid />
         <CTASection />
-        <SectionTransition from="red" to="dark" variant="wave" />
       </main>
       <Footer />
     </SmoothScroll>

@@ -12,9 +12,9 @@ import { spiritItems } from "@/data/spirit";
 gsap.registerPlugin(ScrollTrigger);
 
 const locationMap: Record<string, string> = {
-  "Lumbini White": "Lumbini, Nepal",
-  "Kathmandu Clay": "Kathmandu Valley",
-  "Everest Slate": "Sagarmatha, Nepal",
+  "Palpali Dhaka": "Palpa, Nepal",
+  "Thangka Art": "Kathmandu Valley",
+  "Mithila Art": "Janakpur, Nepal",
 };
 
 export default function SpiritSection() {
@@ -58,7 +58,7 @@ export default function SpiritSection() {
 
       <div className="container relative z-10">
         {/* ── Two-column header ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-end" style={{ gap: "40px", columnGap: "80px", marginBottom: "64px" }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-end" style={{ gap: "clamp(28px, 5vw, 40px)", columnGap: "clamp(40px, 6vw, 80px)", marginBottom: "clamp(40px, 6vw, 64px)" }}>
           {/* Left — Display heading */}
           <div>
             <ScrollReveal from={{ y: 20, opacity: 0 }} to={{ y: 0, opacity: 1 }} start="top 88%" end="top 65%">
@@ -96,7 +96,7 @@ export default function SpiritSection() {
         </ScrollReveal>
 
         {/* ── Tile Cards ── */}
-        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: "32px" }}>
+        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: "clamp(24px, 4vw, 32px)" }}>
           {spiritItems.map((item) => {
             const location = locationMap[item.name] || "Nepal";
 

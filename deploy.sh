@@ -20,6 +20,10 @@ fi
 
 echo "1. Building Next.js App..."
 npm install
+
+echo "1b. Fetching catalog data from Sanity..."
+npx tsx scripts/generate-catalog-data.ts
+
 rm -rf .next out
 npm run build
 

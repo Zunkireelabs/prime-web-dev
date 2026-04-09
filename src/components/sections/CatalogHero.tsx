@@ -30,7 +30,7 @@ export default function CatalogHero() {
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-surface-dark"
-      style={{ minHeight: "60vh", maxHeight: "80vh", height: "70vh" }}
+      style={{ minHeight: "65vh", maxHeight: "80vh", height: "70vh" }}
     >
       {/* Room scene — parallax, full coverage */}
       <img
@@ -62,7 +62,7 @@ export default function CatalogHero() {
       />
 
       {/* Content — left-aligned, bottom-weighted */}
-      <div className="container relative z-10 h-full flex flex-col justify-end" style={{ paddingBottom: "clamp(80px, 8vw, 120px)" }}>
+      <div className="container relative z-10 h-full flex flex-col justify-end" style={{ paddingTop: "120px", paddingBottom: "clamp(60px, 6vw, 90px)" }}>
         <FadeIn>
           <div className="flex items-center" style={{ gap: "16px", marginBottom: "16px" }}>
             <div className="w-10 h-px bg-accent-light/50" />
@@ -82,7 +82,7 @@ export default function CatalogHero() {
 
         <FadeIn delay={0.16}>
           <p className="body-lg text-white/90 max-w-lg leading-relaxed" style={{ marginBottom: "40px" }}>
-            Five catalogs, 395+ designs. Browse our complete range of ceramic,
+            Six catalogs, 490+ designs. Browse our complete range of ceramic,
             vitrified, and large format tiles — including the exclusive Spirit of Nepal
             heritage collection.
           </p>
@@ -96,7 +96,7 @@ export default function CatalogHero() {
             </a>
             <div style={{ height: "16px", width: "1px", background: "rgba(255,255,255,0.25)" }} />
             <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-white/60">
-              5 Catalogs · 395+ Designs
+              6 Catalogs · 490+ Designs
             </span>
           </div>
         </FadeIn>

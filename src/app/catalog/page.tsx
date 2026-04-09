@@ -56,9 +56,8 @@ function CatalogContent() {
         <div ref={gridRef}>
           <CatalogGrid initialSize={activeFilter} />
         </div>
-        <SectionTransition from="light-alt" to="red" variant="diagonal" />
+        <SectionTransition from="light-alt" to="dark" variant="diagonal" />
         <CTASection />
-        <SectionTransition from="red" to="dark" variant="wave" />
       </main>
       <Footer />
     </SmoothScroll>

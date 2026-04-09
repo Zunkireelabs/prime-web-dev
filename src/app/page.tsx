@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import LoadingScreen from "@/components/ui/LoadingScreen";
 import VideoOverlay from "@/components/sections/VideoOverlay";
 import HeroMain from "@/components/sections/HeroMain";
 import BrandIntro from "@/components/sections/BrandIntro";
@@ -25,7 +24,6 @@ const DealerNetwork = dynamic(() => import("@/components/sections/DealerNetwork"
 export default function Home() {
   return (
     <SmoothScroll>
-      <LoadingScreen />
       <Header />
 
       <main id="main-content">
@@ -40,48 +38,39 @@ export default function Home() {
         <FindBySpace />
         <ProductShowcase />
 
-        {/* Factory banner + Stats — connected dark unit */}
+        {/* Factory banner + Stats — connected dark/red unit */}
         <FactoryBanner />
         <StatsBar />
 
-        {/* ─── Transition: Dark → Light ─── */}
-        <SectionTransition from="dark" to="light" variant="diagonal" />
+        {/* ─── Transition: Red → Light ─── */}
+        <SectionTransition from="red" to="light" variant="diagonal" />
 
         <BrowseBy />
-
-        {/* ═══ BLOCK 3 — Dark Showcase ═══ */}
-        <SpiritSection />
-        
-        {/* ─── Transition: Dark → Light ─── */}
-        <SectionTransition from="dark" to="light" variant="diagonal" />
-        
         <CollectionsGrid />
 
-        {/* ─── Transition: Light → Dark (wave — like flowing ceramic) ─── */}
-        <SectionTransition from="light" to="dark" variant="wave" />
+        {/* ═══ Spirit of Nepal (red) ═══ */}
+        <SectionTransition from="light-alt" to="red" variant="diagonal" />
+        <SpiritSection />
 
-        {/* ═══ Virtual Showroom — The Invitation (dark) ═══ */}
+        {/* ─── Transition: Red → Dark ─── */}
+        <SectionTransition from="red" to="dark" variant="wave" />
+
+        {/* ═══ Virtual Showroom (dark) ═══ */}
         <VirtualShowroom />
 
         {/* ─── Transition: Dark → Light ─── */}
-        <SectionTransition from="dark" to="light" variant="wave" />
+        <SectionTransition from="dark" to="light-alt" variant="wave" />
 
         <ClientsSection />
 
         {/* ─── Transition: Light → Dark ─── */}
-        <SectionTransition from="light" to="dark" variant="mosaic" />
+        <SectionTransition from="light-alt" to="dark" variant="wave" />
 
         {/* ═══ Dealer Network (dark) ═══ */}
         <DealerNetwork />
 
-        {/* ─── Transition: Dark → Light ─── */}
-        <SectionTransition from="dark" to="light" variant="diagonal" />
-
-        {/* ═══ CTA — Light section for contrast ═══ */}
+        {/* ═══ CTA Section ═══ */}
         <CTASection />
-
-        {/* ─── Transition: Light → Dark ─── */}
-        <SectionTransition from="light" to="dark" variant="wave" />
       </main>
 
       <Footer />

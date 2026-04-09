@@ -23,7 +23,7 @@ function CatalogCard({
       <div className={`group h-full flex flex-col ${isComingSoon ? "opacity-70" : ""}`}>
         {/* Image */}
         <div
-          className={`relative overflow-hidden ${large ? "aspect-[16/9]" : "aspect-[4/3]"} ${isComingSoon ? "" : "img-gs"}`}
+          className={`relative overflow-hidden ${large ? "aspect-[16/9]" : "aspect-[4/3]"}`}
           style={{ marginBottom: "20px" }}
         >
           <img
@@ -120,10 +120,11 @@ export default function CatalogShowcase({
 }) {
   const featured = catalogEntries[0];
   const secondary = catalogEntries[1];
-  const rest = catalogEntries.slice(2);
+  const middleRow = catalogEntries.slice(2, 5);
+  const bottomRow = catalogEntries.slice(5);
 
   return (
-    <section id="catalog-showcase" className="bg-surface" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
+    <section id="catalog-showcase" className="bg-surface" style={{ paddingTop: "clamp(56px, 6vw, 80px)", paddingBottom: "clamp(80px, 10vw, 140px)" }}>
       <div className="container">
         {/* Section header */}
         <div style={{ marginBottom: "clamp(48px, 6vw, 64px)" }}>
@@ -138,7 +139,7 @@ export default function CatalogShowcase({
           </FadeIn>
           <FadeIn delay={0.1}>
             <p className="body-lg text-ink-light max-w-lg">
-              Five curated catalogs with room scenes, technical specifications,
+              Six curated catalogs with room scenes, technical specifications,
               and design inspiration for every surface.
             </p>
           </FadeIn>
@@ -154,12 +155,21 @@ export default function CatalogShowcase({
           </div>
         </div>
 
-        {/* Row 2: Remaining 3 cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)" }}>
-          {rest.map((cat, i) => (
+        {/* Row 2: 3 cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)", marginBottom: bottomRow.length > 0 ? "clamp(24px, 3vw, 32px)" : undefined }}>
+          {middleRow.map((cat, i) => (
             <CatalogCard key={cat.name} cat={cat} index={i + 2} large={false} onView={onViewCollection} />
           ))}
         </div>
+
+        {/* Row 3: Remaining cards (if any) */}
+        {bottomRow.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)" }}>
+            {bottomRow.map((cat, i) => (
+              <CatalogCard key={cat.name} cat={cat} index={i + 5} large={false} onView={onViewCollection} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

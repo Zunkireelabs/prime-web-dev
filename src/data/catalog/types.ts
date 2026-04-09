@@ -3,6 +3,7 @@
 export type CatalogName =
   | "wall-300x450"
   | "wall-300x600"
+  | "vitrified-400x400"
   | "vitrified-600x600"
   | "eleganz-600x1200"
   | "spirit-of-nepal";

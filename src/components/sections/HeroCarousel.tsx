@@ -24,7 +24,7 @@ export default function HeroCarousel() {
   }, [active, goTo]);
 
   return (
-    <section className="relative h-[85vh] lg:h-screen overflow-hidden bg-[var(--bg-alt)]">
+    <section className="relative h-[85vh] lg:h-screen overflow-hidden bg-surface-alt">
       {/* Slides */}
       {slides.map((slide, i) => (
         <div
@@ -46,10 +46,10 @@ export default function HeroCarousel() {
       <div className="absolute bottom-12 left-0 z-10">
         <div className="container">
           <div className="bg-white/95 backdrop-blur-sm px-8 py-6 inline-block max-w-sm">
-            <p className="eyebrow text-[var(--accent)] mb-2">
+            <p className="eyebrow text-accent mb-2">
               {slides[active].label}
             </p>
-            <p className="text-sm text-[var(--ink)]">
+            <p className="text-sm text-ink">
               {slides[active].subtitle}
             </p>
             <a
@@ -73,8 +73,8 @@ export default function HeroCarousel() {
                 className={cn(
                   "h-[2px] transition-all duration-500",
                   i === active
-                    ? "w-8 bg-[var(--accent)]"
-                    : "w-4 bg-[var(--ink-faint)] hover:bg-[var(--ink-muted)]"
+                    ? "w-8 bg-accent"
+                    : "w-4 bg-ink-faint hover:bg-ink-muted"
                 )}
                 aria-label={`Go to slide ${i + 1}`}
               />

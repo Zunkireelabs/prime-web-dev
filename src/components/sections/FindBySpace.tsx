@@ -96,8 +96,8 @@ export default function FindBySpace() {
                     className="absolute inset-0 transition-opacity duration-700"
                     style={{
                       background: isActive
-                        ? "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)"
-                        : "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%)",
+                        ? "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.35) 40%, transparent 65%)"
+                        : "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 100%)",
                     }}
                   />
 
@@ -194,8 +194,8 @@ export default function FindBySpace() {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/20 z-[1]" />
 
-        <div className="absolute inset-0 z-10 flex flex-col justify-end" style={{ padding: "32px 40px 48px" }}>
-          <p className="text-[0.55rem] font-medium tracking-[0.35em] uppercase text-accent-light" style={{ marginBottom: "12px" }}>
+        <div className="absolute inset-0 z-10 flex flex-col justify-end" style={{ padding: "32px clamp(20px, 5vw, 40px) 48px" }}>
+          <p className="text-[0.65rem] font-medium tracking-[0.3em] uppercase text-accent-light" style={{ marginBottom: "12px" }}>
             Find Tiles By Space
           </p>
 

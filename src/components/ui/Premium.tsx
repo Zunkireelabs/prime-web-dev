@@ -59,9 +59,9 @@ interface HeadingGroupProps {
 
 export function HeadingGroup({ eyebrow, title, subtitle, align = "center", dark = false, className = "" }: HeadingGroupProps) {
   const wrapperCls = align === "center" ? "heading-group" : "heading-group-left";
-  const inkCls = dark ? "text-[var(--ink-on-dark)]" : "text-[var(--ink)]";
-  const eyebrowCls = dark ? "text-[var(--accent-light)]" : "text-[var(--accent)]";
-  const subCls = dark ? "text-[var(--ink-on-dark-light)]" : "text-[var(--ink-light)]";
+  const inkCls = dark ? "text-ink-on-dark" : "text-ink";
+  const eyebrowCls = dark ? "text-accent-light" : "text-accent";
+  const subCls = dark ? "text-ink-on-dark-light" : "text-ink-light";
 
   return (
     <div className={`${wrapperCls} ${className}`}>
@@ -146,7 +146,7 @@ export function StatItem({ value, label, sub, className = "" }: StatItemProps) {
   return (
     <div className={`stat-item ${className}`}>
       <p className="stat-number">{value}</p>
-      <div className="w-5 h-px bg-[var(--accent)]/30 mx-auto mb-3" />
+      <div className="w-5 h-px bg-accent/30 mx-auto mb-3" />
       <p className="stat-label">{label}</p>
       {sub && <p className="stat-sub">{sub}</p>}
     </div>

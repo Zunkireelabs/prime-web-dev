@@ -44,7 +44,7 @@ export default function LoadingScreen({ onComplete }: { onComplete?: () => void 
         <img
           src="/images/prime-logo.png"
           alt="Prime Tiles"
-          style={{ height: "clamp(64px, 8vw, 80px)", width: "auto" }}
+          style={{ height: "clamp(48px, 10vw, 80px)", width: "auto" }}
         />
 
         {/* Accent line */}
@@ -57,7 +57,7 @@ export default function LoadingScreen({ onComplete }: { onComplete?: () => void 
           }}
         />
 
-        <p className="text-[0.55rem] font-medium tracking-[0.35em] uppercase text-ink-muted" style={{ marginTop: "12px" }}>
+        <p className="text-[0.65rem] font-medium tracking-[0.3em] uppercase text-ink-muted" style={{ marginTop: "12px" }}>
           Premium Ceramics
         </p>
       </div>

@@ -7,15 +7,15 @@ export default function CTASection() {
   return (
     <section
       id="contact"
-      className="bg-surface-red relative overflow-hidden"
-      style={{ padding: "clamp(100px, 12vw, 180px) 0" }}
+      className="relative overflow-hidden"
+      style={{ padding: "clamp(64px, 8vw, 110px) 0", background: "var(--color-surface-dark-warm)" }}
     >
       {/* Subtle radial glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 30%, rgba(253, 224, 219, 0.08) 0%, transparent 60%)",
+            "radial-gradient(ellipse at 50% 30%, var(--color-accent-subtle) 0%, transparent 60%)",
         }}
       />
 
@@ -24,7 +24,7 @@ export default function CTASection() {
 
           {/* Eyebrow */}
           <FadeIn>
-            <p className="eyebrow text-ink-on-red/60" style={{ marginBottom: "16px", textAlign: "center" }}>
+            <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center", color: "var(--color-ink-on-dark-muted)" }}>
               Start Your Project
             </p>
           </FadeIn>
@@ -32,30 +32,31 @@ export default function CTASection() {
           {/* Heading */}
           <FadeIn delay={0.08}>
             <h2
-              className="font-serif font-light text-ink-on-red leading-[1.05]"
-              style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)", marginBottom: "32px", textAlign: "center", textWrap: "balance" }}
+              className="h2"
+              style={{ marginBottom: "24px", textAlign: "center", textWrap: "balance", color: "var(--color-ink-on-dark)" }}
             >
               Ready to Transform{" "}
-              <span className="text-white">Your Space?</span>
+              <span style={{ color: "white" }}>Your Space?</span>
             </h2>
           </FadeIn>
 
-          {/* Red divider */}
+          {/* Divider */}
           <FadeIn delay={0.1}>
-            <div className="red-divider-center" style={{ marginBottom: "32px" }} />
+            <div style={{ width: "36px", height: "2px", background: "var(--color-accent)", marginLeft: "auto", marginRight: "auto", marginBottom: "24px" }} />
           </FadeIn>
 
           {/* Description */}
           <FadeIn delay={0.14}>
             <p
-              className="body-lg text-ink-on-red-muted"
+              className="body-lg"
               style={{
                 textAlign: "center",
                 maxWidth: "540px",
                 marginLeft: "auto",
                 marginRight: "auto",
-                marginBottom: "48px",
+                marginBottom: "36px",
                 textWrap: "balance",
+                color: "var(--color-ink-on-dark-light)",
               }}
             >
               Whether you&apos;re an architect, designer, or homeowner — our
@@ -68,7 +69,7 @@ export default function CTASection() {
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "24px" }}>
               <a
                 href="mailto:sales@primeceramics.com.np?subject=Quote%20Request"
-                className="btn-on-red group"
+                className="btn-gold group"
               >
                 Request a Quote
                 <ArrowRight
@@ -76,7 +77,10 @@ export default function CTASection() {
                   className="transition-transform duration-300 group-hover:translate-x-1"
                 />
               </a>
-              <a href="/catalog" className="btn-on-red-outline group">
+              <a
+                href="/catalog"
+                className="btn-gold-outline group"
+              >
                 View Catalogue
                 <ArrowRight
                   size={14}
@@ -88,7 +92,7 @@ export default function CTASection() {
 
           {/* Contact strip */}
           <FadeIn delay={0.25}>
-            <div style={{ marginTop: "64px", paddingTop: "40px", borderTop: "1px solid rgba(253, 224, 219, 0.08)" }}>
+            <div style={{ marginTop: "48px", paddingTop: "32px", borderTop: "1px solid rgba(255, 255, 255, 0.08)" }}>
               <div
                 style={{
                   display: "grid",
@@ -100,12 +104,12 @@ export default function CTASection() {
               >
                 {/* Phone */}
                 <a href="tel:+977-1-5978860" className="group">
-                  <p className="eyebrow text-ink-on-red-muted/50" style={{ marginBottom: "16px", textAlign: "center" }}>
+                  <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center", color: "var(--color-ink-on-dark-muted)" }}>
                     Phone
                   </p>
                   <p
-                    className="font-serif font-light text-ink-on-red/80 group-hover:text-white transition-colors duration-300"
-                    style={{ fontSize: "1.05rem", textAlign: "center" }}
+                    className="font-serif font-light group-hover:text-white transition-colors duration-300"
+                    style={{ fontSize: "1.05rem", textAlign: "center", color: "var(--color-ink-on-dark-light)" }}
                   >
                     +977-1-5978860/61/62
                   </p>
@@ -113,12 +117,12 @@ export default function CTASection() {
 
                 {/* Email */}
                 <a href="mailto:info@primeceramics.com.np" className="group">
-                  <p className="eyebrow text-ink-on-red-muted/50" style={{ marginBottom: "16px", textAlign: "center" }}>
+                  <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center", color: "var(--color-ink-on-dark-muted)" }}>
                     Email
                   </p>
                   <p
-                    className="font-serif font-light text-ink-on-red/80 group-hover:text-white transition-colors duration-300"
-                    style={{ fontSize: "1.05rem", textAlign: "center" }}
+                    className="font-serif font-light group-hover:text-white transition-colors duration-300"
+                    style={{ fontSize: "1.05rem", textAlign: "center", color: "var(--color-ink-on-dark-light)" }}
                   >
                     info@primeceramics.com.np
                   </p>
@@ -126,12 +130,12 @@ export default function CTASection() {
 
                 {/* Toll Free */}
                 <a href="tel:18105000062" className="group">
-                  <p className="eyebrow text-ink-on-red-muted/50" style={{ marginBottom: "16px", textAlign: "center" }}>
+                  <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center", color: "var(--color-ink-on-dark-muted)" }}>
                     Toll Free
                   </p>
                   <p
-                    className="font-serif font-light text-ink-on-red/80 group-hover:text-white transition-colors duration-300"
-                    style={{ fontSize: "1.05rem", textAlign: "center" }}
+                    className="font-serif font-light group-hover:text-white transition-colors duration-300"
+                    style={{ fontSize: "1.05rem", textAlign: "center", color: "var(--color-ink-on-dark-light)" }}
                   >
                     1810 500 0062
                   </p>

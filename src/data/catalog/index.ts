@@ -1,29 +1,45 @@
 // ─── Prime Ceramics — Full Product Catalog ───
+//
+// Data source: Sanity CMS (via sanity-products.json generated at build time)
+// Fallback: Local TypeScript files (when Sanity isn't configured yet)
 
-export type { CatalogProduct, CatalogName, CatalogFinish, CatalogApplication, CatalogCategory } from "./types";
-
-export { eleganz600x1200, eleganz600x1200Specs } from "./eleganz-600x1200";
-export { vitrified600x600 } from "./vitrified-600x600";
-export { wall300x450 } from "./wall-300x450";
-export { wall300x600 } from "./wall-300x600";
-export { spiritOfNepal } from "./spirit-of-nepal";
+export type {
+  CatalogProduct,
+  CatalogName,
+  CatalogFinish,
+  CatalogApplication,
+  CatalogCategory,
+} from "./types";
 
 import type { CatalogProduct, CatalogName, CatalogFinish } from "./types";
+
+// ── Fallback: local TypeScript data ──
+
 import { eleganz600x1200 } from "./eleganz-600x1200";
 import { vitrified600x600 } from "./vitrified-600x600";
 import { wall300x450 } from "./wall-300x450";
 import { wall300x600 } from "./wall-300x600";
 import { spiritOfNepal } from "./spirit-of-nepal";
 
-// ── All products combined ──
-
-export const allProducts: CatalogProduct[] = [
+const localProducts: CatalogProduct[] = [
   ...wall300x450,
   ...wall300x600,
   ...vitrified600x600,
   ...eleganz600x1200,
   ...spiritOfNepal,
 ];
+
+// ── Load Sanity data if available, otherwise use local ──
+
+let sanityProducts: CatalogProduct[] | null = null;
+try {
+  sanityProducts = require("./sanity-products.json") as CatalogProduct[];
+} catch {
+  // sanity-products.json not generated yet — using local data
+}
+
+export const allProducts: CatalogProduct[] =
+  sanityProducts && sanityProducts.length > 0 ? sanityProducts : localProducts;
 
 // ── Filter helpers ──
 
@@ -59,13 +75,6 @@ export const searchTiles = (query: string): CatalogProduct[] => {
 
 export const catalogStats = {
   totalProducts: allProducts.length,
-  catalogs: {
-    "wall-300x450": wall300x450.length,
-    "wall-300x600": wall300x600.length,
-    "vitrified-600x600": vitrified600x600.length,
-    "eleganz-600x1200": eleganz600x1200.length,
-    "spirit-of-nepal": spiritOfNepal.length,
-  },
   sizes: [...new Set(allProducts.map((p) => p.size))],
   finishes: [...new Set(allProducts.map((p) => p.finish))],
   series: [...new Set(allProducts.map((p) => p.series))],

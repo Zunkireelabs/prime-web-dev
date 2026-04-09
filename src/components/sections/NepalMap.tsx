@@ -8,9 +8,10 @@ import { dealers } from "@/data/dealers";
 interface NepalMapProps {
   activeProvince: string;
   onProvinceSelect: (province: string) => void;
+  embedded?: boolean;
 }
 
-export default function NepalMap({ activeProvince, onProvinceSelect }: NepalMapProps) {
+export default function NepalMap({ activeProvince, onProvinceSelect, embedded }: NepalMapProps) {
   const [hovered, setHovered] = useState<string | null>(null);
 
   const counts = useMemo(() => {
@@ -23,29 +24,28 @@ export default function NepalMap({ activeProvince, onProvinceSelect }: NepalMapP
 
   const total = dealers.length;
 
-  return (
-    <section className="bg-surface" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
-      <div className="container">
-        {/* Section header */}
-        <div style={{ textAlign: "center", marginBottom: "64px" }}>
-          <FadeIn>
-            <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center" }}>Select a Province</p>
-          </FadeIn>
-          <FadeIn delay={0.06}>
-            <h2 className="h2" style={{ marginBottom: "24px", textAlign: "center" }}>Explore by Region</h2>
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <p className="body-lg text-ink-light" style={{ maxWidth: "480px", marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
-              {total} authorized dealers across {nepalProvinces.length} provinces.
-              Click a province to filter.
-            </p>
-          </FadeIn>
-        </div>
+  const mapContent = (
+    <>
+      {/* Section header */}
+      <div style={{ textAlign: embedded ? "left" : "center", marginBottom: embedded ? "24px" : "64px" }}>
+        <FadeIn>
+          <p className="eyebrow" style={{ marginBottom: "16px", textAlign: embedded ? "left" : "center" }}>Select a Province</p>
+        </FadeIn>
+        <FadeIn delay={0.06}>
+          <h2 className={embedded ? "h3" : "h2"} style={{ marginBottom: embedded ? "12px" : "24px", textAlign: embedded ? "left" : "center" }}>Explore by Region</h2>
+        </FadeIn>
+        <FadeIn delay={0.1}>
+          <p className="body-lg text-ink-light" style={{ maxWidth: embedded ? "none" : "480px", marginLeft: embedded ? "0" : "auto", marginRight: embedded ? "0" : "auto", textAlign: embedded ? "left" : "center" }}>
+            {total} authorized dealers across {nepalProvinces.length} provinces.
+            Click a province to filter.
+          </p>
+        </FadeIn>
+      </div>
 
-        {/* Map — full container width, SVG handles centering */}
-        <FadeIn delay={0.15} direction="up" distance={20}>
-          <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <svg
+      {/* Map — SVG */}
+      <FadeIn delay={0.15} direction="up" distance={20}>
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: embedded ? "flex-start" : "center" }}>
+          <svg
               viewBox={NEPAL_VIEWBOX}
               style={{
                 width: "100%",
@@ -84,7 +84,7 @@ export default function NepalMap({ activeProvince, onProvinceSelect }: NepalMapP
                     strokeLinejoin="round"
                     className="cursor-pointer"
                     style={{
-                      transition: "fill 0.4s cubic-bezier(0.22,1,0.36,1), stroke 0.4s cubic-bezier(0.22,1,0.36,1), stroke-width 0.3s cubic-bezier(0.22,1,0.36,1)",
+                      transition: "fill 0.3s linear, stroke 0.3s linear, stroke-width 0.3s linear",
                     }}
                     onMouseEnter={() => setHovered(p.province)}
                     onMouseLeave={() => setHovered(null)}
@@ -109,7 +109,7 @@ export default function NepalMap({ activeProvince, onProvinceSelect }: NepalMapP
                     className="pointer-events-none select-none"
                     style={{
                       opacity: highlighted ? 1 : 0.65,
-                      transition: "opacity 0.4s cubic-bezier(0.22,1,0.36,1)",
+                      transition: "opacity 0.3s linear",
                     }}
                   >
                     <text
@@ -126,7 +126,7 @@ export default function NepalMap({ activeProvince, onProvinceSelect }: NepalMapP
                           : highlighted
                           ? "var(--color-ink)"
                           : "var(--color-ink-light)",
-                        transition: "fill 0.4s cubic-bezier(0.22,1,0.36,1)",
+                        transition: "fill 0.3s linear",
                       }}
                     >
                       {p.province.toUpperCase()}
@@ -143,7 +143,7 @@ export default function NepalMap({ activeProvince, onProvinceSelect }: NepalMapP
                         fill: isActive
                           ? "var(--color-accent)"
                           : "var(--color-ink-muted)",
-                        transition: "fill 0.4s cubic-bezier(0.22,1,0.36,1)",
+                        transition: "fill 0.3s linear",
                       }}
                     >
                       {count} {count === 1 ? "dealer" : "dealers"}
@@ -154,14 +154,14 @@ export default function NepalMap({ activeProvince, onProvinceSelect }: NepalMapP
             </svg>
 
             {/* Instruction text */}
-            <p className="text-[0.6rem] font-medium tracking-[0.25em] uppercase text-ink-muted" style={{ marginTop: "32px", textAlign: "center" }}>
+            <p className="text-[0.6rem] font-medium tracking-[0.25em] uppercase text-ink-muted" style={{ marginTop: "20px", textAlign: "center" }}>
               {activeProvince !== "All"
                 ? `Showing ${activeProvince} \u2014 click again to clear`
                 : "Click a province to filter dealers below"}
             </p>
 
             {/* Province quick-select */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", marginTop: "24px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", marginTop: "16px", flexWrap: "wrap" }}>
               {nepalProvinces.map((p) => {
                 const isActive = activeProvince === p.province;
                 return (
@@ -182,7 +182,16 @@ export default function NepalMap({ activeProvince, onProvinceSelect }: NepalMapP
             </div>
           </div>
         </FadeIn>
-      </div>
+    </>
+  );
+
+  if (embedded) {
+    return <div>{mapContent}</div>;
+  }
+
+  return (
+    <section className="bg-surface" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
+      <div className="container">{mapContent}</div>
     </section>
   );
 }

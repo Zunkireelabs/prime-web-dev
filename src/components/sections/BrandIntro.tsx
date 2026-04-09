@@ -1,24 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import FadeIn from "@/components/animations/FadeIn";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function BrandIntro() {
-  const [expanded, setExpanded] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      setHeight(contentRef.current.scrollHeight);
-    }
-  }, [expanded]);
 
   return (
     <section className="relative" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
       <div className="container relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: "56px", columnGap: "96px" }}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: "clamp(40px, 6vw, 56px)", columnGap: "clamp(48px, 8vw, 96px)" }}>
           {/* Left — Image with badge (7 cols) */}
           <div className="lg:col-span-7">
             <FadeIn direction="up" distance={30}>
@@ -76,64 +66,14 @@ export default function BrandIntro() {
               </p>
             </FadeIn>
 
-            {/* Expandable content */}
-            <div
-              ref={contentRef}
-              className="overflow-hidden transition-[max-height,opacity] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-              style={{
-                maxHeight: expanded ? `${height}px` : "0px",
-                opacity: expanded ? 1 : 0,
-              }}
-            >
-              <div className="max-w-md">
-                <p className="body-lg" style={{ marginBottom: "24px" }}>
-                  Promoted by CMS and Fortune Ventures — two of Nepal&apos;s
-                  most respected business houses with over two decades of
-                  excellence — we achieved the highest sales volume among all
-                  tile manufacturers in Nepal for FY 2023–24.
-                </p>
-
-                <p className="body-lg" style={{ marginBottom: "32px" }}>
-                  With NPR 3 billion in investment and 120+ dealers nationwide,
-                  we deliver premium quality and responsive service — guided by
-                  our promise:
-                  <span className="italic text-accent">
-                    {" "}&ldquo;Prime: Tiles with Stile.&rdquo;
-                  </span>
-                </p>
-
-                {/* Stats row */}
-                <div className="grid grid-cols-3 border-t border-accent/12" style={{ gap: "24px", paddingTop: "32px", marginBottom: "40px" }}>
-                  {[
-                    { n: "4M", l: "Sq m / Year" },
-                    { n: "120+", l: "Dealers" },
-                    { n: "₹3B", l: "Investment" },
-                  ].map((s) => (
-                    <div key={s.l} className="border-l-2 border-accent/25 pl-4">
-                      <p className="text-2xl md:text-[1.7rem] font-serif font-light text-ink leading-none">
-                        {s.n}
-                      </p>
-                      <p className="text-[0.5rem] font-medium tracking-[0.15em] uppercase text-ink-muted mt-2">
-                        {s.l}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
             <FadeIn delay={0.3}>
-              <button
-                onClick={() => setExpanded(!expanded)}
+              <a
+                href="/about"
                 className="btn-fill group"
               >
-                {expanded ? "Show Less" : "Know More"}
-                {expanded ? (
-                  <X size={14} />
-                ) : (
-                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
-                )}
-              </button>
+                Know More
+                <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
             </FadeIn>
           </div>
         </div>

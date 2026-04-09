@@ -71,7 +71,7 @@ export default function Header() {
             <img
               src="/images/prime-logo.png"
               alt="Prime Tiles"
-              className="h-12 md:h-16 w-auto transition-[filter] duration-300"
+              className="h-16 md:h-24 w-auto transition-[filter] duration-300"
               style={blendVideo ? { filter: "brightness(0) invert(1)" } : undefined}
             />
           </a>
@@ -127,58 +127,49 @@ export default function Header() {
                       <div
                         className="relative overflow-hidden"
                         style={{
-                          background: "linear-gradient(165deg, #1a1714 0%, #0f0c09 100%)",
-                          border: "1px solid rgba(150, 112, 76, 0.12)",
+                          background: "linear-gradient(165deg, var(--color-surface-dark-alt) 0%, var(--color-surface-dark) 100%)",
+                          border: "1px solid var(--color-accent-subtle)",
                           boxShadow: "0 20px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.03)",
                           minWidth: "280px",
                           padding: "8px 0",
                         }}
                       >
                         {/* Top accent line */}
-                        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1.5px", background: "linear-gradient(90deg, transparent, rgba(215,185,138,0.4), transparent)" }} />
+                        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1.5px", background: "linear-gradient(90deg, transparent, var(--color-accent-glow), transparent)" }} />
 
                         {/* Subtle corner glow */}
-                        <div style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "radial-gradient(circle at top right, rgba(150,112,76,0.06), transparent 70%)", pointerEvents: "none" }} />
+                        <div style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "radial-gradient(circle at top right, var(--color-accent-subtle), transparent 70%)", pointerEvents: "none" }} />
 
                         {item.dropdown!.map((link, idx) => (
                           <a
                             key={link.href}
                             href={link.href}
-                            className="group flex items-center justify-between transition-all duration-300"
+                            className="group flex items-center justify-between transition-all duration-300 hover:bg-[var(--color-accent-subtle)]"
                             style={{
                               padding: "14px 28px",
                               margin: "0 8px",
                               borderRadius: "2px",
                             }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = "rgba(150,112,76,0.08)";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = "transparent";
-                            }}
                           >
                             <span
-                              className="group-hover:translate-x-1 transition-transform duration-300"
+                              className="group-hover:translate-x-1 transition-all duration-300 group-hover:text-[var(--color-accent-light)]"
                               style={{
                                 fontSize: "0.82rem",
                                 letterSpacing: "0.04em",
-                                color: "#a89d8e",
+                                color: "var(--color-ink-on-dark-light)",
                               }}
-                              onMouseEnter={(e) => { e.currentTarget.style.color = "#d7b98a"; }}
-                              onMouseLeave={(e) => { e.currentTarget.style.color = "#a89d8e"; }}
                             >
                               {link.label}
                             </span>
                             <ArrowRight
                               size={13}
-                              className="opacity-0 -translate-x-2 group-hover:opacity-70 group-hover:translate-x-0 transition-all duration-300"
-                              style={{ color: "#d7b98a" }}
+                              className="opacity-0 -translate-x-2 group-hover:opacity-70 group-hover:translate-x-0 transition-all duration-300 text-accent-light"
                             />
                           </a>
                         ))}
 
                         {/* Bottom accent */}
-                        <div style={{ position: "absolute", bottom: 0, left: "20%", right: "20%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(215,185,138,0.1), transparent)" }} />
+                        <div style={{ position: "absolute", bottom: 0, left: "20%", right: "20%", height: "1px", background: "linear-gradient(90deg, transparent, var(--color-accent-subtle), transparent)" }} />
                       </div>
                     </div>
                   )}
@@ -198,7 +189,7 @@ export default function Header() {
             </button>
             <div className={cn("w-px h-4", blendVideo ? "bg-white/20" : "bg-ink/10")} />
             <a
-              href="#showrooms"
+              href="/dealers"
               className={cn(
                 "text-[0.7rem] font-medium tracking-[0.15em] uppercase border transition-all duration-300",
                 blendVideo ? "border-white/25 text-white/80 hover:border-white/50 hover:text-white" : "border-ink/15 text-ink hover:border-accent hover:text-accent"
@@ -208,29 +199,10 @@ export default function Header() {
               Where to Buy
             </a>
 
-            {/* Close video button — far right */}
-            {videoAdVisible && !scrolled && (
-              <button
-                onClick={() => window.dispatchEvent(new CustomEvent("dismiss-video-ad"))}
-                className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white/80 hover:text-white hover:border-white/60 hover:bg-white/10 transition-all duration-300 bg-black/20"
-                aria-label="Close video"
-              >
-                <X size={18} strokeWidth={1.5} />
-              </button>
-            )}
           </div>
 
           {/* Mobile — close ad + menu toggle */}
           <div className="lg:hidden flex items-center gap-3 relative z-50">
-            {videoAdVisible && !scrolled && !mobileOpen && (
-              <button
-                onClick={() => window.dispatchEvent(new CustomEvent("dismiss-video-ad"))}
-                className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center text-white/80 hover:text-white hover:border-white/60 hover:bg-white/10 transition-all duration-300 bg-black/20"
-                aria-label="Close video"
-              >
-                <X size={16} strokeWidth={1.5} />
-              </button>
-            )}
             {!mobileOpen && (
               <button
                 onClick={() => setMobileOpen(true)}
@@ -413,7 +385,7 @@ export default function Header() {
             style={{ marginBottom: "40px", transitionDelay: mobileOpen ? "380ms" : "0ms" }}
           >
             <a
-              href="#showrooms"
+              href="/dealers"
               onClick={() => setMobileOpen(false)}
               className="inline-block text-[0.65rem] font-medium tracking-[0.15em] uppercase px-6 py-3 border border-accent-light/30 text-accent-light hover:border-accent-light transition-all duration-300"
             >

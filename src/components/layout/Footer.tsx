@@ -2,6 +2,8 @@
 
 import FadeIn from "@/components/animations/FadeIn";
 import { footerColumns as cols } from "@/data/navigation";
+import { Mail, Phone, Factory, Building2, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
 const socials = [
   { name: "Facebook", href: "https://www.facebook.com/PrimeTiles.Official/" },
@@ -11,22 +13,37 @@ const socials = [
 ];
 
 const contactItems = [
-  { label: "Email", value: "info@primeceramics.com.np", href: "mailto:info@primeceramics.com.np" },
-  { label: "Phone", value: "+977-1-5978860/61/62", href: "tel:+977-1-5978860" },
-  { label: "Toll Free", value: "1810 500 0062", href: "tel:18105000062" },
-  { label: "Factory", value: "Sakhuwa Dhamaura, Brindavan-6, Rautahat" },
-  { label: "Office", value: "Level 4, Saket Complex, Tripureshwor, Kathmandu" },
+  { label: "Email", value: "info@primeceramics.com.np", href: "mailto:info@primeceramics.com.np", icon: "mail" },
+  { label: "Phone", value: "+977-1-5978860/61/62", href: "tel:+977-1-5978860", icon: "phone" },
+  { label: "Toll Free", value: "1810 500 0062", href: "tel:18105000062", icon: "phone" },
+  { label: "Factory", value: "Sakhuwa Dhamaura, Brindavan-6, Rautahat", icon: "factory" },
+  { label: "Office", value: "Level 4, Saket Complex, Tripureshwor, Kathmandu", icon: "office" },
 ];
+
+const iconMap: Record<string, React.ReactNode> = {
+  mail: <Mail size={14} strokeWidth={1.4} />,
+  phone: <Phone size={14} strokeWidth={1.4} />,
+  factory: <Factory size={14} strokeWidth={1.4} />,
+  office: <Building2 size={14} strokeWidth={1.4} />,
+};
 
 export default function Footer() {
   return (
-    <footer className="bg-surface-dark text-ink-on-dark">
+    <footer className="bg-surface-dark text-ink-on-dark relative overflow-hidden">
+      {/* Subtle ambient glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 20% 0%, rgba(181,138,82,0.04) 0%, transparent 50%)",
+        }}
+      />
+
       {/* Gold accent line */}
       <div className="gold-divider-full" />
 
-      {/* ═══ ZONE 2 — Navigation + Contact ═══ */}
-
-      <div className="container" style={{ padding: "64px 0" }}>
+      {/* ═══ Navigation + Contact Grid ═══ */}
+      <div className="container relative z-10" style={{ padding: "64px 0 64px" }}>
         <div
           className="max-md:[grid-template-columns:repeat(2,1fr)] max-sm:[grid-template-columns:1fr]"
           style={{
@@ -39,14 +56,25 @@ export default function Footer() {
           {cols.map((col, i) => (
             <FadeIn key={col.title} delay={0.06 * (i + 1)}>
               <div>
-                <p className="eyebrow text-accent" style={{ marginBottom: "32px" }}>{col.title}</p>
-                <ul style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                <p
+                  className="eyebrow text-accent"
+                  style={{ marginBottom: "28px" }}
+                >
+                  {col.title}
+                </p>
+                <ul
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "14px",
+                  }}
+                >
                   {col.links.map((l) => (
                     <li key={l.label}>
                       <a
                         href={l.href}
-                        className="text-white/45 hover:text-white/80 transition-colors duration-300"
-                        style={{ fontSize: "0.9rem", lineHeight: "1.6" }}
+                        className="text-white/35 hover:text-white/70 transition-colors duration-300"
+                        style={{ fontSize: "0.85rem", lineHeight: "1.6" }}
                       >
                         {l.label}
                       </a>
@@ -60,37 +88,124 @@ export default function Footer() {
           {/* Contact column */}
           <FadeIn delay={0.25}>
             <div>
-              <p className="eyebrow text-accent" style={{ marginBottom: "32px" }}>Contact</p>
-              <ul style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                {contactItems.map((item) => (
-                  <li key={item.label}>
-                    {item.href ? (
-                      <a
-                        href={item.href}
-                        className="text-white/45 hover:text-white/80 transition-colors duration-300"
-                        style={{ fontSize: "0.9rem", lineHeight: "1.6" }}
+              <p
+                className="eyebrow text-accent"
+                style={{ marginBottom: "28px" }}
+              >
+                Contact
+              </p>
+              <ul
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "18px",
+                }}
+              >
+                {contactItems.map((item) => {
+                  const inner = (
+                    <>
+                      <span
+                        className="text-accent/30 group-hover:text-accent transition-colors duration-300"
+                        style={{ marginTop: "2px", flexShrink: 0 }}
                       >
-                        {item.value}
-                      </a>
-                    ) : (
-                      <p className="text-white/45" style={{ fontSize: "0.9rem", lineHeight: "1.6" }}>
-                        {item.value}
-                      </p>
-                    )}
-                  </li>
-                ))}
+                        {iconMap[item.icon]}
+                      </span>
+                      <span>
+                        <span
+                          className="text-white/18 block"
+                          style={{
+                            fontSize: "0.58rem",
+                            letterSpacing: "0.14em",
+                            textTransform: "uppercase",
+                            marginBottom: "2px",
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                        <span
+                          className="text-white/35 group-hover:text-white/70 transition-colors duration-300"
+                          style={{ fontSize: "0.82rem", lineHeight: "1.5" }}
+                        >
+                          {item.value}
+                        </span>
+                      </span>
+                    </>
+                  );
+
+                  return (
+                    <li key={item.label}>
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          className="group flex items-start"
+                          style={{ gap: "10px" }}
+                        >
+                          {inner}
+                        </a>
+                      ) : (
+                        <div
+                          className="group flex items-start"
+                          style={{ gap: "10px" }}
+                        >
+                          {inner}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </FadeIn>
         </div>
       </div>
 
-      {/* ═══ ZONE 3 — Copyright ═══ */}
-      <div className="container">
+      {/* ═══ Divider ═══ */}
+      <div className="container relative z-10">
+        <div style={{ height: "1px", background: "var(--color-ink-on-dark-muted)" }} />
+      </div>
+
+      {/* ═══ Social Links Row ═══ */}
+      <div className="container relative z-10">
         <div
           style={{
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            padding: "40px 0",
+            padding: "24px 0",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "clamp(20px, 4vw, 40px)",
+            flexWrap: "wrap",
+          }}
+        >
+          {socials.map((s) => (
+            <a
+              key={s.name}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/20 hover:text-accent transition-colors duration-300"
+              style={{
+                fontSize: "0.72rem",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                fontWeight: 500,
+              }}
+            >
+              {s.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* ═══ Divider ═══ */}
+      <div className="container relative z-10">
+        <div style={{ height: "1px", background: "var(--color-ink-on-dark-muted)" }} />
+      </div>
+
+      {/* ═══ Bottom Bar ═══ */}
+      <div className="container relative z-10">
+        <div
+          style={{
+            padding: "28px 0 36px",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -98,19 +213,121 @@ export default function Footer() {
             gap: "16px",
           }}
         >
-          <p className="text-white/30" style={{ fontSize: "0.78rem", letterSpacing: "0.03em" }}>
-            &copy; {new Date().getFullYear()} Prime Ceramics Pvt. Ltd. All rights reserved.
+          {/* Copyright */}
+          <p
+            className="text-white/20"
+            style={{ fontSize: "0.72rem", letterSpacing: "0.03em" }}
+          >
+            &copy; {new Date().getFullYear()} Prime Ceramics Pvt. Ltd. All
+            rights reserved.
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: "32px", flexWrap: "wrap", fontSize: "0.78rem" }}>
-            <a href="/privacy" className="text-white/30 hover:text-white/55 transition-colors duration-300">
+
+          {/* Legal + Designed by */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "clamp(14px, 2.5vw, 22px)",
+              flexWrap: "wrap",
+            }}
+          >
+            <a
+              href="/privacy"
+              className="text-white/20 hover:text-white/45 transition-colors duration-300"
+              style={{ fontSize: "0.72rem" }}
+            >
               Privacy Policy
             </a>
-            <span style={{ width: "1px", height: "14px", background: "rgba(255,255,255,0.1)" }} />
-            <a href="/terms" className="text-white/30 hover:text-white/55 transition-colors duration-300">
+            <span
+              style={{
+                width: "1px",
+                height: "10px",
+                background: "var(--color-ink-on-dark-muted)",
+              }}
+            />
+            <a
+              href="/terms"
+              className="text-white/20 hover:text-white/45 transition-colors duration-300"
+              style={{ fontSize: "0.72rem" }}
+            >
               Terms
             </a>
-            <span style={{ width: "1px", height: "14px", background: "rgba(255,255,255,0.1)" }} />
-            <span className="text-white/20">Designed by Zunkiee Labs</span>
+
+            <span
+              style={{
+                width: "1px",
+                height: "10px",
+                background: "var(--color-ink-on-dark-muted)",
+              }}
+            />
+
+            {/* ── Zunkiee Labs — Designed by badge ── */}
+            <a
+              href="https://zunkireelabs.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center transition-all duration-300"
+              style={{ gap: "8px" }}
+            >
+              {/* Logo icon */}
+              <span
+                className="opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <Image
+                  src="/images/zunkiee-labs-logo.png"
+                  alt="Zunkiee Labs"
+                  width={24}
+                  height={24}
+                  unoptimized
+                  style={{ borderRadius: "50%" }}
+                />
+              </span>
+
+              {/* Text */}
+              <span
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  lineHeight: 1,
+                }}
+              >
+                <span
+                  className="text-white/25 group-hover:text-white/45 transition-colors duration-300"
+                  style={{
+                    fontSize: "0.55rem",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Designed &amp; built by
+                </span>
+                <span
+                  className="text-white/45 group-hover:text-white/70 transition-colors duration-300"
+                  style={{
+                    fontSize: "0.78rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    marginTop: "2px",
+                  }}
+                >
+                  Zunkiee Labs
+                </span>
+              </span>
+
+              {/* Arrow */}
+              <ArrowUpRight
+                size={11}
+                strokeWidth={1.8}
+                className="text-white/25 group-hover:text-white/50 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all duration-300"
+              />
+
+              {/* Underline on hover */}
+              <span
+                className="absolute bottom-[-3px] left-0 right-0 h-px bg-gradient-to-r from-white/0 via-white/20 to-white/0 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"
+              />
+            </a>
           </div>
         </div>
       </div>

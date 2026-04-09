@@ -186,7 +186,7 @@ export default function AboutNarrative() {
               <div className="grid grid-cols-3 border-t border-accent/12" style={{ gap: "16px", paddingTop: "32px", marginBottom: "32px" }}>
                 {[
                   { value: 4, suffix: "M", label: "Sq m / Year" },
-                  { value: 120, suffix: "+", label: "Dealers" },
+                  { value: 200, suffix: "+", label: "Dealers" },
                   { value: 3, suffix: "B", prefix: "₹", label: "Investment" },
                 ].map((s) => (
                   <div key={s.label} className="border-l-2 border-accent/25 pl-4 group">

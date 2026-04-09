@@ -7,6 +7,7 @@ const sizeTabs = [
   { label: "All Tiles", value: "all" },
   { label: "300×450", value: "300×450 mm" },
   { label: "300×600", value: "300×600 mm" },
+  { label: "400×400", value: "400×400 mm" },
   { label: "600×600", value: "600×600 mm" },
   { label: "600×1200", value: "600×1200 mm" },
   { label: "Spirit of Nepal", value: "spirit" },

@@ -3,9 +3,9 @@
 import FadeIn from "@/components/animations/FadeIn";
 
 const stats = [
-  { value: "395", label: "designs" },
-  { value: "5", label: "catalogs" },
-  { value: "4", label: "sizes" },
+  { value: "492", label: "designs" },
+  { value: "6", label: "catalogs" },
+  { value: "5", label: "sizes" },
   { value: "5", label: "finishes" },
 ];
 

@@ -38,11 +38,11 @@ export default function StatsBar() {
                     {/* Divider */}
                     <div className="w-5 h-[1px] bg-ink-on-red/20 group-hover:w-8 transition-all duration-500" style={{ marginBottom: "8px" }} />
                     {/* Label */}
-                    <p className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-ink-on-red/80" style={{ marginBottom: "2px" }}>
+                    <p className="text-[0.65rem] font-medium tracking-[0.15em] uppercase text-ink-on-red/80" style={{ marginBottom: "2px" }}>
                       {s.l}
                     </p>
                     {/* Sub */}
-                    <p className="text-[0.55rem] text-ink-on-red-muted tracking-wider">
+                    <p className="text-[0.6rem] text-ink-on-red-muted tracking-wider">
                       {s.sub}
                     </p>
                   </div>

@@ -70,7 +70,7 @@ export default function SoundToggle() {
   return (
     <button
       onClick={toggle}
-      className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 w-11 h-11 rounded-full bg-[var(--bg-dark)]/80 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-white/25 transition-all duration-300 group"
+      className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 w-11 h-11 rounded-full bg-surface-dark/80 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-white/25 transition-all duration-300 group"
       aria-label={muted ? "Unmute" : "Mute"}
     >
       {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}

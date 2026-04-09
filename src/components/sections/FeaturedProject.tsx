@@ -46,15 +46,15 @@ export default function FeaturedProject() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/30" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
 
-      <div className="container relative z-10 h-full flex flex-col justify-end pb-14 lg:pb-20">
+      <div className="container relative z-10 h-full flex flex-col justify-end pb-20 md:pb-24 lg:pb-28">
         <FadeIn>
-          <p className="eyebrow text-[var(--accent-light)] mb-3 tracking-[0.35em]">Featured Project</p>
+          <p className="eyebrow text-accent-light mb-4">Featured Project</p>
         </FadeIn>
         <FadeIn delay={0.08}>
-          <h2 className="h1 text-white mb-3 max-w-xl">{featuredProject.title}</h2>
+          <h2 className="h1 text-white mb-6 max-w-xl">{featuredProject.title}</h2>
         </FadeIn>
         <FadeIn delay={0.14}>
-          <p className="body-sm text-white/60 max-w-md mb-6">
+          <p className="body-sm text-white/60 max-w-md mb-8">
             {featuredProject.description}
           </p>
         </FadeIn>
@@ -66,18 +66,18 @@ export default function FeaturedProject() {
 
         {/* Project stats strip */}
         <FadeIn delay={0.3}>
-          <div className="flex gap-8 mt-10 pt-6 border-t border-white/10">
+          <div className="flex gap-10 mt-12 pt-8 border-t border-white/10">
             <div>
               <p className="text-2xl font-serif font-light text-white">{featuredProject.area}</p>
-              <p className="text-[0.5rem] tracking-[0.2em] uppercase text-white/40 mt-1">Sq Ft</p>
+              <p className="text-[0.6rem] tracking-[0.2em] uppercase text-white/40 mt-2">Sq Ft</p>
             </div>
             <div>
               <p className="text-2xl font-serif font-light text-white">{featuredProject.collection}</p>
-              <p className="text-[0.5rem] tracking-[0.2em] uppercase text-white/40 mt-1">Collection</p>
+              <p className="text-[0.6rem] tracking-[0.2em] uppercase text-white/40 mt-2">Collection</p>
             </div>
             <div>
               <p className="text-2xl font-serif font-light text-white">{featuredProject.year}</p>
-              <p className="text-[0.5rem] tracking-[0.2em] uppercase text-white/40 mt-1">Completed</p>
+              <p className="text-[0.6rem] tracking-[0.2em] uppercase text-white/40 mt-2">Completed</p>
             </div>
           </div>
         </FadeIn>
