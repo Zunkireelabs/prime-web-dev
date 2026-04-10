@@ -1,22 +1,27 @@
 import type { CatalogProduct } from "./types";
 
 // ─── 600×600mm Vitrified Floor Tiles — Product Catalogue 2025 ───
-// 7 Sub-Series + Patio & Driveway (400×400mm)
+// 7 Sub-Series (Elegant, Glossy, Marble, Monochrome, Wooden, Stone)
 
 const C = "vitrified-600x600" as const;
 const S = "600×600 mm";
 const V = "Vitrified" as const;
 
 // Helper to create tiles quickly
-const tile = (name: string, series: string, finish: "Matt" | "Glossy" | "Satin", category: typeof V | "Wood Look" | "Stone Look" | "Marble Look" | "Monochrome" | "Patio" | "Driveway" = V, size = S, app: "Floor" | "Outdoor" | "Patio" | "Driveway" = "Floor"): CatalogProduct => ({
+const tile = (
+  name: string,
+  series: string,
+  finish: "Matt" | "Glossy" | "Satin",
+  category: typeof V | "Wood Look" | "Stone Look" | "Marble Look" | "Monochrome" = V
+): CatalogProduct => ({
   name,
   slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
   catalog: C,
-  category: category,
+  category,
   series,
-  size,
+  size: S,
   finish,
-  application: app,
+  application: "Floor",
   image: `/images/catalog/vitrified/${name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "")}.jpg`,
 });
 
@@ -128,46 +133,6 @@ const stone: CatalogProduct[] = [
   tile("Antiquity Biege", "Stone", "Matt", "Stone Look"),
 ];
 
-// ── PATIO SERIES (Matt, 400×400mm) ──
-
-const P = "400×400 mm";
-const patio: CatalogProduct[] = [
-  tile("Earthen Light Grey", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Sandstone", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Earthen Dark Grey", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Plain White", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Baltic White", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Plain Ivory", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Cosmic Brown", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Cassion Velvet Grey", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Cosmic Beige", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Hexagon Grey Dry", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Cassion Velvet", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Hexagon Brown Mixed", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Grey Crushed Coated", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Brown Crushed Coated", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Ridge Petals Brown", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Mayan Moss Decor", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Ridge Petals Blue", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Mayan Moss", "Patio", "Matt", "Patio", P, "Patio"),
-  tile("Zeal Dotted Brown", "Patio", "Matt", "Patio", P, "Patio"),
-];
-
-// ── DRIVEWAY SERIES (Matt, 400×400mm) ──
-
-const driveway: CatalogProduct[] = [
-  tile("Cobble Grey", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("Cobble Dark", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("Pebble Multi", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("Slate Rock", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("Cement Grey", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("Cement Dark", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("Brick Mosaic", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("River Stone", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("Granite Grey", "Driveway", "Matt", "Driveway", P, "Driveway"),
-  tile("Granite Dark", "Driveway", "Matt", "Driveway", P, "Driveway"),
-];
-
 export const vitrified600x600: CatalogProduct[] = [
   ...elegant,
   ...glossy,
@@ -175,6 +140,4 @@ export const vitrified600x600: CatalogProduct[] = [
   ...monochrome,
   ...wooden,
   ...stone,
-  ...patio,
-  ...driveway,
 ];

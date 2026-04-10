@@ -154,6 +154,9 @@ async function migrate() {
     wall300x600,
   } = await import("../src/data/catalog/wall-300x600");
   const {
+    vitrified400x400,
+  } = await import("../src/data/catalog/vitrified-400x400");
+  const {
     vitrified600x600,
   } = await import("../src/data/catalog/vitrified-600x600");
   const {
@@ -166,6 +169,7 @@ async function migrate() {
   const allProducts = [
     ...wall300x450,
     ...wall300x600,
+    ...vitrified400x400,
     ...vitrified600x600,
     ...eleganz600x1200,
     ...spiritOfNepal,

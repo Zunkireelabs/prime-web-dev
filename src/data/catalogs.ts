@@ -28,8 +28,8 @@ export const catalogEntries: CatalogEntry[] = [
     name: "Vitrified — 400×400MM",
     size: "400×400MM",
     filterValue: "400×400 mm",
-    count: "29 designs",
-    types: "Matt · Rustic · Patio · Driveway",
+    count: "49 designs",
+    types: "Matt · Patio · Driveway · Decorative",
     description:
       "Durable vitrified tiles for patios, driveways, and outdoor spaces. Built to withstand the elements.",
     image: "/images/catalogs/vitrified-400x400.png",
