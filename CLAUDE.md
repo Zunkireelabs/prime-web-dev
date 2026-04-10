@@ -33,13 +33,11 @@ Design inspired by: Simpolo (minimalism) + Jaquar (typography/showcase) + Kajari
 npm run dev          # Local dev server
 npm run build        # Static export → ./out/
 npm run lint         # ESLint
-./deploy.sh dev      # Deploy to dev-primetiles.zunkireelabs.com
-./deploy.sh prod     # Deploy to prime-tiles.zunkireelabs.com (needs confirmation)
+./deploy.sh          # Deploy to dev-primetiles.zunkireelabs.com
 ```
 
 ## URLs
 - **Dev:** https://dev-primetiles.zunkireelabs.com
-- **Prod:** https://prime-tiles.zunkireelabs.com
 
 ## Skills (27 Custom Skills)
 All in `.claude/skills/`:

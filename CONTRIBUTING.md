@@ -128,15 +128,13 @@ Defined in `src/app/globals.css`. Always use these — never hardcode colors.
 
 - Conventional commit prefixes: `feat:`, `fix:`, `style:`, `perf:`, `docs:`
 - Run `npm run build` and confirm zero errors before every commit
-- Never deploy to production without explicit confirmation from the project owner
 
 ---
 
 ## Deployment
 
 ```bash
-./deploy.sh dev     # Deploy to dev-primetiles.zunkireelabs.com — always safe
-./deploy.sh prod    # Deploy to prime-tiles.zunkireelabs.com — requires "y" confirmation
+./deploy.sh    # Deploy to dev-primetiles.zunkireelabs.com
 ```
 
-Build must pass with zero errors and zero TypeScript warnings before deploying to either environment.
+Build must pass with zero errors and zero TypeScript warnings before deploying.

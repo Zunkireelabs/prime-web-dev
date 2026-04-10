@@ -1,10 +1,10 @@
 ---
 name: deploy-workflow
-description: Only deploy to dev during development phase — never deploy to production unless explicitly asked
+description: Project has only a dev deployment target — there is no production target
 type: feedback
 ---
 
-Only deploy to dev (dev-primeapp.zunkireelabs.com) during the development phase. Do NOT deploy to production (prime-tiles.zunkireelabs.com) unless the user explicitly asks for it.
+This project deploys only to dev (`dev-primetiles.zunkireelabs.com`) via `./deploy.sh`. There is no production deployment target — the prod URL, prod compose file, and prod branch in deploy.sh were removed on 2026-04-10 at the user's request.
 
-**Why:** User wants to finish development first before pushing anything to production.
-**How to apply:** When building/testing changes, always use `./deploy.sh dev` only. Never auto-deploy to prod.
+**Why:** User explicitly removed all prod-deploy capability from this repo. Any future "deploy to prod" request should prompt for clarification about where prod even is.
+**How to apply:** When asked to deploy, use `./deploy.sh` (no args). If the user mentions production, ask where the prod target is — the old prod URL was deliberately retired and should not be reintroduced.

@@ -30,7 +30,7 @@ The build must complete with zero errors before deploying. Do not deploy from a 
 ## Deploy to Dev
 
 ```bash
-./deploy.sh dev
+./deploy.sh
 ```
 
 This will:
@@ -43,20 +43,6 @@ This will:
 
 ---
 
-## Deploy to Production
-
-```bash
-./deploy.sh prod
-```
-
-Same pipeline as dev, with the following differences:
-
-- Requires typing `y` to confirm before proceeding
-- Serves at: https://prime-tiles.zunkireelabs.com
-- **NEVER deploy to production without explicit approval**
-
----
-
 ## Docker Architecture
 
 | File | Purpose |
@@ -64,7 +50,6 @@ Same pipeline as dev, with the following differences:
 | `Dockerfile` | Copies `./out/` into an Nginx Alpine container |
 | `nginx/static.conf` | Handles SPA routing, caching headers, and gzip compression |
 | `docker-compose.dev.yml` | Dev container configuration |
-| `docker-compose.yml` | Production container configuration |
 
 ---
 
@@ -73,7 +58,6 @@ Same pipeline as dev, with the following differences:
 | Environment | URL | Compose File |
 |-------------|-----|--------------|
 | Development | dev-primetiles.zunkireelabs.com | docker-compose.dev.yml |
-| Production | prime-tiles.zunkireelabs.com | docker-compose.yml |
 
 ---
 

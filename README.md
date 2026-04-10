@@ -33,16 +33,12 @@ npm run lint       # ESLint
 Deployments use Docker Compose with Nginx to serve the static `./out/` directory.
 
 ```bash
-./deploy.sh dev    # Deploy to dev-primetiles.zunkireelabs.com
-./deploy.sh prod   # Deploy to prime-tiles.zunkireelabs.com (requires confirmation)
+./deploy.sh    # Deploy to dev-primetiles.zunkireelabs.com
 ```
 
 | Environment | URL |
 |---|---|
 | Dev | https://dev-primetiles.zunkireelabs.com |
-| Prod | https://prime-tiles.zunkireelabs.com |
-
-> Never deploy to production unless explicitly requested.
 
 ---
 

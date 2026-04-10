@@ -240,10 +240,7 @@ npm run build
 
 | Environment | URL | Command |
 |-------------|-----|---------|
-| Dev | https://dev-primetiles.zunkireelabs.com | `./deploy.sh dev` |
-| Production | https://prime-tiles.zunkireelabs.com | `./deploy.sh prod` (requires confirmation) |
-
-Production deploys require explicit user confirmation. Never deploy to production automatically.
+| Dev | https://dev-primetiles.zunkireelabs.com | `./deploy.sh` |
 
 ---
 

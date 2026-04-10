@@ -387,8 +387,6 @@ src/
 
 ## 12. Deployment
 
-- **Dev**: `./deploy.sh dev` → https://dev-primetiles.zunkireelabs.com
-- **Prod**: `./deploy.sh prod` → https://prime-tiles.zunkireelabs.com (requires confirmation)
+- **Dev**: `./deploy.sh` → https://dev-primetiles.zunkireelabs.com
 - **Build**: `npm run build` → static export to `./out/`
 - Always verify build passes before deploying.
-- Never deploy to production without explicit approval.

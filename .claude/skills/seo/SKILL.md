@@ -33,8 +33,6 @@ Add to layout.tsx for rich search results:
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Prime Ceramics",
-  "url": "https://prime-tiles.zunkireelabs.com",
-  "logo": "https://prime-tiles.zunkireelabs.com/images/logo.png",
   "description": "Premium porcelain, ceramic, and natural stone tiles",
   "address": {
     "@type": "PostalAddress",
@@ -108,14 +106,14 @@ Each page should have:
 ```
 User-agent: *
 Allow: /
-Sitemap: https://prime-tiles.zunkireelabs.com/sitemap.xml
+Sitemap: https://your-domain.com/sitemap.xml
 ```
 
 ## sitemap.xml
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://prime-tiles.zunkireelabs.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://prime-tiles.zunkireelabs.com/services/</loc><priority>0.8</priority></url>
+  <url><loc>https://your-domain.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://your-domain.com/services/</loc><priority>0.8</priority></url>
 </urlset>
 ```

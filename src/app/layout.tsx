@@ -77,8 +77,6 @@ export default function RootLayout({
                 "@type": "Organization",
                 "name": "Prime Tiles Industries",
                 "alternateName": "Prime Ceramics",
-                "url": "https://prime-tiles.zunkireelabs.com",
-                "logo": "https://prime-tiles.zunkireelabs.com/images/prime-logo.png",
                 "description": "Nepal's No.1 tile manufacturer. First to manufacture both wall and floor tiles with Italian SACMI technology.",
                 "foundingDate": "2021",
                 "numberOfEmployees": {
@@ -93,7 +91,6 @@ export default function RootLayout({
                 "@type": "LocalBusiness",
                 "name": "Prime Tiles Industries Pvt. Ltd.",
                 "description": "Nepal's largest tile manufacturing facility with 4M sq m annual capacity.",
-                "url": "https://prime-tiles.zunkireelabs.com",
                 "address": {
                   "@type": "PostalAddress",
                   "addressLocality": "Rautahat",
