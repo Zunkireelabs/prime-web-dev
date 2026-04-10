@@ -152,6 +152,14 @@ export const tileProduct = defineType({
       description: "Order within the catalog. Lower numbers appear first.",
       initialValue: 100,
     }),
+    defineField({
+      name: "hidden",
+      title: "Hidden from website",
+      type: "boolean",
+      initialValue: false,
+      description:
+        "If checked, this product is preserved in Sanity but does not appear on the website. Uncheck once you have added an image.",
+    }),
   ],
   orderings: [
     {
@@ -176,11 +184,14 @@ export const tileProduct = defineType({
       subtitle: "size",
       media: "image",
       catalog: "catalog.name",
+      hidden: "hidden",
     },
-    prepare({ title, subtitle, media, catalog }) {
+    prepare({ title, subtitle, media, catalog, hidden }) {
       return {
-        title,
-        subtitle: `${catalog || ""} — ${subtitle || ""}`,
+        title: hidden ? `🔒 ${title}` : title,
+        subtitle: `${catalog || ""} — ${subtitle || ""}${
+          hidden ? " · HIDDEN" : ""
+        }`,
         media,
       };
     },

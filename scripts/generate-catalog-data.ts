@@ -37,7 +37,7 @@ function urlFor(source: any) {
 }
 
 const allProductsQuery = `
-  *[_type == "tileProduct"] | order(sortOrder asc, name asc) {
+  *[_type == "tileProduct" && !(hidden == true)] | order(sortOrder asc, name asc) {
     name,
     "slug": slug.current,
     "catalog": catalog->catalogId,
