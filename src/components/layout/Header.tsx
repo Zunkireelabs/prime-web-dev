@@ -256,7 +256,7 @@ export default function Header() {
                     <ul className="space-y-0">
                       {spaces.map((s) => (
                         <li key={s}>
-                          <a href={`/catalog?space=${encodeURIComponent(s.toLowerCase())}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
+                          <a href={`/products?search=${encodeURIComponent(s)}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <span>{s}</span>
                             <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                           </a>
@@ -271,7 +271,7 @@ export default function Header() {
                     <ul className="space-y-0">
                       {collections.map((c) => (
                         <li key={c}>
-                          <a href={`/catalog?collection=${encodeURIComponent(c.toLowerCase())}`} className="group flex items-center justify-between text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
+                          <a href={`/products?collection=${encodeURIComponent(c)}`} className="group flex items-center justify-between text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <div className="flex items-center gap-1.5">
                               <span className={c === "Spirit of Nepal" ? "text-accent-light font-medium" : ""}>{c}</span>
                               <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
@@ -291,7 +291,7 @@ export default function Header() {
                     <ul className="space-y-0">
                       {finishes.map((f) => (
                         <li key={f}>
-                          <a href={`/catalog?finish=${encodeURIComponent(f.toLowerCase())}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
+                          <a href={`/products?finish=${encodeURIComponent(f)}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <span>{f}</span>
                             <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                           </a>
@@ -306,7 +306,7 @@ export default function Header() {
                     <ul className="space-y-0">
                       {sizes.map((s) => (
                         <li key={s}>
-                          <a href={`/catalog?size=${encodeURIComponent(s)}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
+                          <a href={`/products?size=${encodeURIComponent(s)}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <span>{s}</span>
                             <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                           </a>

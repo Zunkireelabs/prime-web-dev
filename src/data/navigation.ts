@@ -3,7 +3,7 @@ import type { NavItem, FooterColumn, FooterLink } from "./types";
 // ── Header Nav ──
 
 export const navItems: NavItem[] = [
-  { label: "Tiles", href: "#collections", hasMega: true },
+  { label: "Tiles", href: "/products", hasMega: true },
   { label: "Catalog", href: "/catalog", hasMega: false },
   { label: "Projects", href: "#projects", hasMega: false },
   { label: "Dealers", href: "/dealers", hasMega: false },
