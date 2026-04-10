@@ -105,7 +105,7 @@ function generateFileKeys(filename: string): string[] {
 // ── Main ──
 
 async function linkImages() {
-  const catalogIds = ["wall-300x600", "vitrified-400x400"];
+  const catalogIds = ["wall-300x600", "vitrified-400x400", "vitrified-600x600"];
 
   for (const catalogId of catalogIds) {
     console.log(`\n📎 Processing ${catalogId}...`);
@@ -117,7 +117,7 @@ async function linkImages() {
 
     // Fetch products without images for this catalog
     const products: { _id: string; name: string }[] = await client.fetch(
-      `*[_type == "tileProduct" && catalog->catalogId == $catalogId && !defined(image)] { _id, name }`,
+      `*[_type == "tileProduct" && catalog->catalogId == $catalogId && !defined(image) && !(hidden == true)] { _id, name }`,
       { catalogId }
     );
     console.log(`   ${products.length} products need images`);
