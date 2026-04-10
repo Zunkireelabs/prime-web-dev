@@ -53,5 +53,8 @@ Screenshot*
 src/data/catalog/sanity-products.json
 scripts/image-map*.json
 
+# CSV drafts (work in progress)
+data-drafts/
+
 # Temp files
 temp_ss/

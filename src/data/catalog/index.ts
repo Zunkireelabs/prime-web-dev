@@ -16,6 +16,7 @@ import type { CatalogProduct, CatalogName, CatalogFinish } from "./types";
 // ── Fallback: local TypeScript data ──
 
 import { eleganz600x1200 } from "./eleganz-600x1200";
+import { vitrified400x400 } from "./vitrified-400x400";
 import { vitrified600x600 } from "./vitrified-600x600";
 import { wall300x450 } from "./wall-300x450";
 import { wall300x600 } from "./wall-300x600";
@@ -24,6 +25,7 @@ import { spiritOfNepal } from "./spirit-of-nepal";
 const localProducts: CatalogProduct[] = [
   ...wall300x450,
   ...wall300x600,
+  ...vitrified400x400,
   ...vitrified600x600,
   ...eleganz600x1200,
   ...spiritOfNepal,

@@ -143,4 +143,68 @@ Zero build errors. Zero type errors. All 9 pages compiled.
 
 ---
 
+## Session 4 — 2026-04-10
+**Focus:** Vitrified 400×400 catalog — reconciliation with real source folder + Sanity "hide don't delete" pattern
+
+### Context
+- Resumed on a fresh clone of the repo on a new Mac (previous machine unavailable).
+- Inspected Sanity and found the `vitrified-400x400` catalog had **29 products**:
+  - 7 real tiles with linked images (from Apr 9 work)
+  - 22 "ghost" tiles from previous data extraction — names only, no images, no matching source files
+- Client provided the actual 400×400 source folder (`/Prime Tiles/400X400 MM/`) containing **49 real tiles**: 27 top-level + 18 Outdoor Tiles + 4 Parking Tiles.
+- Local data file (`vitrified-600x600.ts` patio/driveway sub-arrays) only matched 9 of the real source tiles — the rest were fabricated.
+
+### Key decisions
+- **"Hide, don't delete" policy** — tiles without images are preserved in Sanity with `hidden: true`. Client can later upload an image and uncheck "Hidden" in Studio. Zero data loss.
+- **Never delete a tile that has an image**, even if it's not in the current source folder (Cosmic Beige kept as visible).
+- **Split 400×400 into its own data file** — `src/data/catalog/vitrified-400x400.ts` with 11 series grouped by product family (Classic, Elite, Epoque, Intex, Monarch, Pedra, Plaster, Decorative, Zealdotted, Outdoor, Parking).
+- Renamed `Zeal Dotted Brown` → `Zealdotted Brown` to match the source filename.
+
+### What was done
+
+**Local data / codebase**
+- Created `src/data/catalog/vitrified-400x400.ts` — 49 tiles, 11 series.
+- Cleaned `src/data/catalog/vitrified-600x600.ts` — removed 19 fake patio + 10 fake driveway sub-arrays; tightened the `tile()` helper signature. Now 78 real 600×600 entries, matching the `catalogs.ts` count.
+- Updated `src/data/catalog/index.ts` to import `vitrified400x400`.
+- Updated `src/data/catalogs.ts` — showcase count `29 designs` → `49 designs`.
+- Updated `scripts/sanity-migrate.ts` — imports and spreads `vitrified400x400`.
+- Created `public/images/catalog/vitrified-400x400/` with 49 JPGs (slug-normalized filenames).
+
+**Sanity schema + site filter**
+- Added `hidden: boolean` field to `tileProduct` schema with 🔒 preview badge.
+- Updated `scripts/generate-catalog-data.ts` GROQ to `*[_type == "tileProduct" && !(hidden == true)]` — backward compatible since docs without the field are treated as visible.
+
+**Tooling (new reusable scripts)**
+- `scripts/sanity-inspect.ts` — read-only inventory tool (catalogs, product counts, image coverage, hidden state). Safe to run anytime.
+- `scripts/sanity-reconcile-400x400.ts` — idempotent reconcile with `--dry-run` (default) and `--confirm`. Matches by normalized name, patches existing, creates net-new, hides orphans-without-images.
+
+**Execution against Sanity**
+- Dry-run reviewed, then executed with `--confirm`: **10 patched, 1 preserved visible, 18 hidden, 39 created**.
+- Uploaded 49 images via `sanity-upload-images.ts --dir public/images/catalog/vitrified-400x400 --catalog vitrified-400x400 --resume`.
+- Linked images via `sanity-link-images.ts` — 43 newly linked, 18 unmatched (the intentionally-hidden fake tiles).
+
+### End state
+
+**Sanity `vitrified-400x400`**: 68 total products
+- **50 visible** (49 from the source folder + Cosmic Beige preserved) — all with images
+- **18 hidden** (Plain White, Plain Ivory, Hexagon Grey Dry/Brown Mixed, Grey/Brown Crushed Coated, Ridge Petals Brown/Blue, Cobble Grey/Dark, Pebble Multi, Slate Rock, Cement Grey/Dark, Brick Mosaic, River Stone, Granite Grey/Dark) — preserved for client to add images later
+
+**Other catalogs untouched**: wall-300x600 still has 74 linked images, everything else unchanged.
+
+**Sanity totals**: 531 products, 124 with images (before session: 492 products, 81 with images).
+
+**Build**: `npm run build` passes. Catalog page renders 50 tiles under the 400×400 size tab.
+
+### Deployments
+- **Local dev verified** on http://localhost:3001/catalog.
+- **Dev server deploy**: not yet done in this session.
+
+### Not done / TODO (Session 5+)
+- Deploy to `dev-primetiles.zunkireelabs.com` (needs local docker context check first).
+- Apply the same reconcile pattern to the other catalogs, one folder at a time: 300×600, 600×600, 600×1200, Spirit of Nepal, 300×450 (when source becomes available).
+- Decide whether to apply `hidden: true` globally to all no-image products across other catalogs (currently 411 no-image products site-wide).
+- Untracked in-progress files (`src/app/products/`, `src/components/sections/Products*.tsx`, `src/components/ui/TileCard.tsx`, modifications to `Header.tsx`, `CatalogGrid.tsx`, `navigation.ts`) appear to be leftover from a previous session and are NOT committed as part of Session 4.
+
+---
+
 <!-- Future sessions append below this line -->
