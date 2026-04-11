@@ -201,9 +201,49 @@ Zero build errors. Zero type errors. All 9 pages compiled.
 
 ### Not done / TODO (Session 5+)
 - Deploy to `dev-primetiles.zunkireelabs.com` (needs local docker context check first).
-- Apply the same reconcile pattern to the other catalogs, one folder at a time: 300×600, 600×600, 600×1200, Spirit of Nepal, 300×450 (when source becomes available).
-- Decide whether to apply `hidden: true` globally to all no-image products across other catalogs (currently 411 no-image products site-wide).
+- Apply the same reconcile pattern to the other catalogs, one folder at a time: 300×600, 600×1200, Spirit of Nepal, 300×450 (when source becomes available).
+- Decide whether to apply `hidden: true` globally to all no-image products across other catalogs.
 - Untracked in-progress files (`src/app/products/`, `src/components/sections/Products*.tsx`, `src/components/ui/TileCard.tsx`, modifications to `Header.tsx`, `CatalogGrid.tsx`, `navigation.ts`) appear to be leftover from a previous session and are NOT committed as part of Session 4.
+
+### Session 4 continued — Vitrified 600×600 reconciliation
+
+Applied the CSV workflow to the 600×600 catalog as the second test case.
+
+**Source folder layout** (`/Prime Tiles/tiles category and product /600X600 MM/`):
+- Elegant Series — 28 files, **only 2 real products** (CEMENTO SLATE, CRYPTIC_PINK_ENDLESS). The other 26 are `600X600 NEW LAUNCH DESIGNS-01..26.png` — catalog spread pages, not individual product photos.
+- Marble Series — 5 products
+- Plain Series — 6 products
+- Stone Series — 4 products
+- Woody Series — 26 files (25 products + 1 garbage `600x600.jpg` placeholder)
+- **Total real: 42 products** out of 69 files.
+
+**Catalog-from-folder enhancements** (for this catalog and future ones):
+- Added `SKIP_PATTERNS` to filter out non-product files (catalog spreads matching `NEW LAUNCH DESIGNS`, numeric-only filenames like `600x600.jpg`).
+- Added `stripFolderSuffix()` to turn "Elegant Series" → "Elegant", "Woody Series" → "Woody", etc.
+- Added heuristics for common look-based folder names: Wood Look, Stone Look, Marble Look, Monochrome, Vitrified.
+
+**Reconcile result** (after one CSV typo fix: "Woody Imppression" → "Woody Impression"):
+- **33 patched** (existing Sanity products updated to new series/category, set visible)
+- **9 created** (Milky Crema, Echo Dark, Antiquity Natural/Pearl/base, 3D Gloss, Edged Wood Intence, Gingham Toss, Timbre Mat)
+- **45 hidden** (Zotak/Dyna/Lenox/Smoky/Cloudy/Armani/Griege/Vinyl/Norwich/Eleganza Teak/Serendipity Multi/etc. — all preserved for client to add images later)
+- **End state**: 42 visible + 45 hidden = 87 total in vitrified-600x600.
+
+**Image pipeline notes**:
+- Staging flow: `python3` script to copy 42 source images into `~/prime-tiles-staging/600x600/` with slug-normalized filenames before upload.
+- `lavish-log.jpg` was 251 MB (10299×10299 CMYK) and hit Sanity's upload size limit (503). Resized the staged copy to 2400px / ~10 MB with `sips`. Original source file untouched.
+- Sanity API returned transient 503s on several files during upload. Resolved by reducing `--batch` to 2 then 1 and retrying with `--resume`.
+
+**Bug found + fixed in `sanity-link-images.ts`**:
+- The fuzzy matcher was over-matching: `antiquity.jpg` linked to `Antiquity`, `Antiquity Multi`, and `Antiquity Biege` (it stripped the suffix and matched the stem). Same for `serendipity.jpg` → `Serendipity` and `Serendipity Multi`.
+- The 3 mis-matched products (`Antiquity Multi`, `Antiquity Biege`, `Serendipity Multi`) were correctly marked `hidden: true` so they stayed off the site, but had wrong image references.
+- **Fix 1**: Added `!(hidden == true)` guard to the linker's GROQ target query so it never touches hidden products.
+- **Fix 2**: Wrote `scripts/sanity-unlink-orphan-images.ts` one-shot to clean up the 3 mis-linked products after the fact.
+
+**Sanity totals after 600×600 work**:
+- 540 products (up from 531 — 9 net-new)
+- 169 with images (up from 124 — 45 newly linked, minus 3 unlinked orphans)
+
+**Committed snapshot**: `data-exports/vitrified-600x600.csv` captures the final state (42 visible with image, 45 hidden without).
 
 ---
 
