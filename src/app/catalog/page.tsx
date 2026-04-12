@@ -22,27 +22,19 @@ const collectionFilterMap: Record<string, string> = {
 function CatalogContent() {
   const searchParams = useSearchParams();
   const collectionParam = searchParams.get("collection");
-  const sizeParam = searchParams.get("size");
-  const finishParam = searchParams.get("finish");
-  const categoryParam = searchParams.get("category");
-
-  const initialFilter = (collectionParam && collectionFilterMap[collectionParam])
-    || (sizeParam ? sizeParam : null)
-    || "all";
-  const initialFinish = finishParam || "";
-  const initialCategory = categoryParam || "";
+  const initialFilter = (collectionParam && collectionFilterMap[collectionParam]) || "all";
 
   const [activeFilter, setActiveFilter] = useState(initialFilter);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll to grid when arriving with a filter param */
+  /* Scroll to grid when arriving with a collection filter */
   useEffect(() => {
-    if (initialFilter !== "all" || initialFinish || initialCategory) {
+    if (initialFilter !== "all") {
       setTimeout(() => {
         gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 600);
     }
-  }, [initialFilter, initialFinish, initialCategory]);
+  }, [initialFilter]);
 
   const handleViewCollection = useCallback((filterValue: string) => {
     setActiveFilter(filterValue);
@@ -62,7 +54,7 @@ function CatalogContent() {
         <CatalogStats />
         <SectionTransition from="dark" to="light-alt" variant="wave" />
         <div ref={gridRef}>
-          <CatalogGrid initialSize={activeFilter} initialFinish={initialFinish} initialCategory={initialCategory} />
+          <CatalogGrid initialSize={activeFilter} />
         </div>
         <SectionTransition from="light-alt" to="dark" variant="diagonal" />
         <CTASection />
