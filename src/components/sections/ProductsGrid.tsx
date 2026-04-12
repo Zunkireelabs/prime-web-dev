@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronDown, Search, X } from "lucide-react";
-import FadeIn from "@/components/animations/FadeIn";
+import StaggerGrid from "@/components/animations/StaggerGrid";
 import TileCard from "@/components/ui/TileCard";
+import ProductDetailPanel from "./ProductDetailPanel";
 import type { CatalogProduct } from "@/data/catalog";
 import type { FilterKey, ProductFilters, SortKey } from "./ProductsBrowser";
 
@@ -45,8 +46,8 @@ export default function ProductsGrid({
   onSortChange,
 }: Props) {
   const [count, setCount] = useState(BATCH);
+  const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
 
-  // Reset page when filter result set changes
   useEffect(() => {
     setCount(BATCH);
   }, [products.length, filters.sort, filters.search]);
@@ -65,6 +66,19 @@ export default function ProductsGrid({
     });
   });
 
+  const handleCardClick = useCallback((product: CatalogProduct) => {
+    setSelectedProduct(product);
+  }, []);
+
+  const handleClosePanel = useCallback(() => {
+    setSelectedProduct(null);
+  }, []);
+
+  const staggerKey = useMemo(
+    () => `${products.length}-${filters.sort}-${filters.search}`,
+    [products.length, filters.sort, filters.search]
+  );
+
   return (
     <div className="flex-1 min-w-0">
       {/* Toolbar — search + sort */}
@@ -72,9 +86,9 @@ export default function ProductsGrid({
         className="flex flex-col md:flex-row md:items-center md:justify-between"
         style={{
           gap: "16px",
-          paddingBottom: "20px",
-          borderBottom: "1px solid rgba(43,36,28,0.1)",
-          marginBottom: "24px",
+          paddingBottom: "24px",
+          borderBottom: "1px solid rgba(43,36,28,0.06)",
+          marginBottom: "28px",
         }}
       >
         {/* Search */}
@@ -82,17 +96,20 @@ export default function ProductsGrid({
           <Search
             size={14}
             className="absolute top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none"
-            style={{ left: "14px" }}
+            style={{ left: "16px" }}
           />
           <input
             type="text"
             value={filters.search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search tiles..."
-            className="w-full text-sm bg-surface text-ink placeholder:text-ink-muted focus:outline-none focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors"
+            className="w-full text-sm text-ink placeholder:text-ink-muted focus:outline-none focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{
-              padding: "10px 40px 10px 40px",
-              border: "1px solid rgba(43,36,28,0.12)",
+              padding: "12px 40px 12px 42px",
+              border: "1px solid rgba(43,36,28,0.1)",
+              borderRadius: "28px",
+              background: "var(--color-surface-card)",
+              transition: "border-color 0.3s cubic-bezier(0.22,1,0.36,1)",
             }}
           />
           {filters.search && (
@@ -100,7 +117,8 @@ export default function ProductsGrid({
               type="button"
               onClick={() => onSearchChange("")}
               aria-label="Clear search"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 text-ink-muted hover:text-ink transition-colors duration-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-ink-muted hover:text-ink"
+              style={{ transition: "color 0.3s" }}
             >
               <X size={14} />
             </button>
@@ -108,15 +126,23 @@ export default function ProductsGrid({
         </div>
 
         {/* Count + sort */}
-        <div className="flex items-center justify-between md:justify-end" style={{ gap: "24px" }}>
-          <span className="text-[0.65rem] font-medium tracking-[0.12em] uppercase text-ink-muted tabular-nums whitespace-nowrap">
-            {visible.length} / {products.length}
+        <div className="flex items-center justify-between md:justify-end" style={{ gap: "20px" }}>
+          <span className="text-[0.6rem] font-medium tracking-[0.14em] uppercase text-ink-muted tabular-nums whitespace-nowrap">
+            {visible.length} of {products.length}
           </span>
-          <div className="relative">
+          <div
+            className="relative"
+            style={{
+              background: "var(--color-surface-card)",
+              borderRadius: "20px",
+              padding: "8px 16px",
+            }}
+          >
             <select
               value={filters.sort}
               onChange={(e) => onSortChange(e.target.value as SortKey)}
-              className="appearance-none pr-6 text-[0.7rem] font-medium tracking-[0.1em] uppercase bg-transparent text-ink-light hover:text-ink focus:outline-none focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2 cursor-pointer transition-colors"
+              className="appearance-none pr-5 text-[0.65rem] font-medium tracking-[0.1em] uppercase bg-transparent text-ink-light hover:text-ink focus:outline-none cursor-pointer"
+              style={{ transition: "color 0.3s" }}
               aria-label="Sort products"
             >
               {SORT_OPTIONS.map((o) => (
@@ -125,84 +151,77 @@ export default function ProductsGrid({
                 </option>
               ))}
             </select>
-            <ChevronDown size={12} className="absolute right-0 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
+            <ChevronDown size={11} className="absolute right-4 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
           </div>
         </div>
       </div>
 
       {/* Active filter chips */}
       {chips.length > 0 && (
-        <div className="flex flex-wrap items-center" style={{ gap: "8px", marginBottom: "28px" }}>
+        <div className="flex flex-wrap items-center" style={{ gap: "8px", marginBottom: "32px" }}>
           {chips.map((c) => (
             <button
               key={`${c.key}:${c.value}`}
               type="button"
               onClick={() => onToggle(c.key, c.value)}
-              className="inline-flex items-center text-[0.6rem] font-medium tracking-[0.1em] uppercase text-ink hover:border-accent hover:text-accent transition-colors duration-300"
+              className="inline-flex items-center text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink hover:text-accent"
               style={{
                 gap: "8px",
-                padding: "6px 12px",
-                border: "1px solid rgba(43,36,28,0.2)",
+                padding: "7px 14px",
+                border: "1px solid rgba(43,36,28,0.15)",
+                borderRadius: "20px",
+                transition: "color 0.3s, border-color 0.3s",
               }}
             >
               {c.label}
-              <X size={11} />
+              <X size={10} />
             </button>
           ))}
           <button
             type="button"
             onClick={onClearAll}
-            className="text-[0.6rem] font-medium tracking-[0.12em] uppercase text-ink-muted hover:text-accent transition-colors duration-300"
-            style={{ padding: "6px 4px" }}
+            className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted hover:text-accent"
+            style={{ padding: "7px 6px", transition: "color 0.3s" }}
           >
             Clear All
           </button>
         </div>
       )}
 
-      {/* Grid or empty state */}
+      {/* Grid */}
       {products.length > 0 ? (
         <>
-          <div
-            className="grid grid-cols-2 md:grid-cols-3"
+          <StaggerGrid
+            key={staggerKey}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
             style={{
-              columnGap: "clamp(20px, 2.5vw, 24px)",
-              rowGap: "clamp(32px, 4vw, 40px)",
+              columnGap: "clamp(24px, 3vw, 32px)",
+              rowGap: "clamp(40px, 5vw, 56px)",
             }}
           >
-            {visible.map((p, i) => (
-              <FadeIn key={p.slug} delay={Math.min(i * 0.02, 0.2)} direction="up" distance={12}>
-                <TileCard product={p} />
-              </FadeIn>
+            {visible.map((p) => (
+              <TileCard key={p.slug} product={p} onClick={handleCardClick} />
             ))}
-          </div>
+          </StaggerGrid>
 
           {hasMore && (
-            <div style={{ marginTop: "64px", textAlign: "center" }}>
+            <div style={{ marginTop: "72px", textAlign: "center" }}>
               <button
                 type="button"
                 onClick={() => setCount((c) => c + BATCH)}
                 className="btn-line"
               >
-                Show More ({products.length - count})
+                Load More Tiles ({products.length - count} remaining)
               </button>
             </div>
           )}
         </>
       ) : (
-        <div style={{ padding: "96px 0", textAlign: "center" }}>
-          <p className="h3 text-ink-muted" style={{ marginBottom: "16px" }}>
-            No tiles found
+        <div style={{ padding: "120px 0", textAlign: "center" }}>
+          <p className="font-serif font-light text-ink-muted" style={{ fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)", marginBottom: "16px" }}>
+            No tiles match your filters
           </p>
-          <p
-            className="body-sm"
-            style={{
-              marginBottom: "32px",
-              maxWidth: "320px",
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
+          <p className="text-sm text-ink-light" style={{ marginBottom: "32px", maxWidth: "340px", marginLeft: "auto", marginRight: "auto", lineHeight: 1.7 }}>
             Try loosening your filters or searching for a different term.
           </p>
           {activeCount > 0 && (
@@ -212,6 +231,13 @@ export default function ProductsGrid({
           )}
         </div>
       )}
+
+      {/* Detail panel */}
+      <ProductDetailPanel
+        product={selectedProduct}
+        onClose={handleClosePanel}
+        onProductChange={setSelectedProduct}
+      />
     </div>
   );
 }

@@ -18,6 +18,7 @@ export default function ProductsPage() {
         <Header />
         <main id="main-content">
           <ProductsHero />
+          <SectionTransition from="dark" to="light-alt" variant="wave" />
           <ProductsBrowser />
           <SectionTransition from="light-alt" to="dark" variant="diagonal" />
           <CTASection />
