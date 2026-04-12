@@ -69,7 +69,7 @@ export default function BrowseBy() {
             {[...items, ...items].map((item, i) => (
               <a
                 key={`${item.name}-${i}`}
-                href={`/catalog?${active.toLowerCase()}=${encodeURIComponent(item.name.toLowerCase())}`}
+                href={`/catalog?${active === "Finishes" ? "finish" : active === "Sizes" ? "size" : active === "Types" ? "category" : "browse"}=${encodeURIComponent(item.name)}`}
                 className="shrink-0 group block"
                 style={{ width: "280px", padding: "0 12px" }}
               >
