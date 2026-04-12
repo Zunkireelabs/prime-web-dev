@@ -3,21 +3,21 @@ import type { Collection, ProductCategory, BrowseData } from "./types";
 // ── Collections (used in CollectionsGrid, CollectionsStrip marquee) ──
 
 export const collections: Collection[] = [
-  { name: "Carrara White", slug: "carrara-white", category: "Porcelain", sizes: ["600×1200 mm"], image: "/images/tiles/carrara-white.webp" },
-  { name: "Bottichino", slug: "bottichino", category: "Vitrified", sizes: ["600×600 mm"], image: "/images/tiles/bottichino.webp" },
-  { name: "Driftwood", slug: "driftwood", category: "Wood Look", sizes: ["200×1200 mm"], image: "/images/tiles/driftwood.webp" },
-  { name: "Armani Bianca", slug: "armani-bianca", category: "Large Format", sizes: ["600×1200 mm"], image: "/images/tiles/armani-bianca.webp" },
-  { name: "Breccia", slug: "breccia", category: "Porcelain", sizes: ["600×600 mm"], image: "/images/tiles/breccia.webp" },
-  { name: "Smoky Grey", slug: "smoky-grey", category: "Ceramic", sizes: ["300×600 mm"], image: "/images/tiles/smoky-grey.webp" },
-  { name: "Sand Beige", slug: "sand-beige", category: "Ceramic", sizes: ["300×450 mm"], image: "/images/tiles/sand-beige.webp" },
-  { name: "Atlantic", slug: "atlantic", category: "Wall Tile", sizes: ["300×450 mm"], image: "/images/tiles/atlantic.webp" },
-  { name: "Spirit of Nepal", slug: "spirit-of-nepal", category: "Special Edition", sizes: ["600×600 mm"], image: "/images/tiles/spirit-of-nepal.webp" },
-  { name: "Onyx", slug: "onyx", category: "Porcelain", sizes: ["600×600 mm"], image: "/images/tiles/onyx.webp" },
-  { name: "Blossom", slug: "blossom", category: "Wall Tile", sizes: ["300×450 mm"], image: "/images/tiles/blossom.webp" },
-  { name: "Antique White", slug: "antique-white", category: "Ceramic", sizes: ["300×600 mm"], image: "/images/tiles/antique-white.webp" },
-  { name: "Armani Sun", slug: "armani-sun", category: "Vitrified", sizes: ["600×600 mm"], image: "/images/tiles/armani-sun.webp" },
-  { name: "Vinyl Grey", slug: "vinyl-grey", category: "Vitrified", sizes: ["600×600 mm"], image: "/images/tiles/vinyl-grey.webp" },
-  { name: "3D Glass", slug: "3d-glass", category: "Ceramic", sizes: ["300×450 mm"], image: "/images/tiles/3d-glass.webp" },
+  { name: "Botticino", slug: "botticino", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
+  { name: "Nero Marquina", slug: "nero-marquina", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
+  { name: "Amazonite Blue", slug: "amazonite-blue", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
+  { name: "Canterbury Beige", slug: "canterbury-beige", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
+  { name: "Driftwood Ash", slug: "driftwood-ash", category: "Wood Look", sizes: ["600×600 mm"], image: "" },
+  { name: "Marvel Bright", slug: "marvel-bright", category: "Marble Look", sizes: ["600×600 mm"], image: "" },
+  { name: "Antiquity Grey", slug: "antiquity-grey", category: "Stone Look", sizes: ["600×600 mm"], image: "" },
+  { name: "Desert Marble Dark", slug: "desert-marble-dark", category: "Ceramic", sizes: ["300×600 mm"], image: "" },
+  { name: "Angel HL", slug: "angel-hl", category: "Ceramic", sizes: ["300×600 mm"], image: "" },
+  { name: "Komo Grid", slug: "komo-grid", category: "Vitrified", sizes: ["400×400 mm"], image: "" },
+  { name: "Cassion Velvet", slug: "cassion-velvet", category: "Vitrified", sizes: ["400×400 mm"], image: "" },
+  { name: "Mithila Art - Buddha", slug: "mithila-art-buddha", category: "Art", sizes: ["300×600 mm"], image: "" },
+  { name: "Aqua Dhaka Dark", slug: "aqua-dhaka-dark", category: "Cultural Heritage", sizes: ["300×600 mm"], image: "" },
+  { name: "Kavre Slate", slug: "kavre-slate", category: "Stone Look", sizes: ["300×600 mm"], image: "" },
+  { name: "Bedrock Brown", slug: "bedrock-brown", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
 ];
 
 // ── Product Categories (used in ProductShowcase sticky cards) ──

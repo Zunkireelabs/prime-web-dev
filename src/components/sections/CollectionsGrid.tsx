@@ -8,8 +8,13 @@ import ScrollReveal from "@/components/animations/ScrollReveal";
 import TiltCard from "@/components/ui/TiltCard";
 import { ArrowUpRight, ArrowRight, ArrowLeft } from "lucide-react";
 import { collections } from "@/data/collections";
+import { allProducts } from "@/data/catalog";
+import type { CatalogProduct } from "@/data/catalog";
+import ProductDetailPanel from "@/components/sections/ProductDetailPanel";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const productBySlug = new Map(allProducts.map((p) => [p.slug, p]));
 
 // Extract unique categories
 const ALL = "All";
@@ -21,6 +26,7 @@ const categories = [
 export default function CollectionsGrid() {
   const [activeCategory, setActiveCategory] = useState(ALL);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
   const stripRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
@@ -158,7 +164,10 @@ export default function CollectionsGrid() {
             style={{ scrollSnapType: "x mandatory", gap: "20px", padding: "8px" }}
           >
             <div ref={cardsRef} className="flex" style={{ gap: "20px" }}>
-              {filtered.map((c, i) => (
+              {filtered.map((c, i) => {
+                const product = productBySlug.get(c.slug);
+                const imgSrc = (product?.image && product.image.startsWith("http")) ? product.image : c.image;
+                return (
                 <div
                   key={c.slug}
                   className="tile-card flex-shrink-0"
@@ -170,14 +179,16 @@ export default function CollectionsGrid() {
                   onMouseLeave={() => setHoveredIdx(null)}
                 >
                   <TiltCard intensity={6} className="h-full">
-                    <a
-                      href={`/catalog?collection=${encodeURIComponent(c.slug)}`}
-                      className="group block h-full"
+                    <button
+                      type="button"
+                      onClick={() => product && setSelectedProduct(product)}
+                      className="group block h-full w-full text-left cursor-pointer"
+                      style={{ background: "none", border: "none", padding: 0 }}
                     >
                       {/* Image */}
                       <div className="relative aspect-[3/4] overflow-hidden bg-surface" style={{ marginBottom: "16px" }}>
                         <img
-                          src={c.image}
+                          src={imgSrc}
                           alt={c.name}
                           loading="lazy"
                           className={`w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -227,10 +238,11 @@ export default function CollectionsGrid() {
                           {c.sizes[0]}
                         </p>
                       </div>
-                    </a>
+                    </button>
                   </TiltCard>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -253,6 +265,12 @@ export default function CollectionsGrid() {
           </a>
         </div>
       </div>
+
+      <ProductDetailPanel
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onProductChange={setSelectedProduct}
+      />
     </section>
   );
 }
