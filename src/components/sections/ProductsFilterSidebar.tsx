@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Check, SlidersHorizontal, X } from "lucide-react";
 import type { FilterKey, ProductFilters } from "./ProductsBrowser";
 
@@ -66,86 +66,107 @@ function FilterGroup({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between text-left cursor-pointer group"
-        style={{ padding: "18px 0" }}
+        className="w-full flex items-center justify-between text-left cursor-pointer"
+        style={{ padding: "20px 0" }}
         aria-expanded={open}
       >
-        <span className="text-[0.7rem] font-medium tracking-[0.14em] uppercase text-ink flex items-center" style={{ gap: "8px" }}>
+        <span
+          className="text-[0.7rem] font-medium tracking-[0.14em] uppercase text-ink flex items-center hover:text-accent"
+          style={{ gap: "8px", transition: "color 0.3s" }}
+        >
           {group.label}
           {selected.length > 0 && (
-            <span className="bg-accent text-white text-[0.55rem] font-medium tracking-[0.1em] px-1.5 py-[1px] tabular-nums">
+            <span
+              className="bg-accent text-white text-[0.55rem] font-medium tracking-[0.1em] px-1.5 py-[1px] tabular-nums"
+              style={{ borderRadius: "2px" }}
+            >
               {selected.length}
             </span>
           )}
         </span>
         <ChevronDown
           size={14}
-          className="text-ink-muted transition-transform duration-300"
-          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+          className="text-ink-muted"
+          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
         />
       </button>
 
-      {open && (
-        <div style={{ paddingBottom: "20px" }}>
-          {group.key === "series" && values.length > 8 && (
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search series..."
-              className="w-full text-xs bg-surface text-ink placeholder:text-ink-muted focus:outline-none focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors"
-              style={{
-                padding: "8px 12px",
-                border: "1px solid rgba(43,36,28,0.12)",
-                marginBottom: "12px",
-              }}
-            />
-          )}
+      <div
+        className="grid"
+        style={{
+          gridTemplateRows: open ? "1fr" : "0fr",
+          transition: "grid-template-rows 0.3s cubic-bezier(0.22,1,0.36,1)",
+        }}
+      >
+        <div className="overflow-hidden">
+          <div style={{ paddingBottom: "20px" }}>
+            {group.key === "series" && values.length > 8 && (
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search series..."
+                className="w-full text-xs bg-surface text-ink placeholder:text-ink-muted focus:outline-none focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2"
+                style={{
+                  padding: "8px 12px",
+                  border: "1px solid rgba(43,36,28,0.12)",
+                  borderRadius: "6px",
+                  marginBottom: "12px",
+                  transition: "border-color 0.3s",
+                }}
+              />
+            )}
 
-          <ul className="max-h-[240px] overflow-y-auto" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {filteredValues.map((v) => {
-              const isOn = selected.includes(v);
-              return (
-                <li key={v}>
-                  <label className="flex items-center cursor-pointer group/row" style={{ gap: "10px" }}>
-                    <span
-                      className="relative flex items-center justify-center shrink-0 transition-colors duration-300"
-                      style={{
-                        width: "14px",
-                        height: "14px",
-                        border: `1px solid ${isOn ? "var(--color-accent)" : "rgba(43,36,28,0.25)"}`,
-                        background: isOn ? "var(--color-accent)" : "transparent",
-                      }}
-                    >
-                      {isOn && <Check size={10} strokeWidth={3} className="text-white" />}
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={isOn}
-                      onChange={() => onToggle(group.key, v)}
-                      className="sr-only"
-                    />
-                    <span className={`text-xs transition-colors duration-300 ${isOn ? "text-ink" : "text-ink-light group-hover/row:text-ink"}`}>
-                      {group.displayTransform ? group.displayTransform(v) : v}
-                    </span>
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
+            <ul className="max-h-[240px] overflow-y-auto" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {filteredValues.map((v) => {
+                const isOn = selected.includes(v);
+                return (
+                  <li key={v}>
+                    <label className="flex items-center cursor-pointer group/row" style={{ gap: "10px" }}>
+                      <span
+                        className="relative flex items-center justify-center shrink-0"
+                        style={{
+                          width: "16px",
+                          height: "16px",
+                          borderRadius: "3px",
+                          border: `1px solid ${isOn ? "var(--color-accent)" : "rgba(43,36,28,0.25)"}`,
+                          background: isOn ? "var(--color-accent)" : "transparent",
+                          transition: "background 0.3s, border-color 0.3s",
+                        }}
+                      >
+                        {isOn && <Check size={10} strokeWidth={3} className="text-white" />}
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={isOn}
+                        onChange={() => onToggle(group.key, v)}
+                        className="sr-only"
+                      />
+                      <span
+                        className={`text-[0.8rem] ${isOn ? "text-ink" : "text-ink-light group-hover/row:text-ink"}`}
+                        style={{ transition: "color 0.3s" }}
+                      >
+                        {group.displayTransform ? group.displayTransform(v) : v}
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
 
-          {selected.length > 0 && (
-            <button
-              type="button"
-              onClick={() => onClear(group.key)}
-              className="text-[0.6rem] font-medium tracking-[0.12em] uppercase text-ink-muted hover:text-accent transition-colors duration-300"
-              style={{ marginTop: "14px" }}
-            >
-              Clear {group.label}
-            </button>
-          )}
+            {selected.length > 0 && (
+              <button
+                type="button"
+                onClick={() => onClear(group.key)}
+                className="text-[0.6rem] font-medium tracking-[0.12em] uppercase text-ink-muted hover:text-accent"
+                style={{ marginTop: "16px", transition: "color 0.3s" }}
+              >
+                Clear {group.label}
+              </button>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -173,7 +194,8 @@ function FilterBody({
           <button
             type="button"
             onClick={onClearAll}
-            className="text-[0.6rem] font-medium tracking-[0.12em] uppercase text-ink-muted hover:text-accent transition-colors duration-300"
+            className="text-[0.6rem] font-medium tracking-[0.12em] uppercase text-ink-muted hover:text-accent"
+            style={{ transition: "color 0.3s" }}
           >
             Clear All ({activeCount})
           </button>
@@ -192,9 +214,10 @@ function FilterBody({
         />
       ))}
 
+      <div className="gold-divider-full" style={{ marginTop: "20px" }} />
       <div
         className="text-[0.6rem] font-medium tracking-[0.14em] uppercase text-ink-muted tabular-nums"
-        style={{ paddingTop: "20px" }}
+        style={{ paddingTop: "24px" }}
       >
         {totalResults} Tiles Found
       </div>
@@ -204,52 +227,83 @@ function FilterBody({
 
 export default function ProductsFilterSidebar(props: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sheetVisible, setSheetVisible] = useState(false);
+  const sheetTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (mobileOpen) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setSheetVisible(true));
+      });
+    } else {
+      setSheetVisible(false);
+    }
+    return () => clearTimeout(sheetTimerRef.current);
+  }, [mobileOpen]);
+
+  const handleCloseSheet = () => {
+    setSheetVisible(false);
+    sheetTimerRef.current = setTimeout(() => setMobileOpen(false), 300);
+  };
 
   return (
     <>
-      {/* ── Desktop sticky sidebar ── */}
-      <aside className="hidden lg:block shrink-0" style={{ width: "260px" }}>
+      {/* Desktop sticky sidebar */}
+      <aside className="hidden lg:block shrink-0" style={{ width: "280px" }}>
         <div className="sticky" style={{ top: "clamp(88px, 10vw, 112px)" }}>
           <FilterBody {...props} />
         </div>
       </aside>
 
-      {/* ── Mobile trigger button ── */}
+      {/* Mobile trigger button */}
       <div className="lg:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="flex items-center justify-center w-full text-xs font-medium tracking-[0.12em] uppercase text-ink border border-ink/15 hover:border-ink/40 transition-colors duration-300"
-          style={{ padding: "14px 16px", gap: "10px", marginBottom: "24px" }}
+          className="flex items-center justify-center w-full text-xs font-medium tracking-[0.12em] uppercase text-ink border border-ink/15 hover:border-ink/40"
+          style={{ padding: "14px 16px", gap: "10px", marginBottom: "24px", borderRadius: "8px", transition: "border-color 0.3s" }}
         >
           <SlidersHorizontal size={14} />
           Filters
           {props.activeCount > 0 && (
-            <span className="bg-accent text-white text-[0.55rem] font-medium tracking-[0.1em] px-1.5 py-[1px] tabular-nums">
+            <span className="bg-accent text-white text-[0.55rem] font-medium tracking-[0.1em] px-1.5 py-[1px] tabular-nums" style={{ borderRadius: "2px" }}>
               {props.activeCount}
             </span>
           )}
         </button>
       </div>
 
-      {/* ── Mobile sheet ── */}
+      {/* Mobile sheet */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex" role="dialog" aria-modal="true" aria-label="Filters">
           <button
             type="button"
             aria-label="Close filters"
-            onClick={() => setMobileOpen(false)}
-            className="absolute inset-0 bg-ink/40"
+            onClick={handleCloseSheet}
+            className="absolute inset-0"
+            style={{
+              background: "rgba(15,12,9,0.4)",
+              opacity: sheetVisible ? 1 : 0,
+              transition: "opacity 0.3s linear",
+            }}
           />
-          <div className="relative ml-auto h-full w-[85vw] max-w-sm bg-surface overflow-y-auto" style={{ padding: "24px" }}>
+          <div
+            className="relative ml-auto h-full w-[85vw] max-w-sm bg-surface overflow-y-auto"
+            style={{
+              padding: "24px",
+              transform: sheetVisible ? "translateX(0)" : "translateX(100%)",
+              transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
+            }}
+          >
             <div className="flex items-center justify-between" style={{ marginBottom: "12px" }}>
               <h2 className="text-[0.75rem] font-medium tracking-[0.14em] uppercase text-ink">
                 Filters
               </h2>
               <button
                 type="button"
-                onClick={() => setMobileOpen(false)}
-                className="text-ink-muted hover:text-ink transition-colors duration-300"
+                onClick={handleCloseSheet}
+                className="text-ink-muted hover:text-ink"
+                style={{ transition: "color 0.3s" }}
                 aria-label="Close"
               >
                 <X size={18} />
@@ -258,9 +312,9 @@ export default function ProductsFilterSidebar(props: Props) {
             <FilterBody {...props} />
             <button
               type="button"
-              onClick={() => setMobileOpen(false)}
-              className="w-full bg-ink text-white text-xs font-medium tracking-[0.12em] uppercase transition-colors duration-300 hover:bg-accent"
-              style={{ padding: "14px 16px", marginTop: "24px" }}
+              onClick={handleCloseSheet}
+              className="w-full bg-ink text-white text-xs font-medium tracking-[0.12em] uppercase hover:bg-accent"
+              style={{ padding: "14px 16px", marginTop: "24px", borderRadius: "8px", transition: "background 0.3s" }}
             >
               View {props.totalResults} Tiles
             </button>
