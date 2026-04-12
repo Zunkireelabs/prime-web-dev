@@ -40,8 +40,14 @@ try {
   // sanity-products.json not generated yet — using local data
 }
 
-export const allProducts: CatalogProduct[] =
-  sanityProducts && sanityProducts.length > 0 ? sanityProducts : localProducts;
+const hasSanity = !!(sanityProducts && sanityProducts.length > 0);
+const rawProducts: CatalogProduct[] = hasSanity ? sanityProducts! : localProducts;
+
+export const allProducts: CatalogProduct[] = hasSanity
+  ? rawProducts.filter((p) => p.image && p.image.startsWith("http"))
+  : rawProducts;
+
+export const allProductsIncludingHidden: CatalogProduct[] = rawProducts;
 
 // ── Filter helpers ──
 
