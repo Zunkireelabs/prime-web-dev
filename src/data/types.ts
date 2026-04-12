@@ -6,11 +6,16 @@ export type TileCategory =
   | "Porcelain"
   | "Ceramic"
   | "Vitrified"
+  | "Glazed Vitrified"
   | "Large Format"
   | "Wood Look"
+  | "Stone Look"
+  | "Marble Look"
   | "Outdoor"
   | "Natural Stone"
-  | "Mosaics";
+  | "Mosaics"
+  | "Art"
+  | "Cultural Heritage";
 
 export type TileFinish =
   | "Matt"
