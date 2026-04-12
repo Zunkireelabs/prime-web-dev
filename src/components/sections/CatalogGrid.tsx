@@ -77,25 +77,17 @@ function TileCard({ product }: { product: CatalogProduct }) {
   );
 }
 
-export default function CatalogGrid({
-  initialSize = "all",
-  initialFinish = "",
-  initialCategory = "",
-}: {
-  initialSize?: string;
-  initialFinish?: string;
-  initialCategory?: string;
-}) {
+export default function CatalogGrid({ initialSize = "all" }: { initialSize?: string }) {
   const [size, setSize] = useState(initialSize);
 
   useEffect(() => {
     setSize(initialSize);
     setSeries("all");
-    setFinish(initialFinish || "all");
+    setFinish("all");
     setSearch("");
     setCount(BATCH);
-  }, [initialSize, initialFinish]);
-  const [finish, setFinish] = useState(initialFinish || "all");
+  }, [initialSize]);
+  const [finish, setFinish] = useState("all");
   const [series, setSeries] = useState("all");
   const [search, setSearch] = useState("");
   const [count, setCount] = useState(BATCH);
@@ -106,13 +98,12 @@ export default function CatalogGrid({
     else if (size !== "all") r = r.filter((p) => p.size === size);
     if (finish !== "all") r = r.filter((p) => p.finish === finish);
     if (series !== "all") r = r.filter((p) => p.series === series);
-    if (initialCategory) r = r.filter((p) => p.category === initialCategory);
     if (search.trim()) {
       const q = search.toLowerCase();
       r = r.filter((p) => p.name.toLowerCase().includes(q) || p.series.toLowerCase().includes(q) || (p.collection?.toLowerCase().includes(q)));
     }
     return r;
-  }, [size, finish, series, search, initialCategory]);
+  }, [size, finish, series, search]);
 
   const seriesList = useMemo(() => {
     let pool = allProducts;

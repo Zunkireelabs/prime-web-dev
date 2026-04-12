@@ -97,6 +97,7 @@ export interface ProductCategory {
 export interface BrowseItem {
   name: string;
   image: string;
+  slug: string;
 }
 
 export interface BrowseData {

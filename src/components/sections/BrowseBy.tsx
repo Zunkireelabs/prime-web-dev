@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { ArrowRight } from "lucide-react";
 import { browseData as data } from "@/data/collections";
+import { allProducts } from "@/data/catalog";
+import type { CatalogProduct } from "@/data/catalog";
+import ProductDetailPanel from "@/components/sections/ProductDetailPanel";
 
 const tabs = Object.keys(data) as (keyof typeof data)[];
 
 export default function BrowseBy() {
   const [active, setActive] = useState<keyof typeof data>(tabs[0]);
   const [animKey, setAnimKey] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
+
   const switchTab = (tab: keyof typeof data) => {
     if (tab === active) return;
     setActive(tab);
     setAnimKey((k) => k + 1);
   };
+
+  const handleTileClick = useCallback((slug: string) => {
+    const product = allProducts.find((p) => p.slug === slug);
+    if (product) setSelectedProduct(product);
+  }, []);
 
   const items = data[active];
 
@@ -67,11 +77,12 @@ export default function BrowseBy() {
             style={{ animationDuration: "35s", width: "max-content" }}
           >
             {[...items, ...items].map((item, i) => (
-              <a
+              <button
                 key={`${item.name}-${i}`}
-                href={`/catalog?${active === "Finishes" ? "finish" : active === "Sizes" ? "size" : active === "Types" ? "category" : "browse"}=${encodeURIComponent(item.name)}`}
-                className="shrink-0 group block"
-                style={{ width: "280px", padding: "0 12px" }}
+                type="button"
+                onClick={() => handleTileClick(item.slug)}
+                className="shrink-0 group block text-left cursor-pointer"
+                style={{ width: "280px", padding: "0 12px", background: "none", border: "none" }}
               >
                 <div className="relative overflow-hidden bg-surface-alt transition-all duration-500 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" style={{ aspectRatio: "3/4" }}>
                   <img
@@ -95,7 +106,7 @@ export default function BrowseBy() {
                   </div>
                   <ArrowRight size={11} className="text-accent opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                 </div>
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -111,6 +122,13 @@ export default function BrowseBy() {
           </div>
         </FadeIn>
       </div>
+
+      {/* Product detail modal */}
+      <ProductDetailPanel
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onProductChange={setSelectedProduct}
+      />
     </section>
   );
 }
