@@ -8,10 +8,15 @@ import { useMemo } from "react";
 
 export default function ProductsHero() {
   const total = allProducts.length;
-  const sizes = useMemo(() => [...new Set(allProducts.map((p) => p.size))].length, []);
-  const finishes = useMemo(() => [...new Set(allProducts.map((p) => p.finish))].length, []);
+  const sizes = [...new Set(allProducts.map((p) => p.size))].length;
+  const finishes = [...new Set(allProducts.map((p) => p.finish))].length;
 
   const featured = useMemo(() => {
+    const showcaseSlugs = ["botticino", "driftwood-classic", "akshobhya-mandala"];
+    const curated = showcaseSlugs
+      .map((slug) => allProducts.find((p) => p.slug === slug && p.image?.startsWith("http")))
+      .filter(Boolean) as typeof allProducts;
+    if (curated.length >= 3) return curated;
     const imaged = allProducts.filter((p) => p.image && p.image.startsWith("http"));
     return imaged.slice(0, 3);
   }, []);
@@ -30,7 +35,7 @@ export default function ProductsHero() {
           right: "20%",
           width: "600px",
           height: "600px",
-          background: "radial-gradient(circle, rgba(181,138,82,0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(181,138,82,0.12) 0%, transparent 70%)",
         }}
       />
 
@@ -146,37 +151,43 @@ export default function ProductsHero() {
                 {/* Large tile — spans 2 rows on left */}
                 <div
                   className="overflow-hidden"
-                  style={{ gridRow: "1 / 3", borderRadius: "12px" }}
+                  style={{ gridRow: "1 / 3", borderRadius: "0" }}
                 >
                   <img
                     src={featured[0].image}
                     alt={featured[0].name}
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
-                    style={{ filter: "brightness(0.95)" }}
+                    style={{ filter: "brightness(0.95)", transform: "scale(1.18)" }}
                   />
                 </div>
                 {/* Top-right tile */}
                 <div
                   className="overflow-hidden"
-                  style={{ borderRadius: "12px" }}
+                  style={{ borderRadius: "0" }}
                 >
                   <img
                     src={featured[1].image}
                     alt={featured[1].name}
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
-                    style={{ filter: "brightness(0.95)" }}
+                    style={{ filter: "brightness(0.95)", transform: "scale(1.18)" }}
                   />
                 </div>
                 {/* Bottom-right tile */}
                 <div
                   className="overflow-hidden"
-                  style={{ borderRadius: "12px" }}
+                  style={{ borderRadius: "0" }}
                 >
                   <img
                     src={featured[2].image}
                     alt={featured[2].name}
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
-                    style={{ filter: "brightness(0.95)" }}
+                    style={{ filter: "brightness(0.95)", transform: "scale(1.18)" }}
                   />
                 </div>
               </div>

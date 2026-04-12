@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Check, SlidersHorizontal, X } from "lucide-react";
 import type { FilterKey, ProductFilters } from "./ProductsBrowser";
 
@@ -56,10 +56,13 @@ function FilterGroup({
   const [open, setOpen] = useState(defaultOpen);
   const [query, setQuery] = useState("");
 
-  const filteredValues =
-    group.key === "series" && query.trim()
-      ? values.filter((v) => v.toLowerCase().includes(query.toLowerCase()))
-      : values;
+  const filteredValues = useMemo(
+    () =>
+      group.key === "series" && query.trim()
+        ? values.filter((v) => v.toLowerCase().includes(query.toLowerCase()))
+        : values,
+    [group.key, query, values]
+  );
 
   return (
     <div style={{ borderBottom: "1px solid rgba(43,36,28,0.08)" }}>

@@ -36,7 +36,7 @@ export default function TileCard({ product, onClick }: TileCardProps) {
         style={{
           aspectRatio: "4/5",
           marginBottom: "16px",
-          borderRadius: "14px",
+          borderRadius: "0",
           boxShadow: "var(--shadow-sm)",
           transition: "box-shadow 0.3s cubic-bezier(0.22,1,0.36,1), transform 0.3s cubic-bezier(0.22,1,0.36,1)",
         }}
@@ -46,6 +46,7 @@ export default function TileCard({ product, onClick }: TileCardProps) {
             src={product.image}
             alt={product.name}
             loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03]"
             style={{ transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
           />
@@ -93,7 +94,7 @@ export default function TileCard({ product, onClick }: TileCardProps) {
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100"
           style={{
             background: "rgba(15,12,9,0.35)",
-            borderRadius: "14px",
+            borderRadius: "0",
             transition: "opacity 0.3s cubic-bezier(0.22,1,0.36,1)",
           }}
         >
@@ -112,7 +113,7 @@ export default function TileCard({ product, onClick }: TileCardProps) {
         </div>
 
         {/* Accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-left" />
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] origin-left" />
       </div>
 
       {/* Meta */}

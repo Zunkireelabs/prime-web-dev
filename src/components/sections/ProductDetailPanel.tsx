@@ -124,6 +124,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               src={product.image}
               alt={product.name}
               loading="eager"
+              decoding="async"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           ) : (
@@ -162,7 +163,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           {/* Mobile-only image */}
           <div className="md:hidden" style={{ marginBottom: "24px" }}>
             {hasImage ? (
-              <div style={{ aspectRatio: "4/3", borderRadius: "12px", overflow: "hidden" }}>
+              <div style={{ aspectRatio: "4/5", borderRadius: "12px", overflow: "hidden" }}>
                 <img
                   src={product.image}
                   alt={product.name}
@@ -173,7 +174,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               <div
                 className="flex items-center justify-center"
                 style={{
-                  aspectRatio: "4/3",
+                  aspectRatio: "4/5",
                   borderRadius: "12px",
                   background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
                 }}
@@ -245,7 +246,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                           src={tile.image}
                           alt={tile.name}
                           loading="lazy"
-                          className="w-full h-full object-cover group-hover/sim:scale-[1.05]"
+                          className="w-full h-full object-cover group-hover/sim:scale-[1.03]"
                           style={{ transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
                         />
                       ) : (

@@ -80,7 +80,7 @@ export default function ProductsGrid({
   );
 
   return (
-    <div className="flex-1 min-w-0">
+    <div className="flex-1 min-w-0" style={{ background: "#fff", padding: "clamp(24px, 3vw, 40px)", borderRadius: "4px" }}>
       {/* Toolbar — search + sort */}
       <div
         className="flex flex-col md:flex-row md:items-center md:justify-between"
@@ -193,6 +193,7 @@ export default function ProductsGrid({
         <>
           <StaggerGrid
             key={staggerKey}
+            keys={visible.map((p) => p.slug)}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
             style={{
               columnGap: "clamp(24px, 3vw, 32px)",
@@ -217,7 +218,7 @@ export default function ProductsGrid({
           )}
         </>
       ) : (
-        <div style={{ padding: "120px 0", textAlign: "center" }}>
+        <div style={{ padding: "clamp(80px, 12vw, 160px) 0", textAlign: "center" }}>
           <p className="font-serif font-light text-ink-muted" style={{ fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)", marginBottom: "16px" }}>
             No tiles match your filters
           </p>
