@@ -3,10 +3,10 @@
 import FadeIn from "@/components/animations/FadeIn";
 
 const stats = [
-  { value: "492", label: "designs" },
+  { value: "450+", label: "designs" },
   { value: "6", label: "catalogs" },
-  { value: "5", label: "sizes" },
-  { value: "5", label: "finishes" },
+  { value: "6", label: "sizes" },
+  { value: "7", label: "finishes" },
 ];
 
 export default function CatalogStats() {

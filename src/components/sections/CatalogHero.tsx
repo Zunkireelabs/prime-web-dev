@@ -82,7 +82,7 @@ export default function CatalogHero() {
 
         <FadeIn delay={0.16}>
           <p className="body-lg text-white/90 max-w-lg leading-relaxed" style={{ marginBottom: "40px" }}>
-            Six catalogs, 490+ designs. Browse our complete range of ceramic,
+            Six catalogs, 450+ designs. Browse our complete range of ceramic,
             vitrified, and large format tiles — including the exclusive Spirit of Nepal
             heritage collection.
           </p>
@@ -96,7 +96,7 @@ export default function CatalogHero() {
             </a>
             <div style={{ height: "16px", width: "1px", background: "rgba(255,255,255,0.25)" }} />
             <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-white/60">
-              6 Catalogs · 490+ Designs
+              6 Catalogs · 450+ Designs
             </span>
           </div>
         </FadeIn>
