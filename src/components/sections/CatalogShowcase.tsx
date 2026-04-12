@@ -21,27 +21,29 @@ function CatalogCard({
   return (
     <FadeIn delay={index * 0.06} direction="up" distance={20}>
       <div className={`group h-full flex flex-col ${isComingSoon ? "opacity-70" : ""}`}>
-        {/* Image */}
+        {/* Image — use 3:4 portrait ratio to match actual cover images */}
         <div
-          className={`relative overflow-hidden ${large ? "aspect-[16/9]" : "aspect-[4/3]"}`}
-          style={{ marginBottom: "20px" }}
+          className={`relative overflow-hidden bg-surface-alt ${large ? "aspect-[3/2]" : "aspect-[3/4]"}`}
+          style={{ marginBottom: "20px", borderRadius: "4px" }}
         >
           <img
             src={cat.image}
             alt={cat.name}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-            style={isComingSoon ? { filter: "grayscale(0.8) brightness(0.75)" } : undefined}
+            className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{
+              ...(isComingSoon ? { filter: "grayscale(0.8) brightness(0.75)" } : {}),
+            }}
           />
 
           {/* Hover overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
           {/* Count badge — bottom left */}
-          <div style={{ position: "absolute", bottom: "16px", left: "16px" }}>
+          <div style={{ position: "absolute", bottom: "12px", left: "12px" }}>
             <span
-              className="text-[0.5rem] font-medium tracking-[0.15em] uppercase bg-white/90 backdrop-blur-sm text-ink"
-              style={{ padding: "6px 12px", display: "inline-block" }}
+              className="text-[0.55rem] font-semibold tracking-[0.15em] uppercase bg-white/95 backdrop-blur-sm text-ink"
+              style={{ padding: "6px 14px", display: "inline-block", borderRadius: "2px" }}
             >
               {cat.count}
             </span>
@@ -49,10 +51,10 @@ function CatalogCard({
 
           {/* Coming soon badge — top right */}
           {isComingSoon && (
-            <div style={{ position: "absolute", top: "16px", right: "16px" }}>
+            <div style={{ position: "absolute", top: "12px", right: "12px" }}>
               <span
                 className="text-[0.5rem] font-medium tracking-[0.15em] uppercase bg-accent text-white"
-                style={{ padding: "6px 12px", display: "inline-block" }}
+                style={{ padding: "6px 12px", display: "inline-block", borderRadius: "2px" }}
               >
                 Coming Soon
               </span>
@@ -67,22 +69,22 @@ function CatalogCard({
         <div className="flex-1 flex flex-col">
           <h3
             className="h3 group-hover:text-accent transition-colors duration-300"
-            style={{ marginBottom: "6px" }}
+            style={{ marginBottom: "6px", fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}
           >
             {cat.name}
           </h3>
           <p
             className="text-[0.55rem] font-medium tracking-[0.15em] uppercase text-ink-muted"
-            style={{ marginBottom: "16px" }}
+            style={{ marginBottom: "12px" }}
           >
             {cat.types}
           </p>
-          <p className="body-sm text-ink-light flex-1" style={{ marginBottom: "24px" }}>
+          <p className="body-sm text-ink-light flex-1" style={{ marginBottom: "20px", lineHeight: "1.7" }}>
             {cat.description}
           </p>
 
           {/* Buttons */}
-          <div className="flex items-center" style={{ gap: "24px" }}>
+          <div className="flex items-center" style={{ gap: "20px" }}>
             {!isComingSoon ? (
               <>
                 <button
