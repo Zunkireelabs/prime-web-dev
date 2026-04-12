@@ -30,7 +30,7 @@ export default function CatalogHero() {
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-surface-dark"
-      style={{ minHeight: "65vh", maxHeight: "80vh", height: "70vh" }}
+      style={{ minHeight: "70vh" }}
     >
       {/* Room scene — parallax, full coverage */}
       <img
@@ -62,7 +62,7 @@ export default function CatalogHero() {
       />
 
       {/* Content — left-aligned, bottom-weighted */}
-      <div className="container relative z-10 h-full flex flex-col justify-end" style={{ paddingTop: "120px", paddingBottom: "clamp(60px, 6vw, 90px)" }}>
+      <div className="container relative z-10 flex flex-col justify-end" style={{ minHeight: "70vh", paddingTop: "clamp(100px, 15vh, 160px)", paddingBottom: "clamp(48px, 6vw, 80px)" }}>
         <FadeIn>
           <div className="flex items-center" style={{ gap: "16px", marginBottom: "16px" }}>
             <div className="w-10 h-px bg-accent-light/50" />
