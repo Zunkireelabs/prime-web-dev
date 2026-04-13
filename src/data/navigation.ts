@@ -7,6 +7,7 @@ export const navItems: NavItem[] = [
   { label: "Catalog", href: "/catalog", hasMega: false },
   { label: "Projects", href: "#projects", hasMega: false },
   { label: "Dealers", href: "/dealers", hasMega: false },
+  { label: "Calculator", href: "/calculator", hasMega: false },
   {
     label: "About",
     href: "/about",
@@ -69,6 +70,7 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: "Find a Showroom", href: "/dealers" },
       { label: "Request Samples", href: "mailto:sales@primeceramics.com.np?subject=Sample%20Request" },
+      { label: "Tile Calculator", href: "/calculator" },
       { label: "Technical Specs", href: "/catalog" },
       { label: "Installation Guide", href: "/services" },
       { label: "FAQ", href: "/#contact" },
