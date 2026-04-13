@@ -105,7 +105,7 @@ function generateFileKeys(filename: string): string[] {
 // ── Main ──
 
 async function linkImages() {
-  const catalogIds = ["wall-300x600", "vitrified-400x400", "vitrified-600x600", "eleganz-600x1200", "spirit-of-nepal"];
+  const catalogIds = ["wall-300x600", "floor-300x300", "vitrified-400x400", "vitrified-600x600", "eleganz-600x1200", "spirit-of-nepal"];
 
   for (const catalogId of catalogIds) {
     console.log(`\n📎 Processing ${catalogId}...`);

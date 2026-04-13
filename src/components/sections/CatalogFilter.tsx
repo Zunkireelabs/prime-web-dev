@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const sizeTabs = [
   { label: "All Tiles", value: "all" },
+  { label: "300×300", value: "300×300 mm" },
   { label: "300×450", value: "300×450 mm" },
   { label: "300×600", value: "300×600 mm" },
   { label: "400×400", value: "400×400 mm" },

@@ -30,6 +30,7 @@ export const tileCatalog = defineType({
         list: [
           { title: "Wall 300×450", value: "wall-300x450" },
           { title: "Wall 300×600", value: "wall-300x600" },
+          { title: "Floor 300×300", value: "floor-300x300" },
           { title: "Vitrified 400×400", value: "vitrified-400x400" },
           { title: "Vitrified 600×600", value: "vitrified-600x600" },
           { title: "Eleganz 600×1200", value: "eleganz-600x1200" },

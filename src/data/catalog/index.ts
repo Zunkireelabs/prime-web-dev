@@ -21,10 +21,12 @@ import { vitrified600x600 } from "./vitrified-600x600";
 import { wall300x450 } from "./wall-300x450";
 import { wall300x600 } from "./wall-300x600";
 import { spiritOfNepal } from "./spirit-of-nepal";
+import { floor300x300 } from "./floor-300x300";
 
 const localProducts: CatalogProduct[] = [
   ...wall300x450,
   ...wall300x600,
+  ...floor300x300,
   ...vitrified400x400,
   ...vitrified600x600,
   ...eleganz600x1200,
