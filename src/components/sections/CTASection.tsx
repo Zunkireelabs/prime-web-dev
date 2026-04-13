@@ -1,30 +1,42 @@
 "use client";
 
 import FadeIn from "@/components/animations/FadeIn";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Phone, Mail, Headphones } from "lucide-react";
 
 export default function CTASection() {
   return (
     <section
       id="contact"
       className="relative overflow-hidden"
-      style={{ padding: "clamp(64px, 8vw, 110px) 0", background: "var(--color-surface-dark-warm)" }}
+      style={{ padding: "clamp(80px, 10vw, 140px) 0", background: "var(--color-surface-dark-warm)" }}
     >
-      {/* Subtle radial glow */}
+      {/* Primary radial glow — stronger, centered on heading */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 30%, var(--color-accent-subtle) 0%, transparent 60%)",
+            "radial-gradient(ellipse 80% 60% at 50% 35%, rgba(181,138,82,0.12) 0%, transparent 70%)",
+        }}
+      />
+
+      {/* Secondary glow — subtle warmth at bottom */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 40% at 50% 90%, rgba(181,138,82,0.06) 0%, transparent 60%)",
         }}
       />
 
       <div className="container relative z-10">
-        <div style={{ maxWidth: "860px", marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
+        <div style={{ maxWidth: "900px", marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
 
           {/* Eyebrow */}
           <FadeIn>
-            <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center", color: "var(--color-ink-on-dark-muted)" }}>
+            <p
+              className="text-[0.65rem] font-medium tracking-[0.22em] uppercase"
+              style={{ marginBottom: "20px", textAlign: "center", color: "var(--color-accent-light)" }}
+            >
               Start Your Project
             </p>
           </FadeIn>
@@ -32,31 +44,46 @@ export default function CTASection() {
           {/* Heading */}
           <FadeIn delay={0.08}>
             <h2
-              className="h2"
-              style={{ marginBottom: "24px", textAlign: "center", textWrap: "balance", color: "var(--color-ink-on-dark)" }}
+              className="font-serif font-light"
+              style={{
+                fontSize: "clamp(2rem, 4vw, 3.4rem)",
+                lineHeight: 1.1,
+                letterSpacing: "-0.01em",
+                marginBottom: "28px",
+                textAlign: "center",
+                textWrap: "balance",
+                color: "var(--color-ink-on-dark)",
+              }}
             >
               Ready to Transform{" "}
-              <span style={{ color: "white" }}>Your Space?</span>
+              <span className="italic" style={{ color: "var(--color-accent-light)" }}>
+                Your Space?
+              </span>
             </h2>
           </FadeIn>
 
-          {/* Divider */}
+          {/* Animated accent line */}
           <FadeIn delay={0.1}>
-            <div style={{ width: "36px", height: "2px", background: "var(--color-accent)", marginLeft: "auto", marginRight: "auto", marginBottom: "24px" }} />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", marginBottom: "28px" }}>
+              <div style={{ width: "40px", height: "1px", background: "rgba(181,138,82,0.3)" }} />
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--color-accent)", opacity: 0.6 }} />
+              <div style={{ width: "40px", height: "1px", background: "rgba(181,138,82,0.3)" }} />
+            </div>
           </FadeIn>
 
           {/* Description */}
           <FadeIn delay={0.14}>
             <p
-              className="body-lg"
               style={{
                 textAlign: "center",
-                maxWidth: "540px",
+                maxWidth: "520px",
                 marginLeft: "auto",
                 marginRight: "auto",
-                marginBottom: "36px",
+                marginBottom: "44px",
                 textWrap: "balance",
                 color: "var(--color-ink-on-dark-light)",
+                fontSize: "clamp(0.9rem, 1.15vw, 1.05rem)",
+                lineHeight: 1.7,
               }}
             >
               Whether you&apos;re an architect, designer, or homeowner — our
@@ -66,7 +93,7 @@ export default function CTASection() {
 
           {/* Buttons */}
           <FadeIn delay={0.2}>
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "24px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "20px" }}>
               <a
                 href="mailto:sales@primeceramics.com.np?subject=Quote%20Request"
                 className="btn-gold group"
@@ -90,9 +117,9 @@ export default function CTASection() {
             </div>
           </FadeIn>
 
-          {/* Contact strip */}
+          {/* Contact strip with icon circles */}
           <FadeIn delay={0.25}>
-            <div style={{ marginTop: "48px", paddingTop: "32px", borderTop: "1px solid rgba(255, 255, 255, 0.08)" }}>
+            <div style={{ marginTop: "56px", paddingTop: "40px", borderTop: "1px solid rgba(181,138,82,0.12)" }}>
               <div
                 style={{
                   display: "grid",
@@ -103,39 +130,87 @@ export default function CTASection() {
                 className="max-sm:[grid-template-columns:1fr] max-sm:[gap:32px]"
               >
                 {/* Phone */}
-                <a href="tel:+977-1-5978860" className="group">
-                  <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center", color: "var(--color-ink-on-dark-muted)" }}>
+                <a href="tel:+977-1-5978860" className="group flex flex-col items-center">
+                  <div
+                    className="flex items-center justify-center group-hover:border-accent"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      border: "1px solid rgba(181,138,82,0.2)",
+                      marginBottom: "16px",
+                      transition: "border-color 0.3s",
+                    }}
+                  >
+                    <Phone size={16} style={{ color: "var(--color-accent)", opacity: 0.7 }} />
+                  </div>
+                  <p
+                    className="text-[0.6rem] font-medium tracking-[0.18em] uppercase"
+                    style={{ marginBottom: "8px", color: "var(--color-ink-on-dark-muted)" }}
+                  >
                     Phone
                   </p>
                   <p
-                    className="font-serif font-light group-hover:text-white transition-colors duration-300"
-                    style={{ fontSize: "1.05rem", textAlign: "center", color: "var(--color-ink-on-dark-light)" }}
+                    className="font-serif font-light group-hover:text-white"
+                    style={{ fontSize: "0.95rem", color: "var(--color-ink-on-dark-light)", transition: "color 0.3s" }}
                   >
                     +977-1-5978860/61/62
                   </p>
                 </a>
 
                 {/* Email */}
-                <a href="mailto:info@primeceramics.com.np" className="group">
-                  <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center", color: "var(--color-ink-on-dark-muted)" }}>
+                <a href="mailto:info@primeceramics.com.np" className="group flex flex-col items-center">
+                  <div
+                    className="flex items-center justify-center group-hover:border-accent"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      border: "1px solid rgba(181,138,82,0.2)",
+                      marginBottom: "16px",
+                      transition: "border-color 0.3s",
+                    }}
+                  >
+                    <Mail size={16} style={{ color: "var(--color-accent)", opacity: 0.7 }} />
+                  </div>
+                  <p
+                    className="text-[0.6rem] font-medium tracking-[0.18em] uppercase"
+                    style={{ marginBottom: "8px", color: "var(--color-ink-on-dark-muted)" }}
+                  >
                     Email
                   </p>
                   <p
-                    className="font-serif font-light group-hover:text-white transition-colors duration-300"
-                    style={{ fontSize: "1.05rem", textAlign: "center", color: "var(--color-ink-on-dark-light)" }}
+                    className="font-serif font-light group-hover:text-white"
+                    style={{ fontSize: "0.95rem", color: "var(--color-ink-on-dark-light)", transition: "color 0.3s" }}
                   >
                     info@primeceramics.com.np
                   </p>
                 </a>
 
                 {/* Toll Free */}
-                <a href="tel:18105000062" className="group">
-                  <p className="eyebrow" style={{ marginBottom: "16px", textAlign: "center", color: "var(--color-ink-on-dark-muted)" }}>
+                <a href="tel:18105000062" className="group flex flex-col items-center">
+                  <div
+                    className="flex items-center justify-center group-hover:border-accent"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      border: "1px solid rgba(181,138,82,0.2)",
+                      marginBottom: "16px",
+                      transition: "border-color 0.3s",
+                    }}
+                  >
+                    <Headphones size={16} style={{ color: "var(--color-accent)", opacity: 0.7 }} />
+                  </div>
+                  <p
+                    className="text-[0.6rem] font-medium tracking-[0.18em] uppercase"
+                    style={{ marginBottom: "8px", color: "var(--color-ink-on-dark-muted)" }}
+                  >
                     Toll Free
                   </p>
                   <p
-                    className="font-serif font-light group-hover:text-white transition-colors duration-300"
-                    style={{ fontSize: "1.05rem", textAlign: "center", color: "var(--color-ink-on-dark-light)" }}
+                    className="font-serif font-light group-hover:text-white"
+                    style={{ fontSize: "0.95rem", color: "var(--color-ink-on-dark-light)", transition: "color 0.3s" }}
                   >
                     1810 500 0062
                   </p>
