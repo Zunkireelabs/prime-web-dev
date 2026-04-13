@@ -56,6 +56,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
   if (!product) return null;
 
   const hasImage = product.image && product.image.startsWith("http");
+  const needsCrop = product.size === "300×600 mm" || product.size === "600×1200 mm";
 
   const specs = [
     { label: "Size", value: product.size },
@@ -125,7 +126,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               alt={product.name}
               loading="eager"
               decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              style={{ width: "100%", height: "100%", objectFit: "cover", transform: needsCrop ? "scale(1.12)" : "none" }}
             />
           ) : (
             <div
