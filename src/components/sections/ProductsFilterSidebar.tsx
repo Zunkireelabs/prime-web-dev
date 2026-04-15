@@ -44,16 +44,17 @@ function FilterGroup({
   selected,
   onToggle,
   onClear,
-  defaultOpen,
+  isOpen,
+  onToggleOpen,
 }: {
   group: Group;
   values: string[];
   selected: string[];
   onToggle: (key: FilterKey, value: string) => void;
   onClear: (key: FilterKey) => void;
-  defaultOpen: boolean;
+  isOpen: boolean;
+  onToggleOpen: () => void;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
   const [query, setQuery] = useState("");
 
   const filteredValues = useMemo(
@@ -68,10 +69,10 @@ function FilterGroup({
     <div style={{ borderBottom: "1px solid rgba(43,36,28,0.08)" }}>
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={onToggleOpen}
         className="w-full flex items-center justify-between text-left cursor-pointer"
         style={{ padding: "20px 0" }}
-        aria-expanded={open}
+        aria-expanded={isOpen}
       >
         <span
           className="text-[0.7rem] font-medium tracking-[0.14em] uppercase text-ink flex items-center hover:text-accent"
@@ -90,14 +91,14 @@ function FilterGroup({
         <ChevronDown
           size={14}
           className="text-ink-muted"
-          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
+          style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
         />
       </button>
 
       <div
         className="grid"
         style={{
-          gridTemplateRows: open ? "1fr" : "0fr",
+          gridTemplateRows: isOpen ? "1fr" : "0fr",
           transition: "grid-template-rows 0.3s cubic-bezier(0.22,1,0.36,1)",
         }}
       >
@@ -183,6 +184,8 @@ function FilterBody({
   onClearGroup,
   onClearAll,
 }: Omit<Props, never>) {
+  const [openKey, setOpenKey] = useState<FilterKey | null>("category");
+
   return (
     <div>
       {/* Header */}
@@ -205,7 +208,7 @@ function FilterBody({
         )}
       </div>
 
-      {GROUPS.map((g, i) => (
+      {GROUPS.map((g) => (
         <FilterGroup
           key={g.key}
           group={g}
@@ -213,7 +216,8 @@ function FilterBody({
           selected={filters[g.key]}
           onToggle={onToggle}
           onClear={onClearGroup}
-          defaultOpen={i < 3}
+          isOpen={openKey === g.key}
+          onToggleOpen={() => setOpenKey(openKey === g.key ? null : g.key)}
         />
       ))}
 
