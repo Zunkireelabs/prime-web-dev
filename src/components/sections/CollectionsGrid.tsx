@@ -118,7 +118,7 @@ export default function CollectionsGrid() {
               </button>
               <div className="w-px h-6 bg-ink-faint" style={{ marginLeft: "4px", marginRight: "4px" }} />
               <a
-                href="/catalog"
+                href="/products"
                 className="link-arrow text-[0.65rem]"
               >
                 View All <ArrowUpRight size={12} />
