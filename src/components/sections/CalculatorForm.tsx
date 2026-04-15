@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   ArrowRight,
   Copy,
@@ -122,11 +122,25 @@ function NumberInput({
 export default function CalculatorForm() {
   const [unit, setUnit] = useState<"ft" | "m">("ft");
   const [length, setLength] = useState("");
+
+  // Auto-select tile size from URL param (e.g. ?size=300x600)
   const [width, setWidth] = useState("");
   const [directArea, setDirectArea] = useState("");
   const [selectedTile, setSelectedTile] = useState(0);
   const [wastage, setWastage] = useState(10);
   const [copied, setCopied] = useState(false);
+
+  // Read ?size= param from URL and auto-select tile
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sizeParam = params.get("size");
+    if (!sizeParam) return;
+    const idx = TILE_DATA.findIndex((t) => {
+      const match = t.label.replace("×", "x");
+      return match === sizeParam || match === sizeParam.replace("x", "×");
+    });
+    if (idx >= 0) setSelectedTile(idx);
+  }, []);
 
   const tile = TILE_DATA[selectedTile];
 

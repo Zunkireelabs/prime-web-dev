@@ -84,7 +84,7 @@ function CatalogCard({
           </p>
 
           {/* Buttons */}
-          <div className="flex items-center" style={{ gap: "20px" }}>
+          <div className="flex items-center flex-wrap" style={{ gap: "16px" }}>
             {!isComingSoon ? (
               <>
                 <button
@@ -94,13 +94,18 @@ function CatalogCard({
                   View Collection <ArrowRight size={12} />
                 </button>
                 <a
+                  href={`/catalog/view/${cat.slug}`}
+                  className="link-arrow text-accent"
+                >
+                  View Catalog <ArrowRight size={12} />
+                </a>
+                <a
                   href={cat.pdf}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  download
                   className="link-arrow text-ink-muted"
                 >
                   <Download size={12} />
-                  PDF
+                  Download
                 </a>
               </>
             ) : (

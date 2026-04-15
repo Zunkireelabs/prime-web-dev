@@ -255,6 +255,7 @@ export interface Dealer {
 
 export interface CatalogEntry {
   name: string;
+  slug: string;
   size: string;
   filterValue: string;
   count: string;
