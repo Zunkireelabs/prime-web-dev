@@ -419,7 +419,9 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           {/* CTAs */}
           <div className="flex flex-wrap items-center" style={{ gap: "16px" }}>
             <a
-              href={`mailto:sales@primeceramics.com.np?subject=Enquiry: ${encodeURIComponent(product.name)}&body=${encodeURIComponent(`Hi, I'm interested in the ${product.name} (${product.size}, ${product.finish}).`)}`}
+              href={`https://wa.me/9779802310000?text=${encodeURIComponent(`Hi, I'm interested in the ${product.name} (${product.size}, ${product.finish}). Can you share more details?`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="link-arrow"
             >
               Enquire About This Tile

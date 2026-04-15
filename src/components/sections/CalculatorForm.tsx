@@ -208,9 +208,10 @@ export default function CalculatorForm() {
     setDirectArea("");
   };
 
-  const quoteBody = results
-    ? `Hi, I need tiles for my project:\n\nRoom Area: ${results.areaSqft} sq ft (${results.areaSqm} sq m)\nTile Size: ${tile.size}\nTotal Tiles: ${results.totalTiles}\nBoxes: ${results.boxesNeeded}\n\nPlease send me a quotation.`
-    : "";
+  const waMessage = results
+    ? `Hi, I need tiles for my project.\n\nRoom Area: ${results.areaSqft} sq ft (${results.areaSqm} sq m)\nTile Size: ${tile.size}\nTotal Tiles: ${results.totalTiles}\nBoxes: ${results.boxesNeeded}\n\nPlease send me a quotation.`
+    : "Hi, I'm interested in Prime Tiles. I'd like to request a quote for my project.";
+  const waUrl = `https://wa.me/9779802310000?text=${encodeURIComponent(waMessage)}`;
 
   const hasInput = length || width || directArea;
 
@@ -680,7 +681,9 @@ export default function CalculatorForm() {
                   {/* ── Actions ── */}
                   <div className="flex flex-wrap items-center" style={{ gap: "12px" }}>
                     <a
-                      href={`mailto:sales@primeceramics.com.np?subject=Tile%20Quote%20Request&body=${encodeURIComponent(quoteBody)}`}
+                      href={waUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="btn-gold group"
                     >
                       Request a Quote

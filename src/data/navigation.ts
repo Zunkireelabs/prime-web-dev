@@ -68,7 +68,7 @@ export const footerColumns: FooterColumn[] = [
     title: "Support",
     links: [
       { label: "Find a Dealer", href: "/dealers" },
-      { label: "Request Samples", href: "mailto:sales@primeceramics.com.np?subject=Sample%20Request" },
+      { label: "Request Samples", href: "https://wa.me/9779802310000?text=Hi%2C%20I%27d%20like%20to%20request%20tile%20samples.%20Can%20you%20help%3F" },
       { label: "Technical Specs", href: "/catalog" },
       { label: "Installation Guide", href: "/services" },
       { label: "FAQ", href: "/#contact" },

@@ -14,6 +14,7 @@ const socials = [
 
 const contactItems = [
   { label: "Email", value: "info@primeceramics.com.np", href: "mailto:info@primeceramics.com.np", icon: "mail" },
+  { label: "WhatsApp", value: "Chat with us", href: "https://wa.me/9779802310000?text=Hi%2C%20I%20have%20a%20question%20about%20Prime%20Tiles%20products.", icon: "phone" },
   { label: "Phone", value: "+977-1-5978860/61/62", href: "tel:+977-1-5978860", icon: "phone" },
   { label: "Toll Free", value: "1810 500 0062", href: "tel:18105000062", icon: "phone" },
   { label: "Factory", value: "Sakhuwa Dhamaura, Brindavan-6, Rautahat", icon: "factory" },

@@ -3,9 +3,11 @@
 import FadeIn from "@/components/animations/FadeIn";
 import { ArrowRight, Phone, Mail, Headphones } from "lucide-react";
 
+const WA = "https://wa.me/9779802310000";
+
 const contactItems = [
   { icon: Phone, label: "Phone", value: "+977-1-5978860/61/62", href: "tel:+977-1-5978860" },
-  { icon: Mail, label: "Email", value: "info@primeceramics.com.np", href: "mailto:info@primeceramics.com.np" },
+  { icon: Mail, label: "WhatsApp", value: "Chat with us", href: `${WA}?text=${encodeURIComponent("Hi, I have a question about Prime Tiles products. Could you help me?")}` },
   { icon: Headphones, label: "Toll Free", value: "1810 500 0062", href: "tel:18105000062" },
 ];
 
@@ -128,7 +130,9 @@ export default function CTASection() {
           <FadeIn delay={0.2}>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "20px" }}>
               <a
-                href="mailto:sales@primeceramics.com.np?subject=Quote%20Request"
+                href={`${WA}?text=${encodeURIComponent("Hi, I'm interested in Prime Tiles. I'd like to request a quote for my project.")}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn-gold group"
               >
                 Request a Quote
