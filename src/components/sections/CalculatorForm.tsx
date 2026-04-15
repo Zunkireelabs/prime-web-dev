@@ -1,8 +1,19 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { ArrowRight, Copy, Check } from "lucide-react";
+import {
+  ArrowRight,
+  Copy,
+  Check,
+  RotateCcw,
+  Ruler,
+  Grid3X3,
+  Percent,
+  Package,
+} from "lucide-react";
 import FadeIn from "@/components/animations/FadeIn";
+
+/* ─── Constants ─── */
 
 const TILE_DATA = [
   { size: "300×300 mm", label: "300×300", dimMm: [300, 300], tilesPerBox: 10, sqmPerTile: 0.09 },
@@ -21,6 +32,31 @@ const WASTAGE_OPTIONS = [
 
 const SQM_TO_SQFT = 10.7639;
 
+/* ─── Sub-components ─── */
+
+function SectionLabel({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ElementType;
+  label: string;
+}) {
+  return (
+    <div
+      className="flex items-center"
+      style={{ gap: "8px", marginBottom: "12px" }}
+    >
+      <Icon
+        size={12}
+        style={{ color: "var(--color-accent)", opacity: 0.6 }}
+      />
+      <p className="text-[0.58rem] font-medium tracking-[0.16em] uppercase text-ink-muted">
+        {label}
+      </p>
+    </div>
+  );
+}
+
 function NumberInput({
   label,
   value,
@@ -37,7 +73,7 @@ function NumberInput({
   return (
     <div>
       <label
-        className="text-[0.6rem] font-medium tracking-[0.16em] uppercase text-ink-muted block"
+        className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted block"
         style={{ marginBottom: "8px" }}
       >
         {label}
@@ -49,18 +85,30 @@ function NumberInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder || "0"}
-          className="w-full text-ink text-[1rem] font-light bg-surface focus:outline-none focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2"
+          className="w-full text-ink font-light bg-transparent focus:outline-none"
           style={{
-            padding: "14px 60px 14px 16px",
-            border: "1px solid rgba(43,36,28,0.12)",
+            fontSize: "0.95rem",
+            padding: "12px 52px 12px 14px",
+            border: "1px solid rgba(43,36,28,0.1)",
             borderRadius: "8px",
-            transition: "border-color 0.3s",
+            background: "rgba(247,244,239,0.5)",
+            transition: "border-color 0.3s, box-shadow 0.3s",
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = "var(--color-accent)";
+            e.currentTarget.style.boxShadow =
+              "0 0 0 3px rgba(181,138,82,0.06)";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = "rgba(43,36,28,0.1)";
+            e.currentTarget.style.boxShadow = "none";
           }}
           min="0"
           step="any"
         />
         <span
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-[0.7rem] font-medium tracking-[0.1em] uppercase text-ink-muted"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[0.6rem] font-medium tracking-[0.1em] uppercase text-ink-muted"
+          style={{ opacity: 0.5 }}
         >
           {unit}
         </span>
@@ -68,6 +116,8 @@ function NumberInput({
     </div>
   );
 }
+
+/* ─── Main Component ─── */
 
 export default function CalculatorForm() {
   const [unit, setUnit] = useState<"ft" | "m">("ft");
@@ -86,7 +136,12 @@ export default function CalculatorForm() {
     if (directArea && parseFloat(directArea) > 0) {
       const val = parseFloat(directArea);
       areaSqm = unit === "ft" ? val / SQM_TO_SQFT : val;
-    } else if (length && width && parseFloat(length) > 0 && parseFloat(width) > 0) {
+    } else if (
+      length &&
+      width &&
+      parseFloat(length) > 0 &&
+      parseFloat(width) > 0
+    ) {
       const l = parseFloat(length);
       const w = parseFloat(width);
       const areaInUnit = l * w;
@@ -115,14 +170,16 @@ export default function CalculatorForm() {
   const handleCopy = useCallback(() => {
     if (!results) return;
     const text = [
-      `Prime Tiles Calculator Results`,
-      `───────────────────────────`,
+      `Prime Tiles — Calculator Results`,
+      `─────────────────────────────────`,
+      ``,
       `Room Area: ${results.areaSqft} sq ft (${results.areaSqm} sq m)`,
       `Tile Size: ${tile.size}`,
-      `Tiles Needed: ${results.tilesNeeded}`,
+      ``,
+      `Base Tiles: ${results.tilesNeeded}`,
       `Wastage (${wastage}%): +${results.wastageExtra} tiles`,
-      `Total: ${results.totalTiles} tiles`,
-      `Boxes: ${results.boxesNeeded} (${results.tilesPerBox} tiles/box)`,
+      `Total Tiles: ${results.totalTiles}`,
+      `Boxes Needed: ${results.boxesNeeded} (${results.tilesPerBox} tiles/box)`,
       ``,
       `www.primeceramics.com.np`,
     ].join("\n");
@@ -131,50 +188,69 @@ export default function CalculatorForm() {
     setTimeout(() => setCopied(false), 2000);
   }, [results, tile, wastage]);
 
+  const handleClear = () => {
+    setLength("");
+    setWidth("");
+    setDirectArea("");
+  };
+
   const quoteBody = results
-    ? `Hi, I need tiles for my project:\n\nRoom Area: ${results.areaSqft} sq ft\nTile Size: ${tile.size}\nTotal Tiles: ${results.totalTiles}\nBoxes: ${results.boxesNeeded}\n\nPlease send me a quotation.`
+    ? `Hi, I need tiles for my project:\n\nRoom Area: ${results.areaSqft} sq ft (${results.areaSqm} sq m)\nTile Size: ${tile.size}\nTotal Tiles: ${results.totalTiles}\nBoxes: ${results.boxesNeeded}\n\nPlease send me a quotation.`
     : "";
+
+  const hasInput = length || width || directArea;
 
   return (
     <section
       className="bg-surface-alt"
-      style={{ padding: "clamp(48px, 6vw, 80px) 0 clamp(80px, 10vw, 140px)" }}
+      style={{ padding: "56px 0 64px" }}
     >
       <div className="container">
-        <div className="flex flex-col lg:flex-row" style={{ gap: "clamp(32px, 4vw, 64px)" }}>
-
-          {/* Left — Inputs */}
+        <div
+          className="flex flex-col lg:flex-row lg:items-stretch"
+          style={{ gap: "40px" }}
+        >
+          {/* ═══════════ LEFT — Inputs ═══════════ */}
           <FadeIn>
             <div
               className="lg:w-[420px] shrink-0"
               style={{
-                padding: "clamp(24px, 3vw, 40px)",
-                background: "var(--color-surface)",
+                padding: "32px",
+                background: "var(--color-surface-card)",
                 borderRadius: "12px",
                 border: "1px solid rgba(43,36,28,0.06)",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.02), 0 6px 24px rgba(0,0,0,0.03)",
               }}
             >
-              {/* Unit toggle */}
+              {/* ── Unit Toggle ── */}
               <div style={{ marginBottom: "28px" }}>
-                <p
-                  className="text-[0.6rem] font-medium tracking-[0.16em] uppercase text-ink-muted"
-                  style={{ marginBottom: "10px" }}
+                <SectionLabel icon={Ruler} label="Unit" />
+                <div
+                  className="inline-flex"
+                  style={{
+                    padding: "3px",
+                    borderRadius: "8px",
+                    background: "rgba(43,36,28,0.04)",
+                    border: "1px solid rgba(43,36,28,0.06)",
+                  }}
                 >
-                  Unit
-                </p>
-                <div className="flex" style={{ gap: "8px" }}>
                   {(["ft", "m"] as const).map((u) => (
                     <button
                       key={u}
                       type="button"
                       onClick={() => setUnit(u)}
-                      className="text-[0.7rem] font-medium tracking-[0.12em] uppercase"
+                      className="text-[0.68rem] font-medium tracking-[0.1em] uppercase"
                       style={{
-                        padding: "10px 24px",
+                        padding: "8px 24px",
                         borderRadius: "6px",
-                        border: `1px solid ${unit === u ? "var(--color-accent)" : "rgba(43,36,28,0.12)"}`,
-                        background: unit === u ? "var(--color-accent-subtle)" : "transparent",
-                        color: unit === u ? "var(--color-accent)" : "var(--color-ink-muted)",
+                        background:
+                          unit === u ? "var(--color-surface-card)" : "transparent",
+                        color:
+                          unit === u
+                            ? "var(--color-accent)"
+                            : "var(--color-ink-muted)",
+                        boxShadow:
+                          unit === u ? "0 1px 4px rgba(0,0,0,0.05)" : "none",
                         transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
                         cursor: "pointer",
                       }}
@@ -185,229 +261,410 @@ export default function CalculatorForm() {
                 </div>
               </div>
 
-              {/* Dimensions */}
-              <div className="grid grid-cols-2" style={{ gap: "16px", marginBottom: "20px" }}>
-                <NumberInput label="Length" value={length} onChange={setLength} unit={unit} placeholder="12" />
-                <NumberInput label="Width" value={width} onChange={setWidth} unit={unit} placeholder="10" />
+              {/* ── Dimensions ── */}
+              <div style={{ marginBottom: "20px" }}>
+                <SectionLabel icon={Ruler} label="Room Dimensions" />
+                <div className="grid grid-cols-2" style={{ gap: "12px" }}>
+                  <NumberInput
+                    label="Length"
+                    value={length}
+                    onChange={(v) => {
+                      setLength(v);
+                      if (v) setDirectArea("");
+                    }}
+                    unit={unit}
+                    placeholder="12"
+                  />
+                  <NumberInput
+                    label="Width"
+                    value={width}
+                    onChange={(v) => {
+                      setWidth(v);
+                      if (v) setDirectArea("");
+                    }}
+                    unit={unit}
+                    placeholder="10"
+                  />
+                </div>
               </div>
 
-              {/* OR divider */}
-              <div className="flex items-center" style={{ gap: "12px", marginBottom: "20px" }}>
-                <div style={{ flex: 1, height: "1px", background: "rgba(43,36,28,0.08)" }} />
-                <span className="text-[0.6rem] font-medium tracking-[0.14em] uppercase text-ink-muted">
+              {/* ── OR Divider ── */}
+              <div
+                className="flex items-center"
+                style={{ gap: "12px", marginBottom: "20px" }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                    height: "1px",
+                    background: "rgba(43,36,28,0.08)",
+                  }}
+                />
+                <span className="text-[0.5rem] font-medium tracking-[0.14em] uppercase text-ink-muted">
                   or enter area
                 </span>
-                <div style={{ flex: 1, height: "1px", background: "rgba(43,36,28,0.08)" }} />
+                <div
+                  style={{
+                    flex: 1,
+                    height: "1px",
+                    background: "rgba(43,36,28,0.08)",
+                  }}
+                />
               </div>
 
-              {/* Direct area */}
-              <div style={{ marginBottom: "32px" }}>
+              {/* ── Direct Area ── */}
+              <div style={{ marginBottom: "28px" }}>
                 <NumberInput
                   label="Total Area"
                   value={directArea}
                   onChange={(v) => {
                     setDirectArea(v);
-                    setLength("");
-                    setWidth("");
+                    if (v) {
+                      setLength("");
+                      setWidth("");
+                    }
                   }}
                   unit={unit === "ft" ? "sq ft" : "sq m"}
                   placeholder="120"
                 />
               </div>
 
-              {/* Tile size */}
+              {/* ── Tile Size Selector ── */}
               <div style={{ marginBottom: "28px" }}>
-                <p
-                  className="text-[0.6rem] font-medium tracking-[0.16em] uppercase text-ink-muted"
-                  style={{ marginBottom: "12px" }}
-                >
-                  Tile Size
-                </p>
-                <div className="grid grid-cols-3" style={{ gap: "8px" }}>
-                  {TILE_DATA.map((t, i) => (
-                    <button
-                      key={t.size}
-                      type="button"
-                      onClick={() => setSelectedTile(i)}
-                      className="text-center"
-                      style={{
-                        padding: "12px 8px",
-                        borderRadius: "8px",
-                        border: `1px solid ${selectedTile === i ? "var(--color-accent)" : "rgba(43,36,28,0.1)"}`,
-                        background: selectedTile === i ? "var(--color-accent-subtle)" : "transparent",
-                        cursor: "pointer",
-                        transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
-                      }}
-                    >
-                      <p
-                        className="font-medium"
+                <SectionLabel icon={Grid3X3} label="Tile Size" />
+                <div className="grid grid-cols-3" style={{ gap: "10px" }}>
+                  {TILE_DATA.map((t, i) => {
+                    const isActive = selectedTile === i;
+                    const ratio = t.dimMm[1] / t.dimMm[0];
+                    const isSquare = ratio === 1;
+                    return (
+                      <button
+                        key={t.size}
+                        type="button"
+                        onClick={() => setSelectedTile(i)}
+                        className="text-center"
                         style={{
-                          fontSize: "0.8rem",
-                          color: selectedTile === i ? "var(--color-accent)" : "var(--color-ink)",
-                          transition: "color 0.3s",
+                          padding: "12px 6px 10px",
+                          borderRadius: "8px",
+                          border: `1px solid ${isActive ? "var(--color-accent)" : "rgba(43,36,28,0.08)"}`,
+                          background: isActive
+                            ? "rgba(181,138,82,0.06)"
+                            : "transparent",
+                          cursor: "pointer",
+                          transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
                         }}
                       >
-                        {t.label}
-                      </p>
-                      <p className="text-[0.55rem] text-ink-muted" style={{ marginTop: "2px" }}>
-                        mm
-                      </p>
-                    </button>
-                  ))}
+                        {/* Mini tile shape */}
+                        <div
+                          className="mx-auto"
+                          style={{
+                            width: isSquare ? "16px" : "12px",
+                            height: isSquare ? "16px" : `${12 * ratio}px`,
+                            border: `1.5px solid ${isActive ? "var(--color-accent)" : "rgba(43,36,28,0.15)"}`,
+                            borderRadius: "1.5px",
+                            marginBottom: "6px",
+                            transition: "border-color 0.3s",
+                          }}
+                        />
+                        <p
+                          className="font-medium"
+                          style={{
+                            fontSize: "0.75rem",
+                            color: isActive
+                              ? "var(--color-accent)"
+                              : "var(--color-ink)",
+                            transition: "color 0.3s",
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {t.label}
+                        </p>
+                        <p
+                          className="text-ink-muted"
+                          style={{
+                            fontSize: "0.48rem",
+                            marginTop: "2px",
+                            letterSpacing: "0.06em",
+                          }}
+                        >
+                          mm
+                        </p>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Wastage */}
-              <div>
-                <p
-                  className="text-[0.6rem] font-medium tracking-[0.16em] uppercase text-ink-muted"
-                  style={{ marginBottom: "10px" }}
-                >
-                  Wastage Allowance
-                </p>
-                <div className="flex" style={{ gap: "8px" }}>
-                  {WASTAGE_OPTIONS.map((w) => (
-                    <button
-                      key={w.value}
-                      type="button"
-                      onClick={() => setWastage(w.value)}
-                      className="flex-1 text-center"
-                      style={{
-                        padding: "10px 8px",
-                        borderRadius: "6px",
-                        border: `1px solid ${wastage === w.value ? "var(--color-accent)" : "rgba(43,36,28,0.1)"}`,
-                        background: wastage === w.value ? "var(--color-accent-subtle)" : "transparent",
-                        cursor: "pointer",
-                        transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
-                      }}
-                    >
-                      <p
-                        className="font-medium"
+              {/* ── Wastage Allowance ── */}
+              <div style={{ marginBottom: hasInput ? "24px" : "0" }}>
+                <SectionLabel icon={Percent} label="Wastage Allowance" />
+                <div className="grid grid-cols-3" style={{ gap: "10px" }}>
+                  {WASTAGE_OPTIONS.map((w) => {
+                    const isActive = wastage === w.value;
+                    return (
+                      <button
+                        key={w.value}
+                        type="button"
+                        onClick={() => setWastage(w.value)}
+                        className="text-center"
                         style={{
-                          fontSize: "0.8rem",
-                          color: wastage === w.value ? "var(--color-accent)" : "var(--color-ink)",
-                          transition: "color 0.3s",
+                          padding: "12px 6px 10px",
+                          borderRadius: "8px",
+                          border: `1px solid ${isActive ? "var(--color-accent)" : "rgba(43,36,28,0.08)"}`,
+                          background: isActive
+                            ? "rgba(181,138,82,0.06)"
+                            : "transparent",
+                          cursor: "pointer",
+                          transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
                         }}
                       >
-                        {w.label}
-                      </p>
-                      <p className="text-[0.5rem] text-ink-muted" style={{ marginTop: "2px" }}>
-                        {w.desc}
-                      </p>
-                    </button>
-                  ))}
+                        <p
+                          className="font-display"
+                          style={{
+                            fontSize: "1rem",
+                            fontWeight: 400,
+                            color: isActive
+                              ? "var(--color-accent)"
+                              : "var(--color-ink)",
+                            transition: "color 0.3s",
+                            lineHeight: 1,
+                            marginBottom: "4px",
+                          }}
+                        >
+                          {w.label}
+                        </p>
+                        <p
+                          className="text-ink-muted"
+                          style={{ fontSize: "0.48rem", letterSpacing: "0.04em" }}
+                        >
+                          {w.desc}
+                        </p>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
+
+              {/* ── Clear Button ── */}
+              {hasInput && (
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="flex items-center text-ink-muted hover:text-accent"
+                  style={{
+                    gap: "6px",
+                    fontSize: "0.65rem",
+                    fontWeight: 500,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase" as const,
+                    cursor: "pointer",
+                    transition: "color 0.3s",
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                  }}
+                >
+                  <RotateCcw size={11} />
+                  Clear
+                </button>
+              )}
             </div>
           </FadeIn>
 
-          {/* Right — Results */}
-          <FadeIn delay={0.1}>
-            <div className="flex-1">
+          {/* ═══════════ RIGHT — Results ═══════════ */}
+          <FadeIn delay={0.1} className="flex-1 min-w-0 flex flex-col">
+            <div className="flex-1 flex flex-col justify-center">
               {results ? (
                 <div>
-                  {/* Room area */}
-                  <div style={{ marginBottom: "32px" }}>
-                    <p
-                      className="text-[0.6rem] font-medium tracking-[0.18em] uppercase text-ink-muted"
-                      style={{ marginBottom: "8px" }}
-                    >
-                      Room Area
-                    </p>
-                    <p className="font-serif font-light text-ink" style={{ fontSize: "clamp(1.2rem, 2vw, 1.6rem)" }}>
-                      {results.areaSqft} <span className="text-ink-muted text-[0.8rem]">sq ft</span>
-                      <span className="text-ink-muted text-[0.75rem]"> ({results.areaSqm} sq m)</span>
-                    </p>
-                  </div>
-
-                  {/* Main result — tiles needed */}
+                  {/* Room area header */}
                   <div
-                    style={{
-                      padding: "clamp(24px, 3vw, 40px)",
-                      background: "var(--color-surface)",
-                      borderRadius: "12px",
-                      border: "1px solid rgba(43,36,28,0.06)",
-                      marginBottom: "24px",
-                    }}
-                  >
-                    <p
-                      className="text-[0.6rem] font-medium tracking-[0.18em] uppercase text-ink-muted"
-                      style={{ marginBottom: "12px" }}
-                    >
-                      Tiles Needed
-                    </p>
-                    <p
-                      className="font-display font-light"
-                      style={{
-                        fontSize: "clamp(3rem, 6vw, 4.5rem)",
-                        lineHeight: 1,
-                        color: "var(--color-accent)",
-                        marginBottom: "16px",
-                      }}
-                    >
-                      {results.totalTiles}
-                    </p>
-                    <div
-                      className="grid grid-cols-2 sm:grid-cols-3"
-                      style={{ gap: "16px" }}
-                    >
-                      <div>
-                        <p className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
-                          Base Tiles
-                        </p>
-                        <p className="text-[1rem] text-ink font-light">{results.tilesNeeded}</p>
-                      </div>
-                      <div>
-                        <p className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
-                          Wastage ({wastage}%)
-                        </p>
-                        <p className="text-[1rem] text-ink font-light">+{results.wastageExtra}</p>
-                      </div>
-                      <div>
-                        <p className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
-                          Tile Size
-                        </p>
-                        <p className="text-[1rem] text-ink font-light">{tile.size}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Boxes */}
-                  <div
-                    className="flex items-center justify-between"
-                    style={{
-                      padding: "20px 24px",
-                      background: "var(--color-surface)",
-                      borderRadius: "10px",
-                      border: "1px solid rgba(43,36,28,0.06)",
-                      marginBottom: "32px",
-                    }}
+                    className="flex items-end justify-between flex-wrap"
+                    style={{ marginBottom: "24px", gap: "12px" }}
                   >
                     <div>
-                      <p className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
-                        Boxes to Buy
+                      <p
+                        className="text-[0.55rem] font-medium tracking-[0.16em] uppercase text-ink-muted"
+                        style={{ marginBottom: "6px" }}
+                      >
+                        Your Room Area
                       </p>
-                      <p className="font-display font-light text-ink" style={{ fontSize: "1.8rem", lineHeight: 1 }}>
-                        {results.boxesNeeded}
+                      <p
+                        className="font-serif font-light text-ink"
+                        style={{ fontSize: "1.5rem", lineHeight: 1 }}
+                      >
+                        {results.areaSqft}{" "}
+                        <span className="text-ink-muted" style={{ fontSize: "0.7rem" }}>
+                          sq ft
+                        </span>
+                        <span className="text-ink-muted" style={{ fontSize: "0.65rem", marginLeft: "6px" }}>
+                          ({results.areaSqm} sq m)
+                        </span>
                       </p>
                     </div>
-                    <p className="text-[0.7rem] text-ink-muted">
-                      {tile.tilesPerBox} tiles per box
+                    <p
+                      className="text-[0.55rem] font-medium tracking-[0.1em] uppercase"
+                      style={{
+                        padding: "5px 12px",
+                        borderRadius: "20px",
+                        background: "var(--color-accent-subtle)",
+                        color: "var(--color-accent)",
+                        border: "1px solid rgba(181,138,82,0.1)",
+                      }}
+                    >
+                      {tile.label} mm
                     </p>
                   </div>
 
-                  {/* Gold divider */}
+                  {/* ── Primary result card ── */}
                   <div
                     style={{
-                      width: "clamp(60px, 10vw, 100px)",
+                      padding: "32px",
+                      background: "var(--color-surface-card)",
+                      borderRadius: "12px",
+                      border: "1px solid rgba(43,36,28,0.06)",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.02), 0 6px 24px rgba(0,0,0,0.03)",
+                      marginBottom: "16px",
+                      position: "relative" as const,
+                      overflow: "hidden" as const,
+                    }}
+                  >
+                    {/* Corner glow */}
+                    <div
+                      className="absolute top-0 right-0 pointer-events-none"
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        background:
+                          "radial-gradient(ellipse at 100% 0%, rgba(181,138,82,0.05) 0%, transparent 70%)",
+                      }}
+                    />
+
+                    <div className="relative">
+                      <p
+                        className="text-[0.55rem] font-medium tracking-[0.16em] uppercase text-ink-muted"
+                        style={{ marginBottom: "10px" }}
+                      >
+                        Total Tiles Needed
+                      </p>
+
+                      {/* Big number */}
+                      <div
+                        className="flex items-baseline"
+                        style={{ gap: "10px", marginBottom: "20px" }}
+                      >
+                        <p
+                          className="font-display font-light"
+                          style={{
+                            fontSize: "clamp(3rem, 6vw, 5rem)",
+                            lineHeight: 0.85,
+                            color: "var(--color-accent)",
+                            letterSpacing: "-0.02em",
+                          }}
+                        >
+                          {results.totalTiles}
+                        </p>
+                        <span className="text-ink-muted font-light" style={{ fontSize: "0.8rem" }}>
+                          tiles
+                        </span>
+                      </div>
+
+                      {/* Gold divider */}
+                      <div
+                        style={{
+                          width: "48px",
+                          height: "1.5px",
+                          background:
+                            "linear-gradient(90deg, var(--color-accent), transparent)",
+                          marginBottom: "20px",
+                        }}
+                      />
+
+                      {/* Breakdown */}
+                      <div className="grid grid-cols-3" style={{ gap: "16px" }}>
+                        <div>
+                          <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
+                            Base Tiles
+                          </p>
+                          <p className="font-display font-light text-ink" style={{ fontSize: "1.2rem", lineHeight: 1 }}>
+                            {results.tilesNeeded}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
+                            Wastage +{wastage}%
+                          </p>
+                          <p className="font-display font-light" style={{ fontSize: "1.2rem", lineHeight: 1, color: "var(--color-accent)" }}>
+                            +{results.wastageExtra}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
+                            Per Tile
+                          </p>
+                          <p className="font-display font-light text-ink" style={{ fontSize: "1.2rem", lineHeight: 1 }}>
+                            {tile.sqmPerTile}
+                            <span className="text-ink-muted" style={{ fontSize: "0.55rem", marginLeft: "2px" }}>m²</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ── Secondary cards ── */}
+                  <div className="grid grid-cols-2" style={{ gap: "16px", marginBottom: "32px" }}>
+                    {/* Boxes */}
+                    <div
+                      style={{
+                        padding: "20px",
+                        background: "rgba(181,138,82,0.04)",
+                        borderRadius: "10px",
+                        border: "1px solid rgba(181,138,82,0.1)",
+                      }}
+                    >
+                      <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "6px" }}>
+                        Boxes to Buy
+                      </p>
+                      <p className="font-display font-light" style={{ fontSize: "1.5rem", lineHeight: 1, color: "var(--color-accent)" }}>
+                        {results.boxesNeeded}
+                      </p>
+                      <p className="text-[0.6rem] text-ink-muted" style={{ marginTop: "4px" }}>
+                        {tile.tilesPerBox} tiles per box
+                      </p>
+                    </div>
+
+                    {/* Coverage */}
+                    <div
+                      style={{
+                        padding: "20px",
+                        background: "var(--color-surface-card)",
+                        borderRadius: "10px",
+                        border: "1px solid rgba(43,36,28,0.06)",
+                      }}
+                    >
+                      <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "6px" }}>
+                        Total Coverage
+                      </p>
+                      <p className="font-display font-light text-ink" style={{ fontSize: "1.5rem", lineHeight: 1 }}>
+                        {(results.totalTiles * tile.sqmPerTile).toFixed(1)}
+                      </p>
+                      <p className="text-[0.6rem] text-ink-muted" style={{ marginTop: "4px" }}>
+                        sq m ({(results.totalTiles * tile.sqmPerTile * SQM_TO_SQFT).toFixed(1)} sq ft)
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ── Divider ── */}
+                  <div
+                    style={{
+                      width: "100%",
                       height: "1px",
-                      background: "linear-gradient(90deg, transparent, var(--color-accent) 30%, var(--color-accent) 70%, transparent)",
+                      background: "linear-gradient(90deg, transparent, rgba(43,36,28,0.08) 20%, rgba(43,36,28,0.08) 80%, transparent)",
                       marginBottom: "32px",
                     }}
                   />
 
-                  {/* Actions */}
-                  <div className="flex flex-wrap items-center" style={{ gap: "16px" }}>
+                  {/* ── Actions ── */}
+                  <div className="flex flex-wrap items-center" style={{ gap: "12px" }}>
                     <a
                       href={`mailto:sales@primeceramics.com.np?subject=Tile%20Quote%20Request&body=${encodeURIComponent(quoteBody)}`}
                       className="btn-gold group"
@@ -427,38 +684,164 @@ export default function CalculatorForm() {
                   </div>
                 </div>
               ) : (
-                /* Empty state — no input yet */
+                /* ═══════════ Empty State (Light) ═══════════ */
                 <div
-                  className="flex flex-col items-center justify-center text-center"
+                  className="flex flex-col items-center justify-center text-center relative overflow-hidden"
                   style={{
-                    padding: "clamp(60px, 8vw, 100px) 24px",
-                    background: "var(--color-surface)",
+                    padding: "56px 32px",
+                    background: "var(--color-surface-card)",
                     borderRadius: "12px",
                     border: "1px solid rgba(43,36,28,0.06)",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.02), 0 6px 24px rgba(0,0,0,0.03)",
+                    height: "100%",
+                    minHeight: "480px",
                   }}
                 >
+                  {/* Subtle tile pattern */}
                   <div
-                    className="flex items-center justify-center"
+                    className="absolute inset-0 pointer-events-none opacity-[0.025]"
                     style={{
-                      width: "64px",
-                      height: "64px",
-                      borderRadius: "50%",
-                      border: "1px solid rgba(181,138,82,0.2)",
-                      marginBottom: "24px",
+                      backgroundImage:
+                        "url(\"data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='22' height='22' fill='none' stroke='%232b241c' stroke-width='0.4'/%3E%3Crect x='25' y='25' width='22' height='22' fill='none' stroke='%232b241c' stroke-width='0.4'/%3E%3C/svg%3E\")",
                     }}
-                  >
-                    <p className="font-display font-light text-accent" style={{ fontSize: "1.4rem" }}>?</p>
+                  />
+
+                  {/* Radial warm glow */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(181,138,82,0.04) 0%, transparent 60%)",
+                    }}
+                  />
+
+                  <div className="relative z-10 flex flex-col items-center">
+                    {/* Tile grid illustration */}
+                    <div style={{ marginBottom: "28px" }}>
+                      <svg
+                        width="56"
+                        height="56"
+                        viewBox="0 0 56 56"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          x="4"
+                          y="4"
+                          width="20"
+                          height="20"
+                          rx="2"
+                          stroke="var(--color-accent)"
+                          strokeWidth="1"
+                          opacity="0.3"
+                        />
+                        <rect
+                          x="32"
+                          y="4"
+                          width="20"
+                          height="20"
+                          rx="2"
+                          stroke="var(--color-accent)"
+                          strokeWidth="1"
+                          opacity="0.2"
+                        />
+                        <rect
+                          x="4"
+                          y="32"
+                          width="20"
+                          height="20"
+                          rx="2"
+                          stroke="var(--color-accent)"
+                          strokeWidth="1"
+                          opacity="0.2"
+                        />
+                        <rect
+                          x="32"
+                          y="32"
+                          width="20"
+                          height="20"
+                          rx="2"
+                          stroke="var(--color-accent)"
+                          strokeWidth="1"
+                          opacity="0.15"
+                        />
+                      </svg>
+                    </div>
+
+                    <p
+                      className="font-serif font-light text-ink"
+                      style={{
+                        fontSize: "1.4rem",
+                        marginBottom: "12px",
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      Your Results
+                    </p>
+
+                    {/* Gold accent */}
+                    <div
+                      style={{
+                        width: "32px",
+                        height: "1.5px",
+                        background:
+                          "linear-gradient(90deg, transparent, var(--color-accent), transparent)",
+                        marginBottom: "16px",
+                      }}
+                    />
+
+                    <p
+                      className="text-ink-muted"
+                      style={{
+                        fontSize: "0.82rem",
+                        maxWidth: "300px",
+                        lineHeight: 1.65,
+                        marginBottom: "32px",
+                      }}
+                    >
+                      Enter your room dimensions on the left. Your tile
+                      estimate will appear here instantly.
+                    </p>
+
+                    {/* Step flow */}
+                    <div
+                      className="flex items-center"
+                      style={{ gap: "16px" }}
+                    >
+                      {[
+                        { icon: Ruler, text: "Dimensions" },
+                        { icon: Grid3X3, text: "Tile Size" },
+                        { icon: Package, text: "Results" },
+                      ].map((step, i) => (
+                        <div
+                          key={step.text}
+                          className="flex items-center"
+                          style={{ gap: "6px" }}
+                        >
+                          {i > 0 && (
+                            <div
+                              style={{
+                                width: "16px",
+                                height: "1px",
+                                background: "rgba(43,36,28,0.1)",
+                                marginRight: "10px",
+                              }}
+                            />
+                          )}
+                          <step.icon
+                            size={13}
+                            style={{
+                              color: "var(--color-accent)",
+                              opacity: 0.4,
+                            }}
+                          />
+                          <span className="text-[0.58rem] font-medium tracking-[0.06em] uppercase text-ink-muted">
+                            {step.text}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <p
-                    className="font-serif font-light text-ink-muted"
-                    style={{ fontSize: "clamp(1.2rem, 2vw, 1.5rem)", marginBottom: "12px" }}
-                  >
-                    Enter your room dimensions
-                  </p>
-                  <p className="text-[0.8rem] text-ink-muted" style={{ maxWidth: "320px", lineHeight: 1.6 }}>
-                    Fill in the length and width — or enter total area directly.
-                    Results will appear here instantly.
-                  </p>
                 </div>
               )}
             </div>

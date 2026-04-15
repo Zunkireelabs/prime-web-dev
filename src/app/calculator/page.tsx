@@ -16,9 +16,8 @@ export default function CalculatorPage() {
       <Header />
       <main id="main-content">
         <CalculatorHero />
-        <SectionTransition from="dark" to="light-alt" variant="wave" />
         <CalculatorForm />
-        <SectionTransition from="light-alt" to="dark" variant="diagonal" />
+        <SectionTransition from="light-alt" to="dark" variant="mosaic" />
         <CTASection />
       </main>
       <Footer />
