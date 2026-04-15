@@ -16,7 +16,6 @@ function tileHue(name: string): number {
 export default function TileCard({ product, onClick }: TileCardProps) {
   const hue = tileHue(product.name);
   const hasImage = product.image && product.image.startsWith("http");
-  const needsCrop = product.size === "300×600 mm" || product.size === "600×1200 mm";
 
   return (
     <article
@@ -50,7 +49,6 @@ export default function TileCard({ product, onClick }: TileCardProps) {
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03]"
             style={{
-              transform: needsCrop ? "scale(1.12)" : "none",
               transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
             }}
           />

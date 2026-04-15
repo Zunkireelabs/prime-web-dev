@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import CatalogFilter from "./CatalogFilter";
+import ProductDetailPanel from "./ProductDetailPanel";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
 
@@ -14,15 +15,26 @@ function tileHue(name: string): number {
   return 25 + (Math.abs(h) % 25);
 }
 
-function TileCard({ product }: { product: CatalogProduct }) {
+function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p: CatalogProduct) => void }) {
   const hue = tileHue(product.name);
 
   return (
-    <div className="group">
-      {/* Swatch — 4:5, labeled sample */}
+    <article
+      className="group"
+      onClick={() => onClick?.(product)}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onClick(product);
+        }
+      }}
+      style={{ cursor: onClick ? "pointer" : "default" }}
+    >
+      {/* Swatch — 4:5 uniform grid */}
       <div className="relative aspect-[4/5] overflow-hidden" style={{ marginBottom: "16px" }}>
         {product.image && product.image.startsWith("http") ? (
-          /* Real product image from Sanity CDN */
           <img
             src={product.image}
             alt={product.name}
@@ -30,7 +42,6 @@ function TileCard({ product }: { product: CatalogProduct }) {
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          /* Gradient placeholder fallback */
           <>
             <div
               className="absolute inset-0"
@@ -62,6 +73,28 @@ function TileCard({ product }: { product: CatalogProduct }) {
           {product.finish}
         </span>
 
+        {/* View Details hover overlay */}
+        <div
+          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100"
+          style={{
+            background: "rgba(15,12,9,0.35)",
+            transition: "opacity 0.3s cubic-bezier(0.22,1,0.36,1)",
+          }}
+        >
+          <span
+            className="text-[0.65rem] font-medium tracking-[0.16em] uppercase"
+            style={{
+              color: "#fff",
+              padding: "10px 24px",
+              border: "1px solid rgba(255,255,255,0.5)",
+              backdropFilter: "blur(4px)",
+              borderRadius: "2px",
+            }}
+          >
+            View Details
+          </span>
+        </div>
+
         {/* Hover accent line */}
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-left" />
       </div>
@@ -73,12 +106,13 @@ function TileCard({ product }: { product: CatalogProduct }) {
       <h3 className="font-serif font-light text-ink group-hover:text-accent transition-colors duration-500 text-[0.95rem] leading-snug">
         {product.name}
       </h3>
-    </div>
+    </article>
   );
 }
 
 export default function CatalogGrid({ initialSize = "all" }: { initialSize?: string }) {
   const [size, setSize] = useState(initialSize);
+  const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
 
   useEffect(() => {
     setSize(initialSize);
@@ -159,7 +193,7 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4" style={{ columnGap: "clamp(20px, 3vw, 24px)", rowGap: "clamp(32px, 4vw, 40px)" }}>
                 {visible.map((p, i) => (
                   <FadeIn key={p.slug} delay={Math.min(i * 0.02, 0.2)} direction="up" distance={12}>
-                    <TileCard product={p} />
+                    <TileCard product={p} onClick={setSelectedProduct} />
                   </FadeIn>
                 ))}
               </div>
@@ -190,6 +224,12 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
           )}
         </div>
       </section>
+
+      <ProductDetailPanel
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onProductChange={setSelectedProduct}
+      />
     </div>
   );
 }

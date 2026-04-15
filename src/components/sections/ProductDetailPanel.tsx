@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { X, ArrowRight } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
+import { tileAspectRatio } from "@/lib/utils";
 
 interface Props {
   product: CatalogProduct | null;
@@ -56,7 +57,6 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
   if (!product) return null;
 
   const hasImage = product.image && product.image.startsWith("http");
-  const needsCrop = product.size === "300×600 mm" || product.size === "600×1200 mm";
 
   const specs = [
     { label: "Size", value: product.size },
@@ -76,7 +76,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
         onClick={onClose}
       />
 
-      {/* Modal container — centered, max dimensions */}
+      {/* Modal container — centered, auto height for true proportions */}
       <div
         className="absolute bg-surface overflow-hidden"
         data-lenis-prevent
@@ -85,7 +85,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: "min(1200px, 92vw)",
-          height: "min(720px, 88vh)",
+          maxHeight: "92vh",
           borderRadius: "16px",
           boxShadow: "var(--shadow-lg)",
           display: "flex",
@@ -110,28 +110,43 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           <X size={18} />
         </button>
 
-        {/* Left — full-height product image */}
+        {/* Left — product image with true tile proportions */}
         <div
-          className="hidden md:block shrink-0"
+          className="hidden md:flex shrink-0 items-center justify-center"
           style={{
             width: "50%",
-            height: "100%",
+            minHeight: "500px",
             position: "relative",
             overflow: "hidden",
+            background: "var(--color-surface-alt)",
           }}
         >
           {hasImage ? (
-            <img
-              src={product.image}
-              alt={product.name}
-              loading="eager"
-              decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "cover", transform: needsCrop ? "scale(1.12)" : "none" }}
-            />
+            <div
+              style={{
+                width: "80%",
+                aspectRatio: tileAspectRatio(product.size),
+                position: "relative",
+                overflow: "hidden",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+              }}
+            >
+              <img
+                src={product.image}
+                alt={product.name}
+                loading="eager"
+                decoding="async"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </div>
           ) : (
             <div
-              className="w-full h-full flex items-center justify-center"
-              style={{ background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))" }}
+              className="flex items-center justify-center"
+              style={{
+                width: "80%",
+                aspectRatio: tileAspectRatio(product.size),
+                background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
+              }}
             >
               <p className="font-serif font-light text-ink-muted text-2xl text-center" style={{ padding: "0 32px" }}>
                 {product.name}
@@ -154,6 +169,22 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           >
             {product.finish}
           </span>
+
+          {/* Size label */}
+          <span
+            className="absolute text-[0.55rem] font-medium tracking-[0.14em] uppercase"
+            style={{
+              bottom: "20px",
+              right: "20px",
+              padding: "6px 14px",
+              background: "var(--color-surface-elevated)",
+              color: "var(--color-accent)",
+              borderRadius: "4px",
+              backdropFilter: "blur(8px)",
+            }}
+          >
+            {product.size}
+          </span>
         </div>
 
         {/* Right — details (scrollable only if needed on mobile) */}
@@ -164,7 +195,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           {/* Mobile-only image */}
           <div className="md:hidden" style={{ marginBottom: "24px" }}>
             {hasImage ? (
-              <div style={{ aspectRatio: "4/5", borderRadius: "12px", overflow: "hidden" }}>
+              <div style={{ aspectRatio: tileAspectRatio(product.size), borderRadius: "12px", overflow: "hidden" }}>
                 <img
                   src={product.image}
                   alt={product.name}
@@ -175,7 +206,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               <div
                 className="flex items-center justify-center"
                 style={{
-                  aspectRatio: "4/5",
+                  aspectRatio: tileAspectRatio(product.size),
                   borderRadius: "12px",
                   background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
                 }}
@@ -240,7 +271,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                   >
                     <div
                       className="overflow-hidden"
-                      style={{ aspectRatio: "1", borderRadius: "8px", marginBottom: "6px" }}
+                      style={{ aspectRatio: tileAspectRatio(tile.size), borderRadius: "8px", marginBottom: "6px" }}
                     >
                       {tile.image && tile.image.startsWith("http") ? (
                         <img
