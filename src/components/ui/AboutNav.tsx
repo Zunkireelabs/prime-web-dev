@@ -45,7 +45,7 @@ export default function AboutNav() {
 
   return (
     <nav
-      className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-end gap-4"
+      className="fixed right-12 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-end gap-4"
       aria-label="Page sections"
     >
       {sections.map((s, i) => (

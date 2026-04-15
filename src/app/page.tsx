@@ -17,7 +17,7 @@ const CollectionsGrid = dynamic(() => import("@/components/sections/CollectionsG
 const CTASection = dynamic(() => import("@/components/sections/CTASection"), { ssr: false });
 const ProductShowcase = dynamic(() => import("@/components/sections/ProductShowcase"), { ssr: false });
 const FactoryBanner = dynamic(() => import("@/components/sections/FactoryBanner"), { ssr: false });
-const VirtualShowroom = dynamic(() => import("@/components/sections/VirtualShowroom"), { ssr: false });
+const CalculatorCTA = dynamic(() => import("@/components/sections/CalculatorCTA"), { ssr: false });
 const ClientsSection = dynamic(() => import("@/components/sections/ClientsSection"), { ssr: false });
 const DealerNetwork = dynamic(() => import("@/components/sections/DealerNetwork"), { ssr: false });
 
@@ -55,8 +55,8 @@ export default function Home() {
         {/* ─── Transition: Red → Dark ─── */}
         <SectionTransition from="red" to="dark" variant="wave" />
 
-        {/* ═══ Virtual Showroom (dark) ═══ */}
-        <VirtualShowroom />
+        {/* ═══ Calculator CTA (dark) ═══ */}
+        <CalculatorCTA />
 
         {/* ─── Transition: Dark → Light ─── */}
         <SectionTransition from="dark" to="light-alt" variant="wave" />

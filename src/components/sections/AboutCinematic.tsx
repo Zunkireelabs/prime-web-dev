@@ -17,9 +17,6 @@ const AboutCTA = dynamic(() => import("./about/AboutCTA"), { ssr: false });
 export default function AboutCinematic() {
   return (
     <div>
-      {/* Dot navigation — fixed right side, desktop only */}
-      <AboutNav />
-
       {/* Hero — cinematic opener */}
       <AboutHero />
 

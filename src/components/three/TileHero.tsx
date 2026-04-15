@@ -1,47 +1,23 @@
 "use client";
 
-import { useRef, useMemo, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import * as THREE from "three";
-import { collections } from "@/data/collections";
 
-const FEATURED_TILES = collections
-  .filter((c) =>
-    ["Porcelain", "Large Format", "Vitrified", "Special Edition"].includes(c.category)
-  )
-  .sort((a, b) => {
-    // Breccia first
-    if (a.name === "Breccia") return -1;
-    if (b.name === "Breccia") return 1;
-    return 0;
-  });
-
-// Preload all textures once — use HTML Image to support webp
-const textureCache = new Map<string, THREE.Texture>();
-
-function preloadTexture(url: string): Promise<THREE.Texture> {
-  if (textureCache.has(url)) return Promise.resolve(textureCache.get(url)!);
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      const tex = new THREE.Texture(img);
-      tex.colorSpace = THREE.SRGBColorSpace;
-      tex.minFilter = THREE.LinearFilter;
-      tex.magFilter = THREE.LinearFilter;
-      tex.generateMipmaps = false;
-      tex.needsUpdate = true;
-      textureCache.set(url, tex);
-      resolve(tex);
-    };
-    img.onerror = () => {
-      console.error(`Failed to load texture: ${url}`);
-      resolve(new THREE.Texture());
-    };
-    img.src = url;
-  });
-}
+// Local tile images for 3D hero — same-origin, no CORS issues
+const TILES = [
+  { name: "Breccia", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "/images/tiles/breccia.webp" },
+  { name: "Botticino", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "/images/tiles/bottichino.webp" },
+  { name: "Onyx", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "/images/tiles/onyx.webp" },
+  { name: "Carrara White", category: "Marble Look", sizes: ["600×1200 mm"], image: "/images/tiles/carrara-white.webp" },
+  { name: "Smoky Grey", category: "Stone Look", sizes: ["600×600 mm"], image: "/images/tiles/smoky-grey.webp" },
+  { name: "Driftwood", category: "Wood Look", sizes: ["600×600 mm"], image: "/images/tiles/driftwood.webp" },
+  { name: "Sand Beige", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "/images/tiles/sand-beige.webp" },
+  { name: "Armani Bianca", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "/images/tiles/armani-bianca.webp" },
+  { name: "3D Glass", category: "Special Edition", sizes: ["600×600 mm"], image: "/images/tiles/3d-glass.webp" },
+  { name: "Spirit of Nepal", category: "Cultural Heritage", sizes: ["300×600 mm"], image: "/images/tiles/spirit-of-nepal.webp" },
+];
 
 function FloatingTile({
   scrollProgress,
@@ -53,43 +29,45 @@ function FloatingTile({
   const groupRef = useRef<THREE.Group>(null);
   const matRef = useRef<THREE.MeshStandardMaterial>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [ready, setReady] = useState(false);
 
-  // Load first texture
+  // Load texture for current tile
   useEffect(() => {
-    const tile = FEATURED_TILES[0];
-    preloadTexture(tile.image).then((tex) => {
-      if (matRef.current) {
-        matRef.current.map = tex;
-        matRef.current.needsUpdate = true;
-      }
-      onTileChange?.({ name: tile.name, category: tile.category, sizes: tile.sizes });
-      setReady(true);
-    });
-    // Preload the rest in background
-    FEATURED_TILES.forEach((t, i) => { if (i > 0) preloadTexture(t.image); });
-  }, []);
+    const tile = TILES[currentIdx];
+    if (!tile) return;
 
-  // Cycle tiles — swap texture on ref, no re-render
-  useEffect(() => {
-    if (!ready) return;
-    const interval = setInterval(() => {
-      setCurrentIdx((prev) => {
-        const next = (prev + 1) % FEATURED_TILES.length;
-        const tile = FEATURED_TILES[next];
-        const cached = textureCache.get(tile.image);
-        if (cached && matRef.current) {
-          matRef.current.map = cached;
+    const loader = new THREE.TextureLoader();
+    loader.crossOrigin = "anonymous";
+    loader.load(
+      tile.image,
+      (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.minFilter = THREE.LinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        tex.generateMipmaps = false;
+        if (matRef.current) {
+          matRef.current.map = tex;
+          matRef.current.color.set("#ffffff");
           matRef.current.needsUpdate = true;
         }
-        onTileChange?.({ name: tile.name, category: tile.category, sizes: tile.sizes });
-        return next;
-      });
+      },
+      undefined,
+      (err) => {
+        console.error(`Failed to load tile texture: ${tile.image}`, err);
+      }
+    );
+
+    onTileChange?.({ name: tile.name, category: tile.category, sizes: tile.sizes });
+  }, [currentIdx, onTileChange]);
+
+  // Cycle tiles every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % TILES.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [ready, onTileChange]);
+  }, []);
 
-  // Smooth animation — no Float, no fighting
+  // Smooth animation
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
@@ -105,7 +83,6 @@ function FloatingTile({
 
   return (
     <group ref={groupRef}>
-      {/* Single box — face texture on front, neutral sides */}
       <mesh>
         <boxGeometry args={[1.15, 1.15, 0.025]} />
         <meshStandardMaterial
@@ -113,7 +90,7 @@ function FloatingTile({
           roughness={0.18}
           metalness={0.02}
           envMapIntensity={0.6}
-          color="#f5f0e8"
+          color="#ffffff"
         />
       </mesh>
     </group>
