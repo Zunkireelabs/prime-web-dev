@@ -273,12 +273,9 @@ export default function Header() {
                         <li key={c}>
                           <a href={`/products?collection=${encodeURIComponent(c)}`} className="group flex items-center justify-between text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <div className="flex items-center gap-1.5">
-                              <span className={c === "Spirit of Nepal" ? "text-accent-light font-medium" : ""}>{c}</span>
+                              <span>{c}</span>
                               <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                             </div>
-                            {c === "Spirit of Nepal" && (
-                              <span className="text-[0.45rem] tracking-[0.15em] uppercase bg-accent/15 text-accent-light px-2 py-0.5">New</span>
-                            )}
                           </a>
                         </li>
                       ))}
@@ -306,9 +303,14 @@ export default function Header() {
                     <ul className="space-y-0">
                       {sizes.map((s) => (
                         <li key={s}>
-                          <a href={`/products?size=${encodeURIComponent(s)}`} className="group flex items-center gap-1.5 text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
-                            <span>{s}</span>
-                            <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
+                          <a href={`/products?size=${encodeURIComponent(s)}`} className="group flex items-center justify-between text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
+                            <div className="flex items-center gap-1.5">
+                              <span className={s === "600×1200 mm" ? "text-accent-light font-medium" : ""}>{s}</span>
+                              <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
+                            </div>
+                            {s === "600×1200 mm" && (
+                              <span className="text-[0.45rem] tracking-[0.15em] uppercase bg-accent/15 text-accent-light px-2 py-0.5">New</span>
+                            )}
                           </a>
                         </li>
                       ))}
