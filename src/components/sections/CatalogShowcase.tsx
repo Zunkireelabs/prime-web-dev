@@ -22,9 +22,10 @@ function CatalogCard({
     <FadeIn delay={index * 0.06} direction="up" distance={20}>
       <div className={`group h-full flex flex-col ${isComingSoon ? "opacity-70" : ""}`}>
         {/* Image — use 3:4 portrait ratio to match actual cover images */}
-        <div
-          className={`relative overflow-hidden bg-surface-alt ${large ? "aspect-[3/2]" : "aspect-[3/4]"}`}
-          style={{ marginBottom: "20px", borderRadius: "4px" }}
+        <a
+          href={isComingSoon ? undefined : `/catalog/view/${cat.slug}`}
+          className={`relative block overflow-hidden bg-surface-alt ${large ? "aspect-[3/2]" : "aspect-[3/4]"}`}
+          style={{ marginBottom: "20px", borderRadius: "4px", cursor: isComingSoon ? "default" : "pointer" }}
         >
           <img
             src={cat.image}
@@ -63,7 +64,7 @@ function CatalogCard({
 
           {/* Gold accent line at bottom on hover */}
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-        </div>
+        </a>
 
         {/* Info */}
         <div className="flex-1 flex flex-col">
