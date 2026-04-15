@@ -196,7 +196,7 @@ export default function Header() {
               )}
               style={{ padding: "10px 20px" }}
             >
-              Where to Buy
+              Find a Dealer
             </a>
 
           </div>
@@ -389,7 +389,7 @@ export default function Header() {
               onClick={() => setMobileOpen(false)}
               className="inline-block text-[0.65rem] font-medium tracking-[0.15em] uppercase px-6 py-3 border border-accent-light/30 text-accent-light hover:border-accent-light transition-all duration-300"
             >
-              Where to Buy
+              Find a Dealer
             </a>
           </div>
 

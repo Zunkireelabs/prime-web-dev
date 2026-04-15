@@ -173,7 +173,7 @@ export default function DealersGrid({
         <div style={{ marginBottom: "56px" }}>
           <FadeIn>
             <p className="eyebrow text-accent" style={{ marginBottom: "16px" }}>
-              Browse Dealers
+              Find a Dealer
             </p>
           </FadeIn>
           <div style={{ marginBottom: "24px" }}>

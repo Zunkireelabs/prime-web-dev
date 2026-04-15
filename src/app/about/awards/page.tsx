@@ -636,7 +636,7 @@ export default function AwardsPage() {
             <FadeIn delay={0.22}>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "24px" }}>
                 <a href="/dealers" className="btn-gold group">
-                  Visit Showroom
+                  Find a Dealer
                   <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </a>
                 <a href="/about" className="btn-gold-outline group">

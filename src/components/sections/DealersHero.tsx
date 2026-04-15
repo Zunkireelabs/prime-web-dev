@@ -77,7 +77,7 @@ export default function DealersHero() {
         <FadeIn delay={0.2}>
           <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
             <a href="#dealers-grid" className="link-arrow text-white/80 hover:text-white">
-              Browse Dealers <ArrowRight size={12} />
+              Find a Dealer <ArrowRight size={12} />
             </a>
             <div style={{ height: "16px", width: "1px", background: "rgba(255,255,255,0.2)" }} />
             <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-white/35">

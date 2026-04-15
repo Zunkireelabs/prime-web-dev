@@ -62,7 +62,7 @@ export default function AboutCTA() {
         <ScrollReveal from={{ y: 20, opacity: 0 }} to={{ y: 0, opacity: 1 }}>
           <div className="flex flex-wrap items-center justify-center" style={{ gap: "20px" }}>
             <a href="/dealers" className="btn-on-red group">
-              Visit Showroom
+              Find a Dealer
               <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
             </a>
             <a href="/catalog" className="btn-on-red-outline group">
