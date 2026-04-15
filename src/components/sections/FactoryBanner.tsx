@@ -87,7 +87,7 @@ export default function FactoryBanner() {
 
         <FadeIn delay={0.3}>
           <a
-            href="#craft"
+            href="/about"
             className="link-arrow text-white/75 hover:text-accent-light"
           >
             Learn About Our Process <ArrowRight size={12} />

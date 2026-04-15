@@ -60,7 +60,6 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: "Company Information", href: "/about" },
       { label: "Awards & Certification", href: "/about/awards" },
-      { label: "Craftsmanship", href: "/#craft" },
       { label: "Projects", href: "/#projects" },
       { label: "Careers", href: "mailto:info@primeceramics.com.np?subject=Careers" },
     ],
