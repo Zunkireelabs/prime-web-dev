@@ -153,7 +153,7 @@ export default function FindBySpace() {
                       {space.subtitle}
                     </p>
                     <a
-                      href={`/catalog?space=${encodeURIComponent(space.name.toLowerCase())}`}
+                      href={`/products?search=${encodeURIComponent(space.name)}`}
                       className="link-arrow text-white/50 hover:text-accent-light text-[0.6rem]"
                       style={{
                         transform: isActive ? "translateY(0)" : "translateY(10px)",
@@ -231,7 +231,7 @@ export default function FindBySpace() {
             ))}
           </div>
 
-          <a href={`/catalog?space=${encodeURIComponent(spaces[mobileIndex].name.toLowerCase())}`} className="link-arrow text-white/60 hover:text-white text-[0.6rem]">
+          <a href={`/products?search=${encodeURIComponent(spaces[mobileIndex].name)}`} className="link-arrow text-white/60 hover:text-white text-[0.6rem]">
             Explore {spaces[mobileIndex].name} <ArrowRight size={11} />
           </a>
         </div>

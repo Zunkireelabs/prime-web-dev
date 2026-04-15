@@ -47,12 +47,12 @@ export const footerColumns: FooterColumn[] = [
   {
     title: "Collections",
     links: [
-      { label: "Porcelain", href: "/catalog?type=porcelain" },
-      { label: "Ceramic", href: "/catalog?type=ceramic" },
-      { label: "Natural Stone", href: "/catalog?type=natural-stone" },
-      { label: "Large Format", href: "/catalog?type=large-format" },
-      { label: "Mosaics", href: "/catalog?type=mosaics" },
-      { label: "Outdoor", href: "/catalog?type=outdoor" },
+      { label: "Porcelain", href: "/products?category=Porcelain" },
+      { label: "Ceramic", href: "/products?category=Ceramic" },
+      { label: "Natural Stone", href: "/products?category=Stone+Look" },
+      { label: "Large Format", href: "/products?category=Glazed+Vitrified" },
+      { label: "Vitrified", href: "/products?category=Vitrified" },
+      { label: "Outdoor", href: "/products?application=Outdoor" },
     ],
   },
   {

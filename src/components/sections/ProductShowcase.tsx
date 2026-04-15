@@ -171,7 +171,7 @@ function StickyCard({
                 transitionDelay: "0.4s",
               }}
             >
-              <a href={`/catalog?type=${encodeURIComponent(item.name.toLowerCase().replace(/\s+/g, '-'))}`} className="link-arrow text-[0.7rem]">
+              <a href={`/products?category=${encodeURIComponent(item.name)}`} className="link-arrow text-[0.7rem]">
                 Explore {item.name} <ArrowRight size={13} />
               </a>
             </div>
