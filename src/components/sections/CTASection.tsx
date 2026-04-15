@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { ArrowRight, Phone, Mail, Headphones } from "lucide-react";
+import QuoteFormModal from "@/components/ui/QuoteFormModal";
 
 const WA = "https://wa.me/9779802310000";
 
@@ -12,6 +14,7 @@ const contactItems = [
 ];
 
 export default function CTASection() {
+  const [quoteOpen, setQuoteOpen] = useState(false);
   return (
     <section
       id="contact"
@@ -129,10 +132,9 @@ export default function CTASection() {
           {/* Buttons */}
           <FadeIn delay={0.2}>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "20px" }}>
-              <a
-                href={`${WA}?text=${encodeURIComponent("Hi, I'm interested in Prime Tiles. I'd like to request a quote for my project.")}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => setQuoteOpen(true)}
                 className="btn-gold group"
               >
                 Request a Quote
@@ -140,7 +142,7 @@ export default function CTASection() {
                   size={14}
                   className="transition-transform duration-300 group-hover:translate-x-1"
                 />
-              </a>
+              </button>
               <a
                 href="/catalog"
                 className="btn-gold-outline group"
@@ -220,6 +222,8 @@ export default function CTASection() {
           transform: translateY(-2px);
         }
       `}</style>
+
+      <QuoteFormModal open={quoteOpen} onClose={() => setQuoteOpen(false)} />
     </section>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
+import QuoteFormModal from "@/components/ui/QuoteFormModal";
 import {
   ArrowRight,
   Copy,
@@ -208,10 +209,14 @@ export default function CalculatorForm() {
     setDirectArea("");
   };
 
-  const waMessage = results
-    ? `Hi, I need tiles for my project.\n\nRoom Area: ${results.areaSqft} sq ft (${results.areaSqm} sq m)\nTile Size: ${tile.size}\nTotal Tiles: ${results.totalTiles}\nBoxes: ${results.boxesNeeded}\n\nPlease send me a quotation.`
-    : "Hi, I'm interested in Prime Tiles. I'd like to request a quote for my project.";
-  const waUrl = `https://wa.me/9779802310000?text=${encodeURIComponent(waMessage)}`;
+  const [quoteOpen, setQuoteOpen] = useState(false);
+
+  const quotePrefill = results
+    ? {
+        tileSize: tile.size,
+        message: `Room Area: ${results.areaSqft} sq ft (${results.areaSqm} sq m)\nTile Size: ${tile.size}\nTotal Tiles: ${results.totalTiles}\nBoxes: ${results.boxesNeeded}`,
+      }
+    : { tileSize: tile.size };
 
   const hasInput = length || width || directArea;
 
@@ -680,15 +685,14 @@ export default function CalculatorForm() {
 
                   {/* ── Actions ── */}
                   <div className="flex flex-wrap items-center" style={{ gap: "12px" }}>
-                    <a
-                      href={waUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      type="button"
+                      onClick={() => setQuoteOpen(true)}
                       className="btn-gold group"
                     >
                       Request a Quote
                       <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
-                    </a>
+                    </button>
                     <button
                       type="button"
                       onClick={handleCopy}
@@ -865,6 +869,8 @@ export default function CalculatorForm() {
           </FadeIn>
         </div>
       </div>
+
+      <QuoteFormModal open={quoteOpen} onClose={() => setQuoteOpen(false)} prefill={quotePrefill} />
     </section>
   );
 }
