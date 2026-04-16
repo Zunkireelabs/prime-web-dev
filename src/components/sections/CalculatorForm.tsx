@@ -13,17 +13,20 @@ import {
   Package,
 } from "lucide-react";
 import FadeIn from "@/components/animations/FadeIn";
+import { tileSpecsBySize } from "@/data/catalog/tile-specs";
 
 /* ─── Constants ─── */
 
-const TILE_DATA = [
-  { size: "300×300 mm", label: "300×300", dimMm: [300, 300], tilesPerBox: 10, sqmPerTile: 0.09, kgPerBox: 13.1, tileType: "Floor", thickness: 8.5 },
-  { size: "300×450 mm", label: "300×450", dimMm: [300, 450], tilesPerBox: 8, sqmPerTile: 0.135, kgPerBox: 11.9, tileType: "Wall", thickness: 8.5 },
-  { size: "300×600 mm", label: "300×600", dimMm: [300, 600], tilesPerBox: 6, sqmPerTile: 0.18, kgPerBox: 15.5, tileType: "Wall", thickness: 8.5 },
-  { size: "400×400 mm", label: "400×400", dimMm: [400, 400], tilesPerBox: 6, sqmPerTile: 0.16, kgPerBox: 18, tileType: "Floor", thickness: 8.5 },
-  { size: "600×600 mm", label: "600×600", dimMm: [600, 600], tilesPerBox: 4, sqmPerTile: 0.36, kgPerBox: 25, tileType: "Floor", thickness: 8.5 },
-  { size: "600×1200 mm", label: "600×1200", dimMm: [600, 1200], tilesPerBox: 2, sqmPerTile: 0.72, kgPerBox: 29.5, tileType: "Floor", thickness: 8.5 },
-];
+const TILE_DATA = Object.values(tileSpecsBySize).map((s) => ({
+  size: s.size,
+  label: s.size.replace(" mm", "").replace("×", "×"),
+  dimMm: s.size.replace(" mm", "").split("×").map(Number),
+  tilesPerBox: s.tilesPerBox,
+  sqmPerTile: s.sqmPerTile,
+  kgPerBox: s.weightPerBox,
+  tileType: s.tileType,
+  thickness: parseFloat(s.thickness),
+}));
 
 const WASTAGE_OPTIONS = [
   { value: 5, label: "5%", desc: "Simple layout" },

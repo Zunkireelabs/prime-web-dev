@@ -1,9 +1,10 @@
 "use client";
 
 import FadeIn from "@/components/animations/FadeIn";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, Download, Layers, Weight, Ruler } from "lucide-react";
 import { catalogEntries } from "@/data/catalogs";
 import type { CatalogEntry } from "@/data/types";
+import { tileSpecsBySize } from "@/data/catalog/tile-specs";
 
 function CatalogCard({
   cat,
@@ -80,14 +81,44 @@ function CatalogCard({
           >
             {cat.types}
           </p>
-          <p className="body-sm text-ink-light flex-1" style={{ marginBottom: "20px", lineHeight: "1.7" }}>
+          <p className="body-sm text-ink-light flex-1" style={{ marginBottom: "16px", lineHeight: "1.7" }}>
             {cat.description}
           </p>
 
-          {/* Buttons */}
+          {/* Spec badges */}
+          {(() => {
+            const specs = tileSpecsBySize[cat.filterValue];
+            if (!specs) return null;
+            return (
+              <div className="flex flex-wrap items-center" style={{ gap: "12px", marginBottom: "20px" }}>
+                <span className="flex items-center gap-1.5 text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted">
+                  <Ruler size={10} className="text-accent opacity-50" />
+                  {specs.thickness}
+                </span>
+                <span style={{ width: "1px", height: "12px", background: "rgba(43,36,28,0.1)" }} />
+                <span className="flex items-center gap-1.5 text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted">
+                  <Layers size={10} className="text-accent opacity-50" />
+                  {specs.tilesPerBox}/box
+                </span>
+                <span style={{ width: "1px", height: "12px", background: "rgba(43,36,28,0.1)" }} />
+                <span className="flex items-center gap-1.5 text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted">
+                  <Weight size={10} className="text-accent opacity-50" />
+                  {specs.weightPerBox} kg
+                </span>
+              </div>
+            );
+          })()}
+
+          {/* Buttons — View Catalog (online) first */}
           <div className="flex items-center flex-wrap" style={{ gap: "16px" }}>
             {!isComingSoon ? (
               <>
+                <a
+                  href={`/catalog/view/${cat.slug}`}
+                  className="link-arrow text-accent"
+                >
+                  View Catalog <ArrowRight size={12} />
+                </a>
                 <button
                   onClick={() => onView?.(cat.filterValue)}
                   className="link-arrow cursor-pointer"
@@ -95,10 +126,10 @@ function CatalogCard({
                   View Collection <ArrowRight size={12} />
                 </button>
                 <a
-                  href={`/catalog/view/${cat.slug}`}
-                  className="link-arrow text-accent"
+                  href={`/catalog/specs/${cat.slug}`}
+                  className="link-arrow text-ink-muted"
                 >
-                  View Catalog <ArrowRight size={12} />
+                  View Specs <ArrowRight size={12} />
                 </a>
                 <a
                   href={cat.pdf}
@@ -106,7 +137,7 @@ function CatalogCard({
                   className="link-arrow text-ink-muted"
                 >
                   <Download size={12} />
-                  Download
+                  Download PDF
                 </a>
               </>
             ) : (

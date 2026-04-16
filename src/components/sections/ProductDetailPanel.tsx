@@ -5,6 +5,7 @@ import { X, ArrowRight, Calculator } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
 import { tileVisualRatio, tileContainerWidth, ALL_TILE_SIZES } from "@/lib/utils";
+import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
 interface Props {
   product: CatalogProduct | null;
@@ -15,10 +16,10 @@ interface Props {
 function SpecItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[0.6rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
+      <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink-muted" style={{ marginBottom: "2px" }}>
         {label}
       </p>
-      <p className="text-[0.85rem] text-ink" style={{ fontWeight: 400 }}>
+      <p className="text-[0.82rem] text-ink" style={{ fontWeight: 400 }}>
         {value}
       </p>
     </div>
@@ -254,12 +255,12 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
         {/* Right — details */}
         <div
           className="flex-1 overflow-y-auto"
-          style={{ padding: "clamp(24px, 4vw, 48px)" }}
+          style={{ padding: "clamp(16px, 3vw, 48px)" }}
         >
           {/* Mobile-only image */}
-          <div className="md:hidden" style={{ marginBottom: "24px" }}>
+          <div className="md:hidden" style={{ marginBottom: "12px" }}>
             {hasImage ? (
-              <div style={{ aspectRatio: tileVisualRatio(product.size), borderRadius: "12px", overflow: "hidden" }}>
+              <div style={{ aspectRatio: tileVisualRatio(product.size), maxHeight: "160px", borderRadius: "8px", overflow: "hidden" }}>
                 <img
                   src={product.image}
                   alt={product.name}
@@ -283,7 +284,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           </div>
 
           {/* Eyebrow */}
-          <p className="eyebrow" style={{ marginBottom: "12px" }}>
+          <p className="eyebrow" style={{ marginBottom: "6px" }}>
             {product.category}
           </p>
 
@@ -291,32 +292,87 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           <h2
             className="font-serif font-light text-ink"
             style={{
-              fontSize: "clamp(1.6rem, 2.5vw, 2.2rem)",
+              fontSize: "clamp(1.3rem, 2.5vw, 2.2rem)",
               lineHeight: 1.15,
-              marginBottom: "20px",
+              marginBottom: "10px",
             }}
           >
             {product.name}
           </h2>
 
           {/* Accent line */}
-          <div className="accent-line" style={{ marginBottom: "24px" }} />
+          <div className="accent-line" style={{ marginBottom: "12px" }} />
 
           {/* Specs grid */}
           <div
             className="grid grid-cols-2 lg:grid-cols-3"
-            style={{ gap: "16px", marginBottom: "24px" }}
+            style={{ gap: "8px 12px", marginBottom: "16px" }}
           >
             {specs.map((s) => (
               <SpecItem key={s.label} label={s.label} value={s.value} />
             ))}
           </div>
 
+          {/* Technical Specifications */}
+          {(() => {
+            const tileSpecs = getSpecsBySize(product.size);
+            if (!tileSpecs) return null;
+            const techSpecs = [
+              { label: "Thickness", value: tileSpecs.thickness },
+              { label: "Weight / Box", value: `${tileSpecs.weightPerBox} kg` },
+              { label: "Tiles / Box", value: `${tileSpecs.tilesPerBox}` },
+              { label: "Area / Box", value: tileSpecs.areaPerBox },
+              { label: "Water Absorption", value: tileSpecs.waterAbsorption },
+              { label: "Breaking Strength", value: tileSpecs.breakingStrength },
+              { label: "Scratch Hardness", value: tileSpecs.scratchHardness },
+              { label: "Standard", value: tileSpecs.standard },
+            ];
+            return (
+              <div style={{ marginBottom: "16px" }}>
+                <p
+                  className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted"
+                  style={{ marginBottom: "6px" }}
+                >
+                  Technical Specifications
+                </p>
+                <div
+                  className="grid grid-cols-4"
+                  style={{
+                    gap: "1px",
+                    background: "rgba(43,36,28,0.06)",
+                    borderRadius: "6px",
+                    overflow: "hidden",
+                  }}
+                >
+                  {techSpecs.map((s) => (
+                    <div
+                      key={s.label}
+                      style={{
+                        padding: "8px 10px",
+                        background: "var(--color-surface-card)",
+                      }}
+                    >
+                      <p
+                        className="text-[0.45rem] font-medium tracking-[0.1em] uppercase text-ink-muted"
+                        style={{ marginBottom: "2px" }}
+                      >
+                        {s.label}
+                      </p>
+                      <p className="text-[0.72rem] text-ink" style={{ fontWeight: 400 }}>
+                        {s.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Available Sizes */}
-          <div style={{ marginBottom: "24px" }}>
+          <div style={{ marginBottom: "16px" }}>
             <p
-              className="text-[0.6rem] font-medium tracking-[0.16em] uppercase text-ink-muted"
-              style={{ marginBottom: "12px" }}
+              className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted"
+              style={{ marginBottom: "6px" }}
             >
               Available Sizes
             </p>
@@ -368,14 +424,14 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             </div>
 
           {/* Gold divider */}
-          <div className="gold-divider-full" style={{ marginBottom: "24px" }} />
+          <div className="gold-divider-full" style={{ marginBottom: "16px" }} />
 
           {/* Similar tiles */}
           {similar.length > 0 && (
-            <div style={{ marginBottom: "24px" }}>
+            <div style={{ marginBottom: "16px" }}>
               <p
-                className="text-[0.6rem] font-medium tracking-[0.16em] uppercase text-ink-muted"
-                style={{ marginBottom: "12px" }}
+                className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted"
+                style={{ marginBottom: "8px" }}
               >
                 Similar Tiles
               </p>
