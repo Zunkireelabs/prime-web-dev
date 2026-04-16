@@ -34,6 +34,14 @@ export default function TextRevealByWord({
     const words = el.querySelectorAll(".tw-word");
     if (!words.length) return;
 
+    // Safety fallback: ensure text is visible even if ScrollTrigger fails
+    const fallback = setTimeout(() => {
+      words.forEach((w) => {
+        (w as HTMLElement).style.opacity = "1";
+        (w as HTMLElement).style.transform = "none";
+      });
+    }, 4000);
+
     const tween = gsap.fromTo(
       words,
       {
@@ -58,6 +66,7 @@ export default function TextRevealByWord({
     );
 
     return () => {
+      clearTimeout(fallback);
       tween.scrollTrigger?.kill();
       tween.kill();
     };

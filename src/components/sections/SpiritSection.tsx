@@ -23,6 +23,15 @@ export default function SpiritSection() {
   useEffect(() => {
     if (!cardsRef.current) return;
 
+    // Safety fallback: ensure cards become visible even if GSAP fails
+    const fallback = setTimeout(() => {
+      const cards = cardsRef.current?.querySelectorAll(".spirit-card");
+      cards?.forEach((card) => {
+        (card as HTMLElement).style.opacity = "1";
+        (card as HTMLElement).style.transform = "none";
+      });
+    }, 3000);
+
     const ctx = gsap.context(() => {
       const cards = cardsRef.current?.querySelectorAll(".spirit-card");
       if (cards?.length) {
@@ -46,7 +55,10 @@ export default function SpiritSection() {
       }
     }, cardsRef);
 
-    return () => ctx.revert();
+    return () => {
+      clearTimeout(fallback);
+      ctx.revert();
+    };
   }, []);
 
   return (

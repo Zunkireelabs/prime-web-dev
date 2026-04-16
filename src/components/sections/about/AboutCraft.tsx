@@ -51,6 +51,15 @@ export default function AboutCraft() {
   useEffect(() => {
     if (!sectionRef.current || !progressRef.current) return;
 
+    // Safety fallback: ensure content is visible even if GSAP fails
+    const fallback = setTimeout(() => {
+      const blocks = sectionRef.current?.querySelectorAll(".process-content, .process-img");
+      blocks?.forEach((el) => {
+        (el as HTMLElement).style.opacity = "1";
+        (el as HTMLElement).style.transform = "none";
+      });
+    }, 3000);
+
     const ctx = gsap.context(() => {
       // Progress bar scrubs with section scroll
       gsap.fromTo(
@@ -112,7 +121,10 @@ export default function AboutCraft() {
       });
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      clearTimeout(fallback);
+      ctx.revert();
+    };
   }, []);
 
   return (

@@ -33,6 +33,14 @@ export default function ScrollReveal({
     const el = ref.current;
     if (!el) return;
 
+    // Safety fallback: ensure content is visible even if ScrollTrigger fails
+    const fallback = setTimeout(() => {
+      if (el) {
+        el.style.opacity = "1";
+        el.style.transform = "none";
+      }
+    }, 4000);
+
     const tween = gsap.fromTo(el, from, {
       ...to,
       delay,
@@ -47,6 +55,7 @@ export default function ScrollReveal({
     });
 
     return () => {
+      clearTimeout(fallback);
       tween.scrollTrigger?.kill();
       tween.kill();
     };
