@@ -22,7 +22,7 @@ export default function TextMarquee({
         <span
           className="mx-4 md:mx-8 font-serif font-light tracking-[-0.02em] select-none whitespace-nowrap"
           style={{
-            fontSize: "clamp(3rem, 8vw, 7rem)",
+            fontSize: "clamp(2rem, 7vw, 7rem)",
             WebkitTextStroke: isDark
               ? "1px rgba(234, 231, 226, 0.12)"
               : "1px rgba(61, 58, 54, 0.1)",

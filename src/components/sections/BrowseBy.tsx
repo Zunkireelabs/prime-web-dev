@@ -48,7 +48,7 @@ export default function BrowseBy() {
                     key={tab}
                     onClick={() => switchTab(tab)}
                     style={{
-                      padding: "10px 24px",
+                      padding: "8px 18px",
                       fontSize: "0.6rem",
                       fontWeight: 500,
                       letterSpacing: "0.15em",
@@ -82,7 +82,7 @@ export default function BrowseBy() {
                 type="button"
                 onClick={() => handleTileClick(item.slug)}
                 className="shrink-0 group block text-left cursor-pointer"
-                style={{ width: "280px", padding: "0 12px", background: "none", border: "none" }}
+                style={{ width: "clamp(200px, 55vw, 280px)", padding: "0 8px", background: "none", border: "none" }}
               >
                 <div className="relative overflow-hidden bg-surface-alt transition-all duration-500 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" style={{ aspectRatio: "3/4" }}>
                   <img

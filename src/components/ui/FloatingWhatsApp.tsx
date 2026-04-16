@@ -25,10 +25,10 @@ export default function FloatingWhatsApp() {
       aria-label="Chat on WhatsApp"
       className="fixed z-50 flex items-center justify-center rounded-full"
       style={{
-        bottom: "24px",
-        right: "24px",
-        width: "56px",
-        height: "56px",
+        bottom: "clamp(16px, 3vw, 24px)",
+        right: "clamp(16px, 3vw, 24px)",
+        width: "clamp(48px, 12vw, 56px)",
+        height: "clamp(48px, 12vw, 56px)",
         background: "#25D366",
         boxShadow: "0 4px 14px rgba(37,211,102,0.4)",
         transition: "transform 0.3s linear, box-shadow 0.3s linear, opacity 0.3s linear",

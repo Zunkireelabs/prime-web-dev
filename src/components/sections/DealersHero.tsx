@@ -36,7 +36,7 @@ export default function DealersHero() {
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-surface-dark"
-      style={{ minHeight: "40vh", maxHeight: "55vh", height: "50vh" }}
+      style={{ minHeight: "clamp(260px, 45vh, 55vh)", maxHeight: "55vh" }}
     >
       {/* Parallax background image */}
       <img

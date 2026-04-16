@@ -235,7 +235,7 @@ export default function CalculatorForm() {
             <div
               className="lg:w-[420px] shrink-0"
               style={{
-                padding: "32px",
+                padding: "clamp(20px, 4vw, 32px)",
                 background: "var(--color-surface-card)",
                 borderRadius: "12px",
                 border: "1px solid rgba(43,36,28,0.06)",
@@ -538,7 +538,7 @@ export default function CalculatorForm() {
                   {/* ── Primary result card ── */}
                   <div
                     style={{
-                      padding: "32px",
+                      padding: "clamp(20px, 4vw, 32px)",
                       background: "var(--color-surface-card)",
                       borderRadius: "12px",
                       border: "1px solid rgba(43,36,28,0.06)",
@@ -602,7 +602,7 @@ export default function CalculatorForm() {
                       {/* Breakdown */}
                       <div className="grid grid-cols-3" style={{ gap: "16px" }}>
                         <div>
-                          <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
+                          <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
                             Base Tiles
                           </p>
                           <p className="font-display font-light text-ink" style={{ fontSize: "1.2rem", lineHeight: 1 }}>
@@ -610,7 +610,7 @@ export default function CalculatorForm() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
+                          <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
                             Wastage +{wastage}%
                           </p>
                           <p className="font-display font-light" style={{ fontSize: "1.2rem", lineHeight: 1, color: "var(--color-accent)" }}>
@@ -618,7 +618,7 @@ export default function CalculatorForm() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
+                          <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
                             Per Tile
                           </p>
                           <p className="font-display font-light text-ink" style={{ fontSize: "1.2rem", lineHeight: 1 }}>
@@ -641,7 +641,7 @@ export default function CalculatorForm() {
                         border: "1px solid rgba(181,138,82,0.1)",
                       }}
                     >
-                      <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "6px" }}>
+                      <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink-muted" style={{ marginBottom: "6px" }}>
                         Boxes to Buy
                       </p>
                       <p className="font-display font-light" style={{ fontSize: "1.5rem", lineHeight: 1, color: "var(--color-accent)" }}>
@@ -661,7 +661,7 @@ export default function CalculatorForm() {
                         border: "1px solid rgba(43,36,28,0.06)",
                       }}
                     >
-                      <p className="text-[0.48rem] font-medium tracking-[0.14em] uppercase text-ink-muted" style={{ marginBottom: "6px" }}>
+                      <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink-muted" style={{ marginBottom: "6px" }}>
                         Total Coverage
                       </p>
                       <p className="font-display font-light text-ink" style={{ fontSize: "1.5rem", lineHeight: 1 }}>
@@ -709,13 +709,13 @@ export default function CalculatorForm() {
                 <div
                   className="flex flex-col items-center justify-center text-center relative overflow-hidden"
                   style={{
-                    padding: "56px 32px",
+                    padding: "clamp(32px, 5vw, 56px) clamp(20px, 4vw, 32px)",
                     background: "var(--color-surface-card)",
                     borderRadius: "12px",
                     border: "1px solid rgba(43,36,28,0.06)",
                     boxShadow: "0 1px 3px rgba(0,0,0,0.02), 0 6px 24px rgba(0,0,0,0.03)",
                     height: "100%",
-                    minHeight: "480px",
+                    minHeight: "clamp(320px, 50vw, 480px)",
                   }}
                 >
                   {/* Subtle tile pattern */}

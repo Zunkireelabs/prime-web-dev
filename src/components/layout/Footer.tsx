@@ -44,14 +44,14 @@ export default function Footer() {
       <div className="gold-divider-full" />
 
       {/* ═══ Navigation + Contact Grid ═══ */}
-      <div className="container relative z-10" style={{ padding: "64px 0 64px" }}>
+      <div className="container relative z-10" style={{ padding: "clamp(40px, 6vw, 64px) 0" }}>
         <div
-          className="max-md:[grid-template-columns:repeat(2,1fr)] max-sm:[grid-template-columns:1fr]"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "48px",
           }}
+          className="max-md:!grid-cols-2 max-sm:!grid-cols-1 max-sm:!gap-[32px] max-md:!gap-[36px]"
         >
           {/* Nav columns */}
           {cols.map((col, i) => (
@@ -115,7 +115,7 @@ export default function Footer() {
                         <span
                           className="text-white/18 block"
                           style={{
-                            fontSize: "0.58rem",
+                            fontSize: "0.62rem",
                             letterSpacing: "0.14em",
                             textTransform: "uppercase",
                             marginBottom: "2px",
@@ -206,7 +206,7 @@ export default function Footer() {
       <div className="container relative z-10">
         <div
           style={{
-            padding: "28px 0 36px",
+            padding: "clamp(20px, 3vw, 28px) 0 clamp(28px, 4vw, 36px)",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",

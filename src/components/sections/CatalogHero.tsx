@@ -30,7 +30,7 @@ export default function CatalogHero() {
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-surface-dark"
-      style={{ minHeight: "70vh" }}
+      style={{ minHeight: "clamp(300px, 60vh, 70vh)" }}
     >
       {/* Room scene — parallax, full coverage */}
       <img

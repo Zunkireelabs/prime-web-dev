@@ -166,7 +166,7 @@ export default function CTASection() {
                   gap: "24px",
                   textAlign: "center",
                 }}
-                className="max-sm:[grid-template-columns:1fr] max-sm:[gap:20px]"
+                className="max-sm:!grid-cols-1 max-sm:!gap-[16px]"
               >
                 {contactItems.map((item) => (
                   <a
@@ -174,7 +174,7 @@ export default function CTASection() {
                     href={item.href}
                     className="group flex flex-col items-center"
                     style={{
-                      padding: "28px 20px",
+                      padding: "clamp(20px, 4vw, 28px) clamp(16px, 3vw, 20px)",
                       borderRadius: "12px",
                       background: "rgba(181,138,82,0.04)",
                       border: "1px solid rgba(181,138,82,0.06)",

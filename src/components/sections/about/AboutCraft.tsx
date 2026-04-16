@@ -189,7 +189,7 @@ export default function AboutCraft() {
             />
           </div>
 
-          <div style={{ paddingLeft: "clamp(0px, 4vw, 64px)", display: "flex", flexDirection: "column", gap: "clamp(56px, 7vw, 80px)" }}>
+          <div style={{ paddingLeft: "clamp(0px, 2vw, 64px)", display: "flex", flexDirection: "column", gap: "clamp(40px, 6vw, 80px)" }}>
             {processSteps.map((step, i) => {
               const Icon = step.icon;
               const isReversed = i % 2 !== 0;

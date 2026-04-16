@@ -153,11 +153,11 @@ function AwardsHero() {
         </FadeIn>
 
         <FadeIn delay={0.2}>
-          <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "clamp(12px, 3vw, 24px)" }}>
             <a href="#certifications" className="link-arrow text-white/80 hover:text-white">
               View Certifications <ArrowRight size={12} />
             </a>
-            <div style={{ height: "16px", width: "1px", background: "var(--color-ink-on-dark-muted)" }} />
+            <div className="hidden sm:block" style={{ height: "16px", width: "1px", background: "var(--color-ink-on-dark-muted)" }} />
             <span className="text-[0.65rem] font-medium tracking-[0.2em] uppercase text-white/35">
               <CountUp target={6} /> Certifications &middot; 3 Int&rsquo;l Standards
             </span>
@@ -194,7 +194,7 @@ export default function AwardsPage() {
         {/* ═══ Section 2 — FEATURED AWARD ═══ */}
         <section className="bg-surface section-pad">
           <div className="container">
-            <div style={{ textAlign: "center", marginBottom: "64px" }}>
+            <div style={{ textAlign: "center", marginBottom: "clamp(36px, 6vw, 64px)" }}>
               <FadeIn>
                 <p className="eyebrow text-accent" style={{ marginBottom: "16px", textAlign: "center" }}>Government Recognition</p>
               </FadeIn>
@@ -352,7 +352,7 @@ export default function AwardsPage() {
             style={{ background: "radial-gradient(ellipse at 50% 0%, var(--color-accent-subtle) 0%, transparent 50%)" }}
           />
           <div className="container relative">
-            <div style={{ textAlign: "center", marginBottom: "64px" }}>
+            <div style={{ textAlign: "center", marginBottom: "clamp(36px, 6vw, 64px)" }}>
               <FadeIn>
                 <p className="eyebrow text-accent-light" style={{ marginBottom: "16px", textAlign: "center" }}>Quality Standards</p>
               </FadeIn>
@@ -466,7 +466,7 @@ export default function AwardsPage() {
         {/* ═══ Section 4 — BRAND & INDUSTRY (Light) ═══ */}
         <section className="bg-surface section-pad">
           <div className="container">
-            <div style={{ textAlign: "center", marginBottom: "64px" }}>
+            <div style={{ textAlign: "center", marginBottom: "clamp(36px, 6vw, 64px)" }}>
               <FadeIn>
                 <p className="eyebrow text-accent" style={{ marginBottom: "16px", textAlign: "center" }}>Brand &amp; Industry</p>
               </FadeIn>

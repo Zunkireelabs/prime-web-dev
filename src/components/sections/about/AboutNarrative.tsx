@@ -112,7 +112,7 @@ export default function AboutNarrative() {
               </div>
 
               {/* Rotating badge — overlaps bottom-right */}
-              <div className="absolute -right-3 -bottom-3 md:-right-5 md:-bottom-5 w-24 h-24 md:w-28 md:h-28 bg-surface rounded-full flex items-center justify-center shadow-[0_8px_40px_rgba(0,0,0,0.08)] border border-accent/15 z-10">
+              <div className="absolute right-2 bottom-2 sm:-right-3 sm:-bottom-3 md:-right-5 md:-bottom-5 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-surface rounded-full flex items-center justify-center shadow-[0_8px_40px_rgba(0,0,0,0.08)] border border-accent/15 z-10">
                 <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 140 140">
                   <defs>
                     <path id="aboutBadge" d="M 70,70 m -48,0 a 48,48 0 1,1 96,0 a 48,48 0 1,1 -96,0" />
@@ -158,7 +158,7 @@ export default function AboutNarrative() {
             </ScrollReveal>
 
             <ScrollReveal from={{ y: 35, opacity: 0 }} to={{ y: 0, opacity: 1 }} start="top 70%" end="top 43%">
-              <p className="body-lg text-ink-light" style={{ marginBottom: "48px" }}>
+              <p className="body-lg text-ink-light" style={{ marginBottom: "clamp(28px, 5vw, 48px)" }}>
                 Powered by Italian SACMI technology, we achieved the highest
                 sales volume among all tile manufacturers in Nepal for
                 FY 2023–24 — in just our second year of full operation.
@@ -167,7 +167,7 @@ export default function AboutNarrative() {
 
             {/* Quote — decorative treatment */}
             <ScrollReveal from={{ y: 30, opacity: 0 }} to={{ y: 0, opacity: 1 }} start="top 65%" end="top 38%">
-              <div className="relative" style={{ marginBottom: "48px" }}>
+              <div className="relative" style={{ marginBottom: "clamp(28px, 5vw, 48px)" }}>
                 <span className="absolute -top-5 -left-2 font-serif text-accent/[0.06] leading-none select-none pointer-events-none" style={{ fontSize: "6rem" }}>
                   &ldquo;
                 </span>
@@ -194,7 +194,7 @@ export default function AboutNarrative() {
                       {s.prefix}
                       <CountUp target={s.value} suffix={s.suffix} />
                     </p>
-                    <p className="text-[0.5rem] font-medium tracking-[0.15em] uppercase text-ink-muted" style={{ marginTop: "8px" }}>{s.label}</p>
+                    <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink-muted" style={{ marginTop: "6px" }}>{s.label}</p>
                   </div>
                 ))}
               </div>
@@ -220,7 +220,7 @@ export default function AboutNarrative() {
           <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "clamp(24px, 3vw, 32px)" }}>
             {promoters.map((p, i) => (
               <ScrollReveal key={p.name} from={{ y: 35, opacity: 0, x: i === 0 ? -30 : 30 }} to={{ y: 0, opacity: 1, x: 0 }} start="top 85%" end="top 55%">
-                <div className="luxury-card p-8 md:p-10 group relative overflow-hidden">
+                <div className="luxury-card p-6 sm:p-8 md:p-10 group relative overflow-hidden">
                   {/* Hover glow */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(181,138,82,0.06) 0%, transparent 60%)" }} />
 

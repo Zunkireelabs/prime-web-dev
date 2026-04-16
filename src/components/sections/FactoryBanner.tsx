@@ -36,7 +36,7 @@ export default function FactoryBanner() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[60vh] md:h-[70vh] lg:h-[75vh] min-h-[450px] max-h-[700px] overflow-hidden"
+      className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[75vh] min-h-[380px] max-h-[700px] overflow-hidden"
     >
       {/* Parallax image */}
       <img

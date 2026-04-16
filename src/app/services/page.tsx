@@ -13,7 +13,7 @@ export default function ServicesPage() {
   return (
     <SmoothScroll>
       <Header />
-      <main id="main-content" style={{ paddingTop: "96px" }}>
+      <main id="main-content" style={{ paddingTop: "clamp(72px, 10vw, 96px)" }}>
         <CollectionsGrid />
         <CTASection />
       </main>

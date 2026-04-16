@@ -71,7 +71,7 @@ export default function Header() {
             <img
               src="/images/prime-logo.png"
               alt="Prime Tiles"
-              className="h-16 md:h-24 w-auto transition-[filter] duration-300"
+              className="h-12 sm:h-16 md:h-24 w-auto transition-[filter] duration-300"
               style={blendVideo ? { filter: "brightness(0) invert(1)" } : undefined}
             />
           </a>
@@ -339,7 +339,7 @@ export default function Header() {
           <X size={22} />
         </button>
 
-        <div className="h-full overflow-y-auto" style={{ padding: "96px 32px 64px" }}>
+        <div className="h-full overflow-y-auto" style={{ padding: "clamp(80px, 12vw, 96px) clamp(20px, 5vw, 32px) clamp(40px, 6vw, 64px)" }}>
           <nav className="space-y-0" style={{ marginBottom: "40px" }}>
             {navItems.map((item, i) => (
               <div key={item.label}>

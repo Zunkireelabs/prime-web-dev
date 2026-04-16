@@ -9,8 +9,8 @@ export default function CalculatorHero() {
     <section
       className="bg-surface-dark relative overflow-hidden"
       style={{
-        paddingTop: "120px",
-        paddingBottom: "56px",
+        paddingTop: "clamp(80px, 12vw, 120px)",
+        paddingBottom: "clamp(36px, 6vw, 56px)",
       }}
     >
       {/* Radial glow */}
@@ -38,7 +38,7 @@ export default function CalculatorHero() {
             <nav
               aria-label="Breadcrumb"
               className="flex items-center text-[0.6rem] font-medium tracking-[0.16em] uppercase text-ink-on-dark-muted"
-              style={{ gap: "10px", marginBottom: "28px" }}
+              style={{ gap: "8px", marginBottom: "clamp(16px, 3vw, 28px)" }}
             >
               <Link
                 href="/"

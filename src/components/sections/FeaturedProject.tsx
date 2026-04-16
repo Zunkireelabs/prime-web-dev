@@ -32,7 +32,7 @@ export default function FeaturedProject() {
   }, [handleScroll]);
 
   return (
-    <section ref={sectionRef} id="projects" className="relative h-[70vh] lg:h-[85vh] overflow-hidden">
+    <section ref={sectionRef} id="projects" className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[85vh] overflow-hidden">
       {/* Parallax image */}
       <img
         src={featuredProject.image}
