@@ -17,12 +17,12 @@ import FadeIn from "@/components/animations/FadeIn";
 /* ─── Constants ─── */
 
 const TILE_DATA = [
-  { size: "300×300 mm", label: "300×300", dimMm: [300, 300], tilesPerBox: 10, sqmPerTile: 0.09 },
-  { size: "300×450 mm", label: "300×450", dimMm: [300, 450], tilesPerBox: 8, sqmPerTile: 0.135 },
-  { size: "300×600 mm", label: "300×600", dimMm: [300, 600], tilesPerBox: 6, sqmPerTile: 0.18 },
-  { size: "400×400 mm", label: "400×400", dimMm: [400, 400], tilesPerBox: 6, sqmPerTile: 0.16 },
-  { size: "600×600 mm", label: "600×600", dimMm: [600, 600], tilesPerBox: 4, sqmPerTile: 0.36 },
-  { size: "600×1200 mm", label: "600×1200", dimMm: [600, 1200], tilesPerBox: 2, sqmPerTile: 0.72 },
+  { size: "300×300 mm", label: "300×300", dimMm: [300, 300], tilesPerBox: 10, sqmPerTile: 0.09, kgPerBox: 13.1, tileType: "Floor", thickness: 8.5 },
+  { size: "300×450 mm", label: "300×450", dimMm: [300, 450], tilesPerBox: 8, sqmPerTile: 0.135, kgPerBox: 11.9, tileType: "Wall", thickness: 8.5 },
+  { size: "300×600 mm", label: "300×600", dimMm: [300, 600], tilesPerBox: 6, sqmPerTile: 0.18, kgPerBox: 15.5, tileType: "Wall", thickness: 8.5 },
+  { size: "400×400 mm", label: "400×400", dimMm: [400, 400], tilesPerBox: 6, sqmPerTile: 0.16, kgPerBox: 18, tileType: "Floor", thickness: 8.5 },
+  { size: "600×600 mm", label: "600×600", dimMm: [600, 600], tilesPerBox: 4, sqmPerTile: 0.36, kgPerBox: 25, tileType: "Floor", thickness: 8.5 },
+  { size: "600×1200 mm", label: "600×1200", dimMm: [600, 1200], tilesPerBox: 2, sqmPerTile: 0.72, kgPerBox: 29.5, tileType: "Floor", thickness: 8.5 },
 ];
 
 const WASTAGE_OPTIONS = [
@@ -171,6 +171,8 @@ export default function CalculatorForm() {
     const totalTiles = tilesNeeded + wastageExtra;
     const boxesNeeded = Math.ceil(totalTiles / tile.tilesPerBox);
 
+    const totalWeightKg = Math.round(boxesNeeded * tile.kgPerBox * 10) / 10;
+
     return {
       areaSqm: Math.round(areaSqm * 100) / 100,
       areaSqft: Math.round(areaSqft * 100) / 100,
@@ -179,6 +181,7 @@ export default function CalculatorForm() {
       totalTiles,
       boxesNeeded,
       tilesPerBox: tile.tilesPerBox,
+      totalWeightKg,
     };
   }, [length, width, directArea, unit, selectedTile, wastage, tile]);
 
@@ -195,6 +198,8 @@ export default function CalculatorForm() {
       `Wastage (${wastage}%): +${results.wastageExtra} tiles`,
       `Total Tiles: ${results.totalTiles}`,
       `Boxes Needed: ${results.boxesNeeded} (${results.tilesPerBox} tiles/box)`,
+      `Total Weight: ${results.totalWeightKg} kg (${tile.kgPerBox} kg/box)`,
+      `Thickness: ${tile.thickness} mm`,
       ``,
       `www.primeceramics.com.np`,
     ].join("\n");
@@ -531,7 +536,7 @@ export default function CalculatorForm() {
                         border: "1px solid rgba(181,138,82,0.1)",
                       }}
                     >
-                      {tile.label} mm
+                      {tile.label} mm · {tile.thickness} mm · {tile.tileType}
                     </p>
                   </div>
 
@@ -631,7 +636,7 @@ export default function CalculatorForm() {
                   </div>
 
                   {/* ── Secondary cards ── */}
-                  <div className="grid grid-cols-2" style={{ gap: "16px", marginBottom: "32px" }}>
+                  <div className="grid grid-cols-3 max-sm:grid-cols-2" style={{ gap: "16px", marginBottom: "32px" }}>
                     {/* Boxes */}
                     <div
                       style={{
@@ -669,6 +674,28 @@ export default function CalculatorForm() {
                       </p>
                       <p className="text-[0.6rem] text-ink-muted" style={{ marginTop: "4px" }}>
                         sq m ({(results.totalTiles * tile.sqmPerTile * SQM_TO_SQFT).toFixed(1)} sq ft)
+                      </p>
+                    </div>
+
+                    {/* Total Weight */}
+                    <div
+                      className="max-sm:col-span-2"
+                      style={{
+                        padding: "20px",
+                        background: "var(--color-surface-card)",
+                        borderRadius: "10px",
+                        border: "1px solid rgba(43,36,28,0.06)",
+                      }}
+                    >
+                      <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-ink-muted" style={{ marginBottom: "6px" }}>
+                        Total Weight
+                      </p>
+                      <p className="font-display font-light text-ink" style={{ fontSize: "1.5rem", lineHeight: 1 }}>
+                        {results.totalWeightKg}
+                        <span className="text-ink-muted" style={{ fontSize: "0.6rem", marginLeft: "3px" }}>kg</span>
+                      </p>
+                      <p className="text-[0.6rem] text-ink-muted" style={{ marginTop: "4px" }}>
+                        {tile.kgPerBox} kg per box
                       </p>
                     </div>
                   </div>
