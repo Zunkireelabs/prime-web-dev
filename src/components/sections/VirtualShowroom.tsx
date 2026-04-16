@@ -89,7 +89,7 @@ export default function VirtualShowroom() {
       />
 
       <div className="container relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: "64px", columnGap: "80px" }}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: "clamp(32px, 5vw, 64px)", columnGap: "clamp(40px, 6vw, 80px)" }}>
           
           {/* ─── LEFT: Typography & Interface ─── */}
           <div className="lg:col-span-5 relative z-20">
@@ -106,13 +106,13 @@ export default function VirtualShowroom() {
             </FadeIn>
 
             <FadeIn delay={0.1}>
-              <h2 className="font-serif font-light italic text-white leading-[1.05] tracking-[-0.025em]" style={{ fontSize: "clamp(3.5rem, 6vw, 5.5rem)", marginBottom: "40px" }}>
+              <h2 className="font-serif font-light italic text-white leading-[1.05] tracking-[-0.025em]" style={{ fontSize: "clamp(2.4rem, 6vw, 5.5rem)", marginBottom: "clamp(24px, 4vw, 40px)" }}>
                 Virtual <br /> <span className="text-accent-light not-italic">Showroom</span>
               </h2>
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <div className="border-l-2 border-accent/30 bg-gradient-to-r from-white/5 to-transparent rounded-r-lg" style={{ paddingLeft: "32px", marginBottom: "48px", paddingTop: "24px", paddingBottom: "24px" }}>
+              <div className="border-l-2 border-accent/30 bg-gradient-to-r from-white/5 to-transparent rounded-r-lg" style={{ paddingLeft: "clamp(16px, 3vw, 32px)", marginBottom: "clamp(28px, 5vw, 48px)", paddingTop: "clamp(16px, 3vw, 24px)", paddingBottom: "clamp(16px, 3vw, 24px)" }}>
                 <p className="body-lg text-white/90 max-w-md leading-relaxed font-light">
                   Step inside our spaces before they exist. 
                   Experience Prime Ceramics through an immersive, high-fidelity lens. 
@@ -122,7 +122,7 @@ export default function VirtualShowroom() {
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <div className="flex flex-wrap items-center" style={{ gap: "32px" }}>
+              <div className="flex flex-wrap items-center" style={{ gap: "clamp(16px, 3vw, 32px)" }}>
                 <a href="/dealers" className="group relative inline-flex items-center gap-4 px-8 py-4 bg-accent text-white overflow-hidden transition-all duration-500 hover:pr-12">
                   <span className="relative z-10 flex items-center gap-4 text-[0.7rem] font-bold tracking-[0.2em] uppercase">
                     <Play size={14} fill="currentColor" /> Initialize 360°
@@ -138,7 +138,7 @@ export default function VirtualShowroom() {
             </FadeIn>
             
             <FadeIn delay={0.4}>
-              <div className="grid grid-cols-2 border-t border-white/10" style={{ marginTop: "48px", gap: "48px", paddingTop: "32px" }}>
+              <div className="grid grid-cols-2 border-t border-white/10" style={{ marginTop: "clamp(28px, 5vw, 48px)", gap: "clamp(20px, 4vw, 48px)", paddingTop: "clamp(20px, 3vw, 32px)" }}>
                 <div>
                   <p className="text-[0.55rem] uppercase tracking-[0.3em] text-accent-light mb-2 flex items-center gap-2 font-bold">
                     <MapPin size={10}/> COORDINATES

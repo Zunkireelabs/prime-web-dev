@@ -71,7 +71,7 @@ export default function PrivacyPage() {
         {/* Hero */}
         <section
           className="bg-surface-dark relative overflow-hidden"
-          style={{ paddingTop: "120px", paddingBottom: "56px" }}
+          style={{ paddingTop: "clamp(80px, 12vw, 120px)", paddingBottom: "clamp(36px, 6vw, 56px)" }}
         >
           <div
             className="absolute inset-0 pointer-events-none"

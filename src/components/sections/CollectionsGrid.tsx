@@ -139,7 +139,7 @@ export default function CollectionsGrid() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                style={{ padding: "10px 28px" }}
+                style={{ padding: "8px 18px" }}
                 className={`text-[0.58rem] md:text-[0.62rem] font-medium tracking-[0.18em] uppercase whitespace-nowrap transition-all duration-300 cursor-pointer border rounded-full ${
                   activeCategory === cat
                     ? "bg-accent text-white border-accent shadow-[0_2px_12px_rgba(181,138,82,0.25)]"
@@ -172,9 +172,10 @@ export default function CollectionsGrid() {
                   key={c.slug}
                   className="tile-card flex-shrink-0"
                   style={{
-                    width: "clamp(200px, 22vw, 280px)",
+                    width: "clamp(150px, 42vw, 280px)",
                     scrollSnapAlign: "start",
                   }}
+                  className="sm:!w-[clamp(180px,25vw,280px)]"
                   onMouseEnter={() => setHoveredIdx(i)}
                   onMouseLeave={() => setHoveredIdx(null)}
                 >

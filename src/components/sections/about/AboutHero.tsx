@@ -117,7 +117,7 @@ export default function AboutHero() {
               <p className="text-[0.6rem] font-medium tracking-[0.35em] uppercase text-accent-light">About Prime Ceramics</p>
             </div>
 
-            <h1 className="hero-title font-serif font-light text-ink-on-dark opacity-0 leading-[0.92]" style={{ fontSize: "clamp(2.8rem, 6vw, 5.5rem)", letterSpacing: "-0.03em", marginBottom: "32px" }}>
+            <h1 className="hero-title font-serif font-light text-ink-on-dark opacity-0 leading-[0.92]" style={{ fontSize: "clamp(2.2rem, 6vw, 5.5rem)", letterSpacing: "-0.03em", marginBottom: "clamp(20px, 4vw, 32px)" }}>
               Crafting Nepal&apos;s<br />Future, One Tile<br />at a Time
             </h1>
 
@@ -156,7 +156,7 @@ export default function AboutHero() {
             { label: "Dealers", value: "200+" },
           ].map((f, i) => (
             <div key={f.label} className={`fact-item opacity-0 ${i > 0 ? "border-l border-accent/10" : ""} group hover:bg-white/[0.02] transition-colors duration-300`} style={{ padding: "clamp(24px, 3vw, 32px) 0", textAlign: "center" }}>
-              <p className="text-[0.5rem] font-medium tracking-[0.3em] uppercase text-accent-light/50" style={{ marginBottom: "8px" }}>{f.label}</p>
+              <p className="text-[0.55rem] font-medium tracking-[0.25em] uppercase text-accent-light/50" style={{ marginBottom: "8px" }}>{f.label}</p>
               <p className="text-lg md:text-xl font-serif font-light text-ink-on-dark group-hover:text-accent-light transition-colors duration-300">{f.value}</p>
             </div>
           ))}

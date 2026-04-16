@@ -33,8 +33,8 @@ export default function ProductsHero() {
         style={{
           top: "-100px",
           right: "20%",
-          width: "600px",
-          height: "600px",
+          width: "clamp(300px, 80vw, 600px)",
+          height: "clamp(300px, 80vw, 600px)",
           background: "radial-gradient(circle, rgba(181,138,82,0.12) 0%, transparent 70%)",
         }}
       />
@@ -47,7 +47,7 @@ export default function ProductsHero() {
               <nav
                 aria-label="Breadcrumb"
                 className="flex items-center text-[0.6rem] font-medium tracking-[0.16em] uppercase text-ink-on-dark-muted"
-                style={{ gap: "10px", marginBottom: "32px" }}
+                style={{ gap: "8px", marginBottom: "clamp(20px, 4vw, 32px)" }}
               >
                 <Link href="/" className="hover:text-ink-on-dark" style={{ transition: "color 0.3s" }}>
                   Home

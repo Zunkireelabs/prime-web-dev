@@ -76,7 +76,7 @@ export default function DealerNetwork() {
         <FadeIn delay={0.15}>
           <div
             className="flex flex-wrap justify-center"
-            style={{ gap: "40px 32px" }}
+            style={{ gap: "clamp(16px, 3vw, 40px) clamp(12px, 2.5vw, 32px)" }}
           >
             {dealersByProvince.map((province) => (
               <a
@@ -86,9 +86,10 @@ export default function DealerNetwork() {
                 style={{
                   textAlign: "center",
                   width: "calc(25% - 24px)",
-                  minWidth: "260px",
-                  padding: "56px 40px",
+                  minWidth: "130px",
+                  padding: "clamp(28px, 5vw, 56px) clamp(20px, 4vw, 40px)",
                 }}
+                className="max-sm:!w-[calc(50%-8px)] max-[480px]:!w-full"
               >
                 {/* Bottom accent line on hover */}
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
@@ -109,7 +110,7 @@ export default function DealerNetwork() {
         </FadeIn>
 
         {/* ══ CTA ══ */}
-        <div style={{ marginTop: "80px" }}>
+        <div style={{ marginTop: "clamp(48px, 7vw, 80px)" }}>
           <div
             className="bg-gradient-to-r from-transparent via-white/[0.08] to-transparent"
             style={{ height: "1px", marginBottom: "56px" }}

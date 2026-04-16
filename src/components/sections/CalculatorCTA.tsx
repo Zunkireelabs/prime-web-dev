@@ -142,6 +142,7 @@ function TileGridVisual() {
 
         {/* Dimension label — right side (height) */}
         <div
+          className="hidden sm:flex"
           style={{
             position: "absolute",
             top: 0,
@@ -188,6 +189,7 @@ function TileGridVisual() {
 
         {/* Counter badge */}
         <div
+          className="hidden sm:block"
           style={{
             position: "absolute",
             bottom: "-20px",
@@ -473,10 +475,10 @@ export default function CalculatorCTA() {
               {features.map((feature, i) => (
                 <div
                   key={feature.label}
-                  className="flex items-center"
+                  className="flex items-center max-sm:!border-r-0"
                   style={{
                     gap: "12px",
-                    padding: "12px clamp(20px, 3vw, 40px)",
+                    padding: "12px clamp(16px, 3vw, 40px)",
                     borderRight:
                       i < features.length - 1
                         ? "1px solid rgba(181,138,82,0.12)"

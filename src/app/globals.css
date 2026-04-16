@@ -157,7 +157,7 @@ html.lenis body {
 .display {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-size: clamp(2.2rem, 6vw, 5.5rem);
   line-height: 0.95;
   letter-spacing: -0.025em;
 }
@@ -386,9 +386,9 @@ html.lenis body {
 .btn-on-red-outline {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 18px 36px;
-  font-size: 0.72rem;
+  gap: 10px;
+  padding: 14px 28px;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -396,7 +396,7 @@ html.lenis body {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  min-height: 52px;
+  min-height: 48px;
   transition: all var(--duration-base) var(--ease-out);
 }
 
@@ -408,7 +408,10 @@ html.lenis body {
   .btn-red,
   .btn-on-red,
   .btn-on-red-outline {
+    gap: 12px;
     padding: 18px 44px;
+    font-size: 0.72rem;
+    min-height: 52px;
   }
 }
 

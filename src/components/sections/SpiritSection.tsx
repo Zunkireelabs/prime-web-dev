@@ -96,7 +96,7 @@ export default function SpiritSection() {
         </ScrollReveal>
 
         {/* ── Tile Cards ── */}
-        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: "clamp(24px, 4vw, 32px)" }}>
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 4vw, 32px)" }}>
           {spiritItems.map((item) => {
             const location = locationMap[item.name] || "Nepal";
 
@@ -119,7 +119,7 @@ export default function SpiritSection() {
                       {/* Location tag — top left */}
                       <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/30 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5">
                         <MapPin size={10} className="text-accent-light" />
-                        <p className="text-[0.45rem] font-medium tracking-[0.15em] uppercase text-white/80">
+                        <p className="text-[0.55rem] font-medium tracking-[0.12em] uppercase text-white/80">
                           {location}
                         </p>
                       </div>

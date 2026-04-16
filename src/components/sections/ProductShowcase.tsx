@@ -53,7 +53,7 @@ function StickyCard({
           {/* Image side — 6 cols */}
           <div className="md:col-span-6 relative overflow-hidden md:[direction:ltr]">
             <div
-              className="h-full min-h-[260px] md:min-h-[380px] max-h-[460px]"
+              className="h-full min-h-[200px] sm:min-h-[260px] md:min-h-[380px] max-h-[460px]"
               style={{
                 opacity: visible ? 1 : 0,
                 transform: visible
@@ -87,7 +87,7 @@ function StickyCard({
           {/* Content side — 6 cols */}
           <div
             className="md:col-span-6 flex flex-col justify-center relative overflow-hidden md:[direction:ltr]"
-            style={{ padding: "clamp(48px, 6vw, 80px) clamp(32px, 7vw, 96px)" }}
+            style={{ padding: "clamp(32px, 5vw, 80px) clamp(20px, 5vw, 96px)" }}
           >
             {/* Small index + category tag */}
             <div
@@ -150,7 +150,7 @@ function StickyCard({
                 fontSize: "clamp(0.85rem, 1.05vw, 0.95rem)",
                 letterSpacing: "0.015em",
                 wordSpacing: "0.05em",
-                marginBottom: "48px",
+                marginBottom: "clamp(24px, 4vw, 48px)",
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(18px)",
                 transition:

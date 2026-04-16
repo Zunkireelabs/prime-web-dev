@@ -25,7 +25,7 @@ export default function BrandIntro() {
                 </div>
 
                 {/* Badge — overlapping bottom-right */}
-                <div className="absolute -right-3 -bottom-3 md:-right-6 md:-bottom-6 w-28 h-28 md:w-36 md:h-36 bg-surface rounded-full flex flex-col items-center justify-center shadow-[0_8px_40px_rgba(0,0,0,0.06)] border border-ink-faint/30 z-10">
+                <div className="absolute right-2 bottom-2 sm:-right-3 sm:-bottom-3 md:-right-6 md:-bottom-6 w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 bg-surface rounded-full flex flex-col items-center justify-center shadow-[0_8px_40px_rgba(0,0,0,0.06)] border border-ink-faint/30 z-10">
                   <p className="font-serif font-light text-accent leading-none text-[clamp(1.8rem,2.5vw,2.4rem)]">
                     4+
                   </p>
