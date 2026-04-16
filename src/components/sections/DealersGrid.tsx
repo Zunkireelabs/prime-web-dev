@@ -216,7 +216,7 @@ export default function DealersGrid({
             </div>
           ) : (
             /* Standalone: full toolbar with pills */
-            <div className="bg-surface-alt border border-ink/6" style={{ padding: "clamp(24px, 4vw, 48px)" }}>
+            <div className="bg-surface-alt border border-ink/6 sticky z-20" style={{ padding: "clamp(24px, 4vw, 48px)", top: "clamp(64px, 8vw, 88px)" }}>
               <div className="relative max-w-2xl" style={{ marginBottom: "32px" }}>
                 <Search
                   size={20}
