@@ -6,6 +6,7 @@ import CatalogFilter from "./CatalogFilter";
 import ProductDetailPanel from "./ProductDetailPanel";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
+import { tileAspectRatio, tileGridColSpan } from "@/lib/utils";
 
 const BATCH = 24;
 
@@ -32,8 +33,8 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
       }}
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
-      {/* Swatch — 4:5 uniform grid */}
-      <div className="relative aspect-[4/5] overflow-hidden" style={{ marginBottom: "16px" }}>
+      {/* Swatch — proportional to real tile dimensions */}
+      <div className="relative overflow-hidden" style={{ aspectRatio: tileAspectRatio(product.size), marginBottom: "16px" }}>
         {product.image && product.image.startsWith("http") ? (
           <img
             src={product.image}
@@ -191,11 +192,20 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
           {filtered.length > 0 ? (
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4" style={{ columnGap: "clamp(20px, 3vw, 24px)", rowGap: "clamp(32px, 4vw, 40px)" }}>
-                {visible.map((p, i) => (
-                  <FadeIn key={p.slug} delay={Math.min(i * 0.02, 0.2)} direction="up" distance={12}>
-                    <TileCard product={p} onClick={setSelectedProduct} />
-                  </FadeIn>
-                ))}
+                {visible.map((p, i) => {
+                  const colSpan = tileGridColSpan(p.size);
+                  return (
+                    <FadeIn
+                      key={p.slug}
+                      delay={Math.min(i * 0.02, 0.2)}
+                      direction="up"
+                      distance={12}
+                      className={colSpan === 2 ? "col-span-2" : ""}
+                    >
+                      <TileCard product={p} onClick={setSelectedProduct} />
+                    </FadeIn>
+                  );
+                })}
               </div>
 
               {/* Load More — per product-grid-master: centered, btn-line, mt-16 */}

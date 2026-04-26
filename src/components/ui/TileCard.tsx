@@ -1,10 +1,13 @@
 "use client";
 
 import type { CatalogProduct } from "@/data/catalog";
+import { tileAspectRatio } from "@/lib/utils";
 
 interface TileCardProps {
   product: CatalogProduct;
   onClick?: (product: CatalogProduct) => void;
+  /** Use real tile proportions instead of uniform 4:5 */
+  proportional?: boolean;
 }
 
 function tileHue(name: string): number {
@@ -13,7 +16,7 @@ function tileHue(name: string): number {
   return 25 + (Math.abs(h) % 25);
 }
 
-export default function TileCard({ product, onClick }: TileCardProps) {
+export default function TileCard({ product, onClick, proportional }: TileCardProps) {
   const hue = tileHue(product.name);
   const hasImage = product.image && product.image.startsWith("http");
 
@@ -34,7 +37,7 @@ export default function TileCard({ product, onClick }: TileCardProps) {
       <div
         className="relative overflow-hidden"
         style={{
-          aspectRatio: "4/5",
+          aspectRatio: proportional ? tileAspectRatio(product.size) : "4/5",
           marginBottom: "16px",
           borderRadius: "0",
           boxShadow: "var(--shadow-sm)",

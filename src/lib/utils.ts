@@ -43,6 +43,17 @@ export function tileContainerWidth(size: string): string {
   return TILE_WIDTH_SCALE[size] || "70%";
 }
 
+/**
+ * Grid column span based on tile width.
+ * 600mm tiles span 2 columns, others span 1.
+ */
+export function tileGridColSpan(size: string): number {
+  const match = size.match(/(\d+)\s*[×x]\s*(\d+)/);
+  if (!match) return 1;
+  const w = parseInt(match[1], 10);
+  return w >= 600 ? 2 : 1;
+}
+
 /** All standard tile sizes in order */
 export const ALL_TILE_SIZES = [
   "300×300 mm",

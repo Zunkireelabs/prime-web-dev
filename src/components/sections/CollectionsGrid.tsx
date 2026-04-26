@@ -7,6 +7,7 @@ import FadeIn from "@/components/animations/FadeIn";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import TiltCard from "@/components/ui/TiltCard";
 import { ArrowUpRight, ArrowRight, ArrowLeft } from "lucide-react";
+import { tileAspectRatio } from "@/lib/utils";
 import { collections } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -186,7 +187,7 @@ export default function CollectionsGrid() {
                       style={{ background: "none", border: "none", padding: 0 }}
                     >
                       {/* Image */}
-                      <div className="relative aspect-[3/4] overflow-hidden bg-surface" style={{ marginBottom: "16px" }}>
+                      <div className="relative overflow-hidden bg-surface" style={{ aspectRatio: tileAspectRatio(c.sizes[0] || "300×450 mm"), marginBottom: "16px" }}>
                         <img
                           src={imgSrc}
                           alt={c.name}

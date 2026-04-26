@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { ArrowRight } from "lucide-react";
+import { tileAspectRatio } from "@/lib/utils";
 import { browseData as data } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -84,7 +85,7 @@ export default function BrowseBy() {
                 className="shrink-0 group block text-left cursor-pointer"
                 style={{ width: "clamp(200px, 55vw, 280px)", padding: "0 8px", background: "none", border: "none" }}
               >
-                <div className="relative overflow-hidden bg-surface-alt transition-all duration-500 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" style={{ aspectRatio: "3/4" }}>
+                <div className="relative overflow-hidden bg-surface-alt transition-all duration-500 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" style={{ aspectRatio: (() => { const p = allProducts.find((pr) => pr.slug === item.slug); return p ? tileAspectRatio(p.size) : "3/4"; })() }}>
                   <img
                     src={item.image}
                     alt={item.name}
