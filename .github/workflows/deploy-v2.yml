@@ -27,6 +27,7 @@ jobs:
               -o StrictHostKeyChecking=yes \
               "${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_HOST }}" \
               'set -e
+               MAIN_DIR="/home/zunkireelabs/devprojects/websiteprojects/Prime-web-dev"
                V2_DIR="/home/zunkireelabs/devprojects/websiteprojects/Prime-web-v2"
 
                # Clone if first time, otherwise just fetch
@@ -34,10 +35,19 @@ jobs:
                  git clone -b v2 git@github.com:Zunkireelabs/prime-web-dev.git "$V2_DIR"
                fi
 
+               # Copy env and sanity data from main project
+               cp "$MAIN_DIR/.env.local" "$V2_DIR/.env.local" 2>/dev/null || true
+               cp "$MAIN_DIR/src/data/catalog/sanity-products.json" "$V2_DIR/src/data/catalog/sanity-products.json" 2>/dev/null || true
+
                cd "$V2_DIR"
                git fetch --prune origin v2
                git checkout v2
                git reset --hard origin/v2
+
+               # Restore env and sanity data (git reset removes them)
+               cp "$MAIN_DIR/.env.local" "$V2_DIR/.env.local" 2>/dev/null || true
+               cp "$MAIN_DIR/src/data/catalog/sanity-products.json" "$V2_DIR/src/data/catalog/sanity-products.json" 2>/dev/null || true
+
                ./deploy-v2.sh'
 
       - name: Health check
