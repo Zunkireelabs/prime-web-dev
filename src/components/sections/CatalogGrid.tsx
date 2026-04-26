@@ -6,7 +6,7 @@ import CatalogFilter from "./CatalogFilter";
 import ProductDetailPanel from "./ProductDetailPanel";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
-import { tileAspectRatio, tileGridColSpan } from "@/lib/utils";
+import { tileCardHeight, tileGridColSpan } from "@/lib/utils";
 
 const BATCH = 24;
 
@@ -34,7 +34,7 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
       {/* Swatch — proportional to real tile dimensions */}
-      <div className="relative overflow-hidden" style={{ aspectRatio: tileAspectRatio(product.size), marginBottom: "16px" }}>
+      <div className="relative overflow-hidden" style={{ height: tileCardHeight(product.size), marginBottom: "16px" }}>
         {product.image && product.image.startsWith("http") ? (
           <img
             src={product.image}

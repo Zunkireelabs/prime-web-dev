@@ -1,7 +1,7 @@
 "use client";
 
 import type { CatalogProduct } from "@/data/catalog";
-import { tileAspectRatio } from "@/lib/utils";
+import { tileCardHeight } from "@/lib/utils";
 
 interface TileCardProps {
   product: CatalogProduct;
@@ -37,7 +37,7 @@ export default function TileCard({ product, onClick, proportional }: TileCardPro
       <div
         className="relative overflow-hidden"
         style={{
-          aspectRatio: tileAspectRatio(product.size),
+          height: tileCardHeight(product.size),
           marginBottom: "16px",
           borderRadius: "0",
           boxShadow: "var(--shadow-sm)",

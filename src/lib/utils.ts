@@ -57,6 +57,24 @@ export function tileGridColSpan(size: string): number {
   return w >= 600 ? 2 : 1;
 }
 
+/**
+ * Fixed card height per tile size — ensures every size looks visually distinct.
+ * Heights scale proportionally to real physical dimensions.
+ * Used in grids where aspect-ratio alone can't differentiate same-ratio tiles.
+ */
+const TILE_CARD_HEIGHT: Record<string, string> = {
+  "300×300 mm": "200px",
+  "300×450 mm": "280px",
+  "300×600 mm": "380px",
+  "400×400 mm": "260px",
+  "600×600 mm": "380px",
+  "600×1200 mm": "520px",
+};
+
+export function tileCardHeight(size: string): string {
+  return TILE_CARD_HEIGHT[size] || "260px";
+}
+
 /** All standard tile sizes in order */
 export const ALL_TILE_SIZES = [
   "300×300 mm",
