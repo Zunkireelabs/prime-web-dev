@@ -82,14 +82,13 @@ export default function DealerNetwork() {
               <a
                 key={province.name}
                 href={`/dealers?province=${province.name}`}
-                className="group relative block border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/20 transition-all duration-300 cursor-pointer overflow-hidden"
+                className="group relative block border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/20 transition-all duration-300 cursor-pointer overflow-hidden max-sm:!w-[calc(50%-8px)] max-[480px]:!w-full"
                 style={{
                   textAlign: "center",
                   width: "calc(25% - 24px)",
                   minWidth: "130px",
                   padding: "clamp(28px, 5vw, 56px) clamp(20px, 4vw, 40px)",
                 }}
-                className="max-sm:!w-[calc(50%-8px)] max-[480px]:!w-full"
               >
                 {/* Bottom accent line on hover */}
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
