@@ -191,31 +191,42 @@ export default function DealersGrid({
       )}
 
       {/* ── Compact Search ── */}
+      {embedded && (
+        <div
+          className="sticky z-10"
+          style={{
+            top: "0",
+            background: "var(--color-surface)",
+            paddingTop: "8px",
+            paddingBottom: "8px",
+            marginBottom: "24px",
+          }}
+        >
+          <div className="relative">
+            <Search
+              size={16}
+              className="absolute top-1/2 -translate-y-1/2 text-ink-muted"
+              style={{ left: "0" }}
+            />
+            <input
+              type="text"
+              placeholder="Search dealers..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setVisibleCount(INITIAL_COUNT);
+              }}
+              aria-label="Search dealers by name or city"
+              className="w-full py-3 text-[0.85rem] bg-transparent border-b border-ink/10 text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none transition-colors duration-300"
+              style={{ paddingLeft: "28px" }}
+            />
+          </div>
+        </div>
+      )}
+      {!embedded && (
       <FadeIn delay={0.25}>
-        <div style={{ marginBottom: embedded ? "24px" : "56px" }}>
-          {embedded ? (
-            /* Embedded: minimal border-bottom search */
-            <div className="relative">
-              <Search
-                size={16}
-                className="absolute top-1/2 -translate-y-1/2 text-ink-muted"
-                style={{ left: "0" }}
-              />
-              <input
-                type="text"
-                placeholder="Search dealers..."
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setVisibleCount(INITIAL_COUNT);
-                }}
-                aria-label="Search dealers by name or city"
-                className="w-full py-3 text-[0.85rem] bg-transparent border-b border-ink/10 text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none transition-colors duration-300"
-                style={{ paddingLeft: "28px" }}
-              />
-            </div>
-          ) : (
-            /* Standalone: full toolbar with pills */
+        <div style={{ marginBottom: "56px" }}>
+            {/* Standalone: full toolbar with pills */}
             <div className="bg-surface-alt border border-ink/6 sticky z-20" style={{ padding: "clamp(24px, 4vw, 48px)", top: "clamp(64px, 8vw, 88px)" }}>
               <div className="relative max-w-2xl" style={{ marginBottom: "32px" }}>
                 <Search
@@ -265,9 +276,9 @@ export default function DealersGrid({
                 })}
               </div>
             </div>
-          )}
         </div>
       </FadeIn>
+      )}
 
       {/* ── Results + Cards (fade on province change) ── */}
       <div style={{ opacity: isFading ? 0 : 1, transition: "opacity 0.15s linear" }}>
