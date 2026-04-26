@@ -170,12 +170,11 @@ export default function CollectionsGrid() {
                 return (
                 <div
                   key={c.slug}
-                  className="tile-card flex-shrink-0"
+                  className="tile-card flex-shrink-0 sm:!w-[clamp(180px,25vw,280px)]"
                   style={{
                     width: "clamp(150px, 42vw, 280px)",
                     scrollSnapAlign: "start",
                   }}
-                  className="sm:!w-[clamp(180px,25vw,280px)]"
                   onMouseEnter={() => setHoveredIdx(i)}
                   onMouseLeave={() => setHoveredIdx(null)}
                 >
