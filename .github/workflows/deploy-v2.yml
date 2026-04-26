@@ -27,7 +27,14 @@ jobs:
               -o StrictHostKeyChecking=yes \
               "${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_HOST }}" \
               'set -e
-               cd /home/zunkireelabs/devprojects/websiteprojects/Prime-web-dev
+               V2_DIR="/home/zunkireelabs/devprojects/websiteprojects/Prime-web-v2"
+
+               # Clone if first time, otherwise just fetch
+               if [ ! -d "$V2_DIR" ]; then
+                 git clone -b v2 git@github.com:Zunkireelabs/prime-web-dev.git "$V2_DIR"
+               fi
+
+               cd "$V2_DIR"
                git fetch --prune origin v2
                git checkout v2
                git reset --hard origin/v2
