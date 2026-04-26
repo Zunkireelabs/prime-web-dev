@@ -1,0 +1,17 @@
+services:
+  prime-web-v2:
+    build: .
+    container_name: prime-web-v2
+    restart: unless-stopped
+    networks:
+      - hosting
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prime-web-v2.rule=Host(`v2-primetiles.zunkireelabs.com`)"
+      - "traefik.http.routers.prime-web-v2.entrypoints=websecure"
+      - "traefik.http.routers.prime-web-v2.tls.certresolver=letsencrypt"
+      - "traefik.http.services.prime-web-v2.loadbalancer.server.port=80"
+
+networks:
+  hosting:
+    external: true
