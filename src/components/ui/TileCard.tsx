@@ -37,7 +37,7 @@ export default function TileCard({ product, onClick, proportional }: TileCardPro
       <div
         className="relative overflow-hidden"
         style={{
-          aspectRatio: proportional ? tileAspectRatio(product.size) : "4/5",
+          aspectRatio: tileAspectRatio(product.size),
           marginBottom: "16px",
           borderRadius: "0",
           boxShadow: "var(--shadow-sm)",

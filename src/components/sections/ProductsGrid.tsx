@@ -6,6 +6,7 @@ import StaggerGrid from "@/components/animations/StaggerGrid";
 import TileCard from "@/components/ui/TileCard";
 import ProductDetailPanel from "./ProductDetailPanel";
 import type { CatalogProduct } from "@/data/catalog";
+import { tileGridColSpan } from "@/lib/utils";
 import type { FilterKey, ProductFilters, SortKey } from "./ProductsBrowser";
 
 const BATCH = 24;
@@ -201,7 +202,9 @@ export default function ProductsGrid({
             }}
           >
             {visible.map((p) => (
-              <TileCard key={p.slug} product={p} onClick={handleCardClick} />
+              <div key={p.slug} className={tileGridColSpan(p.size) === 2 ? "sm:col-span-2 lg:col-span-2" : ""}>
+                <TileCard product={p} onClick={handleCardClick} />
+              </div>
             ))}
           </StaggerGrid>
 
