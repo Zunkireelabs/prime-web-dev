@@ -44,8 +44,11 @@ export function tileContainerWidth(size: string): string {
 }
 
 /**
- * Grid column span based on tile width.
- * 600mm tiles span 2 columns, others span 1.
+ * Grid column span based on tile physical width.
+ * Makes each size visually distinct in the grid:
+ * - 300mm tiles: 1 column (small)
+ * - 400mm tiles: 1 column (medium — differentiated by aspect ratio)
+ * - 600mm tiles: 2 columns (large — visually bigger)
  */
 export function tileGridColSpan(size: string): number {
   const match = size.match(/(\d+)\s*[×x]\s*(\d+)/);

@@ -202,7 +202,7 @@ export default function ProductsGrid({
             }}
           >
             {visible.map((p) => (
-              <div key={p.slug} className={tileGridColSpan(p.size) === 2 ? "sm:col-span-2 lg:col-span-2" : ""}>
+              <div key={p.slug} style={tileGridColSpan(p.size) === 2 ? { gridColumn: "span 2" } : undefined}>
                 <TileCard product={p} onClick={handleCardClick} />
               </div>
             ))}

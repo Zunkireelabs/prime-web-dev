@@ -195,15 +195,18 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
                 {visible.map((p, i) => {
                   const colSpan = tileGridColSpan(p.size);
                   return (
-                    <FadeIn
+                    <div
                       key={p.slug}
-                      delay={Math.min(i * 0.02, 0.2)}
-                      direction="up"
-                      distance={12}
-                      className={colSpan === 2 ? "col-span-2" : ""}
+                      style={colSpan === 2 ? { gridColumn: "span 2" } : undefined}
                     >
-                      <TileCard product={p} onClick={setSelectedProduct} />
-                    </FadeIn>
+                      <FadeIn
+                        delay={Math.min(i * 0.02, 0.2)}
+                        direction="up"
+                        distance={12}
+                      >
+                        <TileCard product={p} onClick={setSelectedProduct} />
+                      </FadeIn>
+                    </div>
                   );
                 })}
               </div>
