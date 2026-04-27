@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -26,17 +27,17 @@ export function tileVisualRatio(size: string): string {
 }
 
 /**
- * Width percentage for the image container based on physical tile width.
- * 300mm tiles = 55%, 400mm = 70%, 600mm = 90%.
- * Creates visual size difference between same-ratio tiles.
+ * Width percentage for the image container based on physical tile dimensions.
+ * Tuned so every standard size has a visually distinct footprint inside a fixed-width card.
+ * Hierarchy goes 300×300 (smallest) → 600×600 (largest square).
  */
 const TILE_WIDTH_SCALE: Record<string, string> = {
-  "300×300 mm": "55%",
-  "300×450 mm": "55%",
-  "300×600 mm": "55%",
-  "400×400 mm": "70%",
-  "600×600 mm": "90%",
-  "600×1200 mm": "70%",
+  "300×300 mm": "44%",
+  "300×450 mm": "50%",
+  "300×600 mm": "54%",
+  "400×400 mm": "64%",
+  "600×600 mm": "92%",
+  "600×1200 mm": "60%",
 };
 
 export function tileContainerWidth(size: string): string {
@@ -58,21 +59,33 @@ export function tileGridColSpan(size: string): number {
 }
 
 /**
- * Fixed card height per tile size — ensures every size looks visually distinct.
- * Heights scale proportionally to real physical dimensions.
- * Used in grids where aspect-ratio alone can't differentiate same-ratio tiles.
+ * Card outer-frame height. Uniform across sizes so cards align in grids and
+ * marquees; the inner image varies by `tileVisualRatio` + `tileContainerWidth`
+ * to communicate the tile's real proportions and physical scale.
+ *
+ * The legacy size-keyed argument is accepted but ignored.
  */
-const TILE_CARD_HEIGHT: Record<string, string> = {
-  "300×300 mm": "200px",
-  "300×450 mm": "280px",
-  "300×600 mm": "380px",
-  "400×400 mm": "260px",
-  "600×600 mm": "380px",
-  "600×1200 mm": "520px",
-};
+export function tileCardHeight(_size?: string): string {
+  return "clamp(320px, 30vw, 420px)";
+}
 
-export function tileCardHeight(size: string): string {
-  return TILE_CARD_HEIGHT[size] || "260px";
+/**
+ * Inline style for the inner image container inside a fixed-frame card.
+ * - aspectRatio = real tile shape (e.g. 1/1, 1/2, 2/3)
+ * - width      = physical-size scale (% of frame width)
+ * - maxHeight  = keeps image inside the frame for portrait tiles
+ *
+ * Use inside a `flex items-center justify-center` parent so the image centers
+ * with proportional negative space around it.
+ */
+export function tileImageFrameStyle(size: string): CSSProperties {
+  return {
+    width: tileContainerWidth(size),
+    aspectRatio: tileVisualRatio(size),
+    maxHeight: "92%",
+    position: "relative",
+    overflow: "hidden",
+  };
 }
 
 /** All standard tile sizes in order */

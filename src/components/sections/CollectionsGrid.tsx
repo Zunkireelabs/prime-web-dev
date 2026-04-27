@@ -7,7 +7,7 @@ import FadeIn from "@/components/animations/FadeIn";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import TiltCard from "@/components/ui/TiltCard";
 import { ArrowUpRight, ArrowRight, ArrowLeft } from "lucide-react";
-import { tileCardHeight } from "@/lib/utils";
+import { tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
 import { collections } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -186,20 +186,22 @@ export default function CollectionsGrid() {
                       className="group block h-full w-full text-left cursor-pointer"
                       style={{ background: "none", border: "none", padding: 0 }}
                     >
-                      {/* Image */}
-                      <div className="relative overflow-hidden bg-surface" style={{ height: tileCardHeight(c.sizes[0] || "300×450 mm"), marginBottom: "16px" }}>
-                        <img
-                          src={imgSrc}
-                          alt={c.name}
-                          loading="lazy"
-                          className={`w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            hoveredIdx === i
-                              ? "scale-[1.06]"
-                              : hoveredIdx !== null
-                                ? "scale-[0.98] brightness-[0.85]"
-                                : ""
-                          }`}
-                        />
+                      {/* Image — uniform-height frame with proportional inner image */}
+                      <div className="relative overflow-hidden bg-surface flex items-center justify-center" style={{ height: tileCardHeight(), marginBottom: "16px" }}>
+                        <div style={tileImageFrameStyle(c.sizes[0] || "300×450 mm")}>
+                          <img
+                            src={imgSrc}
+                            alt={c.name}
+                            loading="lazy"
+                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                              hoveredIdx === i
+                                ? "scale-[1.06]"
+                                : hoveredIdx !== null
+                                  ? "scale-[0.98] brightness-[0.85]"
+                                  : ""
+                            }`}
+                          />
+                        </div>
 
                         {/* Dark gradient — always visible at bottom */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

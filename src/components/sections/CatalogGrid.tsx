@@ -6,7 +6,7 @@ import CatalogFilter from "./CatalogFilter";
 import ProductDetailPanel from "./ProductDetailPanel";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
-import { tileCardHeight, tileGridColSpan } from "@/lib/utils";
+import { tileCardHeight, tileGridColSpan, tileImageFrameStyle } from "@/lib/utils";
 
 const BATCH = 24;
 
@@ -33,20 +33,21 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
       }}
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
-      {/* Swatch — proportional to real tile dimensions */}
-      <div className="relative overflow-hidden" style={{ height: tileCardHeight(product.size), marginBottom: "16px" }}>
-        {product.image && product.image.startsWith("http") ? (
-          <img
-            src={product.image}
-            alt={product.name}
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <>
-            <div
-              className="absolute inset-0"
-              style={{ background: `linear-gradient(155deg, hsl(${hue}, 12%, 89%), hsl(${hue}, 8%, 83%), hsl(${hue}, 5%, 79%))` }}
+      {/* Outer frame: uniform height. Inner image keeps real tile proportions + physical-size scale. */}
+      <div className="relative overflow-hidden flex items-center justify-center bg-surface-alt" style={{ height: tileCardHeight(), marginBottom: "16px" }}>
+        <div style={tileImageFrameStyle(product.size)}>
+          {product.image && product.image.startsWith("http") ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <>
+              <div
+                className="absolute inset-0"
+                style={{ background: `linear-gradient(155deg, hsl(${hue}, 12%, 89%), hsl(${hue}, 8%, 83%), hsl(${hue}, 5%, 79%))` }}
             >
               <div
                 className="absolute inset-0 opacity-[0.12] mix-blend-multiply"
@@ -58,15 +59,16 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
             <div className="absolute inset-0 flex items-center justify-center px-4">
               <p
                 className="font-serif font-light text-center leading-tight select-none"
-                style={{ fontSize: "clamp(0.75rem, 1.2vw, 0.95rem)", color: `hsl(${hue}, 6%, 62%)` }}
+                style={{ fontSize: "clamp(0.7rem, 1.1vw, 0.9rem)", color: `hsl(${hue}, 6%, 62%)` }}
               >
                 {product.name}
               </p>
             </div>
           </>
-        )}
+          )}
+        </div>
 
-        {/* Finish badge */}
+        {/* Finish badge — pinned to outer frame */}
         <span
           className="absolute top-2.5 right-2.5 px-2.5 py-1 text-[0.45rem] font-medium tracking-[0.12em] uppercase"
           style={{ background: `hsl(${hue}, 6%, 95%)`, color: `hsl(${hue}, 8%, 48%)` }}
@@ -74,7 +76,7 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
           {product.finish}
         </span>
 
-        {/* View Details hover overlay */}
+        {/* View Details hover overlay — covers outer frame */}
         <div
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100"
           style={{

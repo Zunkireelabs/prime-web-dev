@@ -27,7 +27,7 @@ function CatalogCard({
         <a
           href={isComingSoon ? undefined : `/catalog/view/${cat.slug}`}
           className="relative block overflow-hidden bg-surface-alt"
-          style={{ height: large ? "320px" : tileCardHeight(cat.filterValue), marginBottom: "20px", borderRadius: "4px", cursor: isComingSoon ? "default" : "pointer" }}
+          style={{ height: large ? "320px" : tileCardHeight(), marginBottom: "20px", borderRadius: "4px", cursor: isComingSoon ? "default" : "pointer" }}
         >
           <img
             src={cat.image}

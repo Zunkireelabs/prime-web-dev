@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { ArrowRight } from "lucide-react";
-import { tileCardHeight } from "@/lib/utils";
+import { tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
 import { browseData as data } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -77,7 +77,10 @@ export default function BrowseBy() {
             className="flex animate-marquee"
             style={{ animationDuration: "35s", width: "max-content" }}
           >
-            {[...items, ...items].map((item, i) => (
+            {[...items, ...items].map((item, i) => {
+              const product = allProducts.find((pr) => pr.slug === item.slug);
+              const tileSize = product?.size ?? "300×450 mm";
+              return (
               <button
                 key={`${item.name}-${i}`}
                 type="button"
@@ -85,13 +88,15 @@ export default function BrowseBy() {
                 className="shrink-0 group block text-left cursor-pointer"
                 style={{ width: "clamp(200px, 55vw, 280px)", padding: "0 8px", background: "none", border: "none" }}
               >
-                <div className="relative overflow-hidden bg-surface-alt transition-all duration-500 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" style={{ height: (() => { const p = allProducts.find((pr) => pr.slug === item.slug); return p ? tileCardHeight(p.size) : "260px"; })() }}>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-                  />
+                <div className="relative overflow-hidden bg-surface-alt flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" style={{ height: tileCardHeight() }}>
+                  <div style={tileImageFrameStyle(tileSize)}>
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                    />
+                  </div>
                   {/* Bottom gradient */}
                   <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   {/* Accent corner on hover */}
@@ -108,7 +113,8 @@ export default function BrowseBy() {
                   <ArrowRight size={11} className="text-accent opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                 </div>
               </button>
-            ))}
+              );
+            })}
           </div>
         </div>
 
