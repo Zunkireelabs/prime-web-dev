@@ -186,8 +186,8 @@ export default function CollectionsGrid() {
                       className="group block h-full w-full text-left cursor-pointer"
                       style={{ background: "none", border: "none", padding: 0 }}
                     >
-                      {/* Image — uniform-height frame with proportional inner image */}
-                      <div className="relative overflow-hidden bg-surface flex items-center justify-center" style={{ height: tileCardHeight(), marginBottom: "16px" }}>
+                      {/* Image — cream-white stage with proportional inner image */}
+                      <div className="relative overflow-hidden bg-surface-card flex items-center justify-center" style={{ height: tileCardHeight(), marginBottom: "16px" }}>
                         <div style={tileImageFrameStyle(c.sizes[0] || "300×450 mm")}>
                           <img
                             src={imgSrc}

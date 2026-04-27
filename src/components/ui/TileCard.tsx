@@ -32,9 +32,9 @@ export default function TileCard({ product, onClick }: TileCardProps) {
       }}
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
-      {/* Outer frame: uniform height. Inner image keeps real tile proportions + physical-size scale. */}
+      {/* Outer frame: cream-white stage. */}
       <div
-        className="relative overflow-hidden flex items-center justify-center bg-surface-alt"
+        className="relative overflow-hidden flex items-center justify-center bg-surface-card"
         style={{
           height: tileCardHeight(),
           marginBottom: "16px",
@@ -94,7 +94,7 @@ export default function TileCard({ product, onClick }: TileCardProps) {
           {product.finish}
         </span>
 
-        {/* "View Details" hover overlay — covers outer frame */}
+        {/* "View Details" hover overlay */}
         <div
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100"
           style={{

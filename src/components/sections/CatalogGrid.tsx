@@ -33,8 +33,8 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
       }}
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
-      {/* Outer frame: uniform height. Inner image keeps real tile proportions + physical-size scale. */}
-      <div className="relative overflow-hidden flex items-center justify-center bg-surface-alt" style={{ height: tileCardHeight(), marginBottom: "16px" }}>
+      {/* Outer frame: cream-white stage. */}
+      <div className="relative overflow-hidden flex items-center justify-center bg-surface-card" style={{ height: tileCardHeight(), marginBottom: "16px" }}>
         <div style={tileImageFrameStyle(product.size)}>
           {product.image && product.image.startsWith("http") ? (
             <img
@@ -76,7 +76,7 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
           {product.finish}
         </span>
 
-        {/* View Details hover overlay — covers outer frame */}
+        {/* View Details hover overlay */}
         <div
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100"
           style={{
