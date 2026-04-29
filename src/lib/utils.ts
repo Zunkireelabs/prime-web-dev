@@ -123,6 +123,34 @@ export function tileImageFrameStyle(size: string): CSSProperties {
 }
 
 /**
+ * "Showcase" sizing — for views that display a single tile at large scale
+ * (e.g. product detail modal). Each tile fills the same visual envelope:
+ * the longest physical side renders at `longestPctOfBase`% of `--tile-base`,
+ * and the shorter side scales proportionally so the tile's own w:h is
+ * preserved. Tiles with the same aspect ratio render identically in this
+ * mode — that's intentional, since size is communicated via labels here.
+ *
+ * Use `tileImageFrameStyle` instead for catalog/grid views where
+ * cross-tile size comparison matters.
+ */
+export function tileShowcaseFrameStyle(
+  size: string,
+  longestPctOfBase = 80,
+): CSSProperties {
+  const { w, h } = parseTileDims(size);
+  const longest = Math.max(w, h);
+  const wPct = (w / longest) * (longestPctOfBase / 100);
+  const hPct = (h / longest) * (longestPctOfBase / 100);
+  const base = "var(--tile-base, clamp(280px, 30vw, 380px))";
+  return {
+    width: `calc(${base} * ${wPct})`,
+    height: `calc(${base} * ${hPct})`,
+    position: "relative",
+    overflow: "hidden",
+  };
+}
+
+/**
  * Pixel dimensions for a small tile-shape icon (size-picker, mini reference).
  * Uses the same physical-mm → px rule as the main image frame, so picker
  * icons stay consistent with how the actual tile cards render.

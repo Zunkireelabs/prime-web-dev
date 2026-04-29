@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import { X, ArrowRight, Calculator } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
-import { tileVisualRatio, tileImageFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
+import { tileVisualRatio, tileImageFrameStyle, tileShowcaseFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
 import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
 interface Props {
@@ -167,24 +167,24 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           <X size={18} />
         </button>
 
-        {/* Left — product image at true physical scale */}
+        {/* Left — product image, showcase fit (each tile fills the panel
+            uniformly while keeping its own aspect ratio). */}
         <div
           className="hidden md:flex shrink-0 items-center justify-center"
           style={{
             width: "50%",
-            minHeight: "500px",
+            minHeight: "620px",
             position: "relative",
             overflow: "hidden",
             background: "var(--color-surface-alt)",
-            // Modal hero — use a bigger base than card grids so a 1200mm tile
-            // reads at ~440px tall in the panel.
-            ["--tile-base" as never]: "clamp(360px, 36vw, 460px)",
+            // Showcase base — longest physical side renders at 80% of this.
+            ["--tile-base" as never]: "clamp(440px, 50vw, 580px)",
           }}
         >
           {hasImage ? (
             <div
               style={{
-                ...tileImageFrameStyle(product.size),
+                ...tileShowcaseFrameStyle(product.size, 80),
                 boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
               }}
             >
@@ -200,7 +200,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             <div
               className="flex items-center justify-center"
               style={{
-                ...tileImageFrameStyle(product.size),
+                ...tileShowcaseFrameStyle(product.size, 80),
                 background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
               }}
             >
@@ -248,19 +248,19 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           className="flex-1 overflow-y-auto"
           style={{ padding: "clamp(16px, 3vw, 48px)" }}
         >
-          {/* Mobile-only image — physical scale, centered with cream stage */}
+          {/* Mobile-only image — showcase fit, centered on cream stage */}
           <div
             className="md:hidden flex items-center justify-center bg-surface-card"
             style={{
               marginBottom: "12px",
               padding: "12px",
               borderRadius: "8px",
-              // Phone-appropriate base — a 1200mm tile reads at ~220px tall.
-              ["--tile-base" as never]: "clamp(180px, 60vw, 240px)",
+              // Showcase base for phone — longest side renders at 80% of this.
+              ["--tile-base" as never]: "clamp(220px, 70vw, 320px)",
             }}
           >
             {hasImage ? (
-              <div style={{ ...tileImageFrameStyle(product.size), borderRadius: "4px" }}>
+              <div style={{ ...tileShowcaseFrameStyle(product.size, 80), borderRadius: "4px" }}>
                 <img
                   src={product.image}
                   alt={product.name}
@@ -271,7 +271,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               <div
                 className="flex items-center justify-center"
                 style={{
-                  ...tileImageFrameStyle(product.size),
+                  ...tileShowcaseFrameStyle(product.size, 80),
                   borderRadius: "4px",
                   background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
                 }}
