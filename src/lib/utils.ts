@@ -189,10 +189,10 @@ export function tilePickerSize(size: string, basePx = 48): { w: number; h: numbe
  * background math (see TileLens).
  */
 export const TILE_IMAGE_CROP = {
-  top: 0.03,
-  bottom: 0.10,
-  left: 0.04,
-  right: 0.04,
+  top: 0.07,
+  bottom: 0.12,
+  left: 0.06,
+  right: 0.06,
 } as const;
 
 export const tileImageCropStyle: CSSProperties = {
