@@ -5,6 +5,7 @@ import { X, ArrowRight, Calculator } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
 import { tileVisualRatio, tileImageFrameStyle, tileShowcaseFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
+import TileLens from "@/components/ui/TileLens";
 import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
 interface Props {
@@ -181,20 +182,14 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             ["--tile-base" as never]: "clamp(440px, 50vw, 580px)",
           }}
         >
-          {hasImage ? (
+          {hasImage && product.image ? (
             <div
               style={{
                 ...tileShowcaseFrameStyle(product.size, 85, 40),
                 boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
               }}
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                loading="eager"
-                decoding="async"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
+              <TileLens src={product.image} alt={product.name} />
             </div>
           ) : (
             <div
