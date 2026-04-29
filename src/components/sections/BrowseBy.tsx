@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { ArrowRight } from "lucide-react";
-import { tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
+import { tileCardCSSVars, tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
 import { browseData as data } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -88,7 +88,7 @@ export default function BrowseBy() {
                 className="shrink-0 group block text-left cursor-pointer"
                 style={{ width: "clamp(200px, 55vw, 280px)", padding: "0 8px", background: "none", border: "none" }}
               >
-                <div className="relative overflow-hidden bg-surface-card flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" style={{ height: tileCardHeight() }}>
+                <div className="relative overflow-hidden bg-surface-card flex items-center justify-center transition-all duration-500 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]" style={{ ...tileCardCSSVars(), height: tileCardHeight() }}>
                   <div style={tileImageFrameStyle(tileSize)}>
                     <img
                       src={item.image}

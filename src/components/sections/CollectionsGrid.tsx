@@ -7,7 +7,7 @@ import FadeIn from "@/components/animations/FadeIn";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import TiltCard from "@/components/ui/TiltCard";
 import { ArrowUpRight, ArrowRight, ArrowLeft } from "lucide-react";
-import { tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
+import { tileCardCSSVars, tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
 import { collections } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -187,7 +187,7 @@ export default function CollectionsGrid() {
                       style={{ background: "none", border: "none", padding: 0 }}
                     >
                       {/* Image — cream-white stage with proportional inner image */}
-                      <div className="relative overflow-hidden bg-surface-card flex items-center justify-center" style={{ height: tileCardHeight(), marginBottom: "16px" }}>
+                      <div className="relative overflow-hidden bg-surface-card flex items-center justify-center" style={{ ...tileCardCSSVars(), height: tileCardHeight(), marginBottom: "16px" }}>
                         <div style={tileImageFrameStyle(c.sizes[0] || "300×450 mm")}>
                           <img
                             src={imgSrc}

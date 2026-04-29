@@ -7,84 +7,135 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Parse a tile size string like "300×600 mm" and return
- * the CSS aspect-ratio value as "width / height" (e.g. "1 / 2").
- * Falls back to "4 / 5" if parsing fails.
+ * Tile sizing — true physical scale.
+ *
+ * The reference dimension is 1200 mm (the longest standard side, e.g. 600×1200).
+ * A CSS variable `--tile-base` defines what 1200 mm looks like in pixels for
+ * a given context. Each tile's inner frame derives both its width and height
+ * from physical mm:
+ *
+ *   width  = var(--tile-base) × (physicalWidth  / 1200)
+ *   height = var(--tile-base) × (physicalHeight / 1200)
+ *
+ * Result: every standard size is visually distinct and physically correct.
+ *   - 600×600  → 0.5 × 0.5  (medium square)
+ *   - 300×600  → 0.25 × 0.5 (half the width of 600×600, same height)
+ *   - 600×1200 → 0.5 × 1.0  (same width as 600×600, twice the height)
+ *   - 400×400  → 0.33 × 0.33
+ *   - 300×450  → 0.25 × 0.375
+ *   - 300×300  → 0.25 × 0.25 (smallest)
  */
-export function tileAspectRatio(size: string): string {
-  const match = size.match(/(\d+)\s*[×x]\s*(\d+)/);
-  if (!match) return "4 / 5";
-  const w = parseInt(match[1], 10);
-  const h = parseInt(match[2], 10);
-  return `${w} / ${h}`;
+
+const REF_DIM_MM = 1200;
+
+const TILE_DIMS: Record<string, { w: number; h: number }> = {
+  "300×300 mm": { w: 300, h: 300 },
+  "300×450 mm": { w: 300, h: 450 },
+  "300×600 mm": { w: 300, h: 600 },
+  "400×400 mm": { w: 400, h: 400 },
+  "600×600 mm": { w: 600, h: 600 },
+  "600×1200 mm": { w: 600, h: 1200 },
+};
+
+function parseTileDims(size: string): { w: number; h: number } {
+  if (TILE_DIMS[size]) return TILE_DIMS[size];
+  const m = size.match(/(\d+)\s*[×x]\s*(\d+)/);
+  if (m) return { w: parseInt(m[1], 10), h: parseInt(m[2], 10) };
+  return { w: 600, h: 600 };
 }
 
 /**
- * Real physical aspect ratio per tile size.
+ * CSS aspect-ratio string ("w / h") — kept for callers that still need a raw ratio.
  */
+export function tileAspectRatio(size: string): string {
+  const { w, h } = parseTileDims(size);
+  return `${w} / ${h}`;
+}
+
 export function tileVisualRatio(size: string): string {
   return tileAspectRatio(size);
 }
 
 /**
- * Width percentage for the image container based on physical tile dimensions.
- * Tuned so every standard size has a visually distinct footprint inside a fixed-width card.
- * Hierarchy goes 300×300 (smallest) → 600×600 (largest square).
+ * Width of the inner image frame as a CSS expression.
+ * Resolves against `--tile-base` on the nearest ancestor (with a sensible
+ * fallback so callers that forget to set it still render reasonably).
  */
-const TILE_WIDTH_SCALE: Record<string, string> = {
-  "300×300 mm": "44%",
-  "300×450 mm": "50%",
-  "300×600 mm": "54%",
-  "400×400 mm": "64%",
-  "600×600 mm": "92%",
-  "600×1200 mm": "60%",
-};
-
 export function tileContainerWidth(size: string): string {
-  return TILE_WIDTH_SCALE[size] || "70%";
+  const { w } = parseTileDims(size);
+  return `calc(var(--tile-base, clamp(280px, 30vw, 380px)) * ${w / REF_DIM_MM})`;
+}
+
+/**
+ * Height of the inner image frame as a CSS expression.
+ * Pairs with `tileContainerWidth` for true physical scaling.
+ */
+export function tileContainerHeight(size: string): string {
+  const { h } = parseTileDims(size);
+  return `calc(var(--tile-base, clamp(280px, 30vw, 380px)) * ${h / REF_DIM_MM})`;
 }
 
 /**
  * Grid column span based on tile physical width.
- * Makes each size visually distinct in the grid:
- * - 300mm tiles: 1 column (small)
- * - 400mm tiles: 1 column (medium — differentiated by aspect ratio)
- * - 600mm tiles: 2 columns (large — visually bigger)
+ * 600 mm tiles span 2 columns so wider tiles read as wider in dense grids.
  */
 export function tileGridColSpan(size: string): number {
-  const match = size.match(/(\d+)\s*[×x]\s*(\d+)/);
-  if (!match) return 1;
-  const w = parseInt(match[1], 10);
+  const { w } = parseTileDims(size);
   return w >= 600 ? 2 : 1;
 }
 
 /**
- * Card outer-frame height. Uniform across sizes so cards align in grids and
- * marquees; the inner image varies by `tileVisualRatio` + `tileContainerWidth`
- * to communicate the tile's real proportions and physical scale.
+ * Card outer-frame height. Sized to fit a 1200 mm tile (tallest) plus
+ * breathing room above/below for badges and centering.
  *
- * The legacy size-keyed argument is accepted but ignored.
+ * Pair this with `tileCardCSSVars()` on the same element so child frames
+ * resolve `--tile-base` correctly.
  */
 export function tileCardHeight(_size?: string): string {
-  return "clamp(320px, 30vw, 420px)";
+  return "clamp(360px, 32vw, 460px)";
 }
 
 /**
- * Inline style for the inner image container inside a fixed-frame card.
- * - aspectRatio = real tile shape (e.g. 1/1, 1/2, 2/3)
- * - width      = physical-size scale (% of frame width)
- * - maxHeight  = keeps image inside the frame for portrait tiles
- *
- * Use inside a `flex items-center justify-center` parent so the image centers
- * with proportional negative space around it.
+ * CSS variable bundle for card outer frames.
+ * `--tile-base` defines the visual size in px corresponding to a 1200 mm tile.
+ * Apply via `style={{ ...tileCardCSSVars() }}` on the card's outer image div.
+ */
+export function tileCardCSSVars(): CSSProperties {
+  return {
+    // 1200 mm reference. Slightly smaller than card height so the tallest
+    // tile has padding above/below.
+    ["--tile-base" as never]: "clamp(310px, 28vw, 400px)",
+  };
+}
+
+/**
+ * Inline style for the inner image container. Width and height both scale
+ * from physical mm via `--tile-base`. Pair this with a flex-centered parent
+ * so the image sits centered with proportional negative space around it.
  */
 export function tileImageFrameStyle(size: string): CSSProperties {
   return {
     width: tileContainerWidth(size),
-    aspectRatio: tileVisualRatio(size),
-    maxHeight: "92%",
+    height: tileContainerHeight(size),
     position: "relative",
     overflow: "hidden",
+  };
+}
+
+/**
+ * Pixel dimensions for a small tile-shape icon (size-picker, mini reference).
+ * Uses the same physical-mm → px rule as the main image frame, so picker
+ * icons stay consistent with how the actual tile cards render.
+ *
+ * `basePx` is the visual size in px corresponding to a 1200 mm tile.
+ * Default 48 keeps icons compact for inline pickers; pass a larger value
+ * for callers that want more visual weight.
+ */
+export function tilePickerSize(size: string, basePx = 48): { w: number; h: number } {
+  const { w, h } = parseTileDims(size);
+  return {
+    w: (w / REF_DIM_MM) * basePx,
+    h: (h / REF_DIM_MM) * basePx,
   };
 }
 

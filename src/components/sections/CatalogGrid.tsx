@@ -6,7 +6,7 @@ import CatalogFilter from "./CatalogFilter";
 import ProductDetailPanel from "./ProductDetailPanel";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
-import { tileCardHeight, tileGridColSpan, tileImageFrameStyle } from "@/lib/utils";
+import { tileCardCSSVars, tileCardHeight, tileGridColSpan, tileImageFrameStyle } from "@/lib/utils";
 
 const BATCH = 24;
 
@@ -34,7 +34,7 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
       {/* Outer frame: cream-white stage. */}
-      <div className="relative overflow-hidden flex items-center justify-center bg-surface-card" style={{ height: tileCardHeight(), marginBottom: "16px" }}>
+      <div className="relative overflow-hidden flex items-center justify-center bg-surface-card" style={{ ...tileCardCSSVars(), height: tileCardHeight(), marginBottom: "16px" }}>
         <div style={tileImageFrameStyle(product.size)}>
           {product.image && product.image.startsWith("http") ? (
             <img

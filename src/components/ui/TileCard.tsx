@@ -1,7 +1,7 @@
 "use client";
 
 import type { CatalogProduct } from "@/data/catalog";
-import { tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
+import { tileCardCSSVars, tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
 
 interface TileCardProps {
   product: CatalogProduct;
@@ -36,6 +36,7 @@ export default function TileCard({ product, onClick }: TileCardProps) {
       <div
         className="relative overflow-hidden flex items-center justify-center bg-surface-card"
         style={{
+          ...tileCardCSSVars(),
           height: tileCardHeight(),
           marginBottom: "16px",
           boxShadow: "var(--shadow-sm)",
