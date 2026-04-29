@@ -124,23 +124,33 @@ export function tileImageFrameStyle(size: string): CSSProperties {
 
 /**
  * "Showcase" sizing — for views that display a single tile at large scale
- * (e.g. product detail modal). Each tile fills the same visual envelope:
- * the longest physical side renders at `longestPctOfBase`% of `--tile-base`,
- * and the shorter side scales proportionally so the tile's own w:h is
- * preserved. Tiles with the same aspect ratio render identically in this
- * mode — that's intentional, since size is communicated via labels here.
+ * (e.g. product detail modal). The longest physical side maps to a percentage
+ * of `--tile-base` between `longestPctMin` (300 mm tile) and `longestPctMax`
+ * (1200 mm tile); the shorter side scales proportionally so each tile's own
+ * w:h is preserved.
  *
- * Use `tileImageFrameStyle` instead for catalog/grid views where
- * cross-tile size comparison matters.
+ * - With `longestPctMin === longestPctMax` (default): every tile fills the
+ *   panel uniformly. Same-ratio tiles render identically.
+ * - With `longestPctMin < longestPctMax`: a soft physical scale — smaller
+ *   tiles render visibly smaller, but with a higher floor than the strict
+ *   physical scale used by `tileImageFrameStyle`. Use this for showcases
+ *   that need *some* size differentiation without making 300 mm tiles tiny.
+ *
+ * `tileImageFrameStyle` (strict cross-tile physical truth) is the right
+ * call for catalog/grid views where size comparison is the point.
  */
 export function tileShowcaseFrameStyle(
   size: string,
-  longestPctOfBase = 80,
+  longestPctMax = 80,
+  longestPctMin = longestPctMax,
 ): CSSProperties {
   const { w, h } = parseTileDims(size);
   const longest = Math.max(w, h);
-  const wPct = (w / longest) * (longestPctOfBase / 100);
-  const hPct = (h / longest) * (longestPctOfBase / 100);
+  // Map longest physical dim (300–1200 mm) to a pct between min..max.
+  const t = Math.max(0, Math.min(1, (longest - 300) / 900));
+  const longestPct = longestPctMin + t * (longestPctMax - longestPctMin);
+  const wPct = (w / longest) * (longestPct / 100);
+  const hPct = (h / longest) * (longestPct / 100);
   const base = "var(--tile-base, clamp(280px, 30vw, 380px))";
   return {
     width: `calc(${base} * ${wPct})`,

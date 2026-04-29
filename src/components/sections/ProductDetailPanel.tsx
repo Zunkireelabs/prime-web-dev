@@ -184,7 +184,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           {hasImage ? (
             <div
               style={{
-                ...tileShowcaseFrameStyle(product.size, 80),
+                ...tileShowcaseFrameStyle(product.size, 85, 40),
                 boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
               }}
             >
@@ -200,7 +200,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             <div
               className="flex items-center justify-center"
               style={{
-                ...tileShowcaseFrameStyle(product.size, 80),
+                ...tileShowcaseFrameStyle(product.size, 85, 40),
                 background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
               }}
             >
@@ -260,7 +260,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             }}
           >
             {hasImage ? (
-              <div style={{ ...tileShowcaseFrameStyle(product.size, 80), borderRadius: "4px" }}>
+              <div style={{ ...tileShowcaseFrameStyle(product.size, 85, 40), borderRadius: "4px" }}>
                 <img
                   src={product.image}
                   alt={product.name}
@@ -271,7 +271,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               <div
                 className="flex items-center justify-center"
                 style={{
-                  ...tileShowcaseFrameStyle(product.size, 80),
+                  ...tileShowcaseFrameStyle(product.size, 85, 40),
                   borderRadius: "4px",
                   background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
                 }}
