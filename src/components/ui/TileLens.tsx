@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { ZoomIn } from "lucide-react";
+import { TILE_IMAGE_CROP, tileImageCropStyle } from "@/lib/utils";
 
 interface TileLensProps {
   src: string;
@@ -17,8 +18,13 @@ interface TileLensProps {
 /**
  * Circle loupe that follows the cursor over a tile image. The lens shows
  * a zoomed-in slice of the image at `zoom`× the rendered source size.
+ *
+ * The visible image is cropped via `tileImageCropStyle` to hide manufacturer
+ * watermarks/banners. The loupe applies the same crop math so the magnified
+ * view stays in the cropped pattern area and never reveals the banner.
+ *
  * Touch devices receive no mouse events, so the lens stays hidden — the
- * underlying image still renders normally.
+ * underlying image still renders normally (cropped).
  */
 export default function TileLens({
   src,
@@ -41,12 +47,25 @@ export default function TileLens({
     }
   }, [size.w, size.h]);
 
+  // Cursor coords as fractions of the visible (cropped) area
   const xPct = size.w > 0 ? pos.x / size.w : 0;
   const yPct = size.h > 0 ? pos.y / size.h : 0;
-  const zoomedW = size.w * zoom;
-  const zoomedH = size.h * zoom;
-  const bgX = lensSize / 2 - xPct * zoomedW;
-  const bgY = lensSize / 2 - yPct * zoomedH;
+
+  // Visible window covers (1 - left - right) horizontally and similar vertically
+  // of the source image. Map cursor coords back into source-image coords.
+  const visW = 1 - TILE_IMAGE_CROP.left - TILE_IMAGE_CROP.right;
+  const visH = 1 - TILE_IMAGE_CROP.top - TILE_IMAGE_CROP.bottom;
+  const sourceXPct = TILE_IMAGE_CROP.left + xPct * visW;
+  const sourceYPct = TILE_IMAGE_CROP.top + yPct * visH;
+
+  // The full source image, if rendered at the same scale as the cropped view,
+  // would occupy size.w / visW × size.h / visH px.
+  const sourceFullW = size.w / visW;
+  const sourceFullH = size.h / visH;
+  const zoomedW = sourceFullW * zoom;
+  const zoomedH = sourceFullH * zoom;
+  const bgX = lensSize / 2 - sourceXPct * zoomedW;
+  const bgY = lensSize / 2 - sourceYPct * zoomedH;
 
   return (
     <div
@@ -62,8 +81,8 @@ export default function TileLens({
         alt={alt}
         loading="eager"
         decoding="async"
-        className="w-full h-full object-cover block"
-        style={{ pointerEvents: "none" }}
+        className="block"
+        style={{ ...tileImageCropStyle, pointerEvents: "none" }}
       />
 
       {showHint && (
@@ -80,6 +99,7 @@ export default function TileLens({
             boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
             opacity: active ? 0 : 1,
             transition: "opacity 0.3s linear",
+            zIndex: 2,
           }}
         >
           <ZoomIn size={14} className="text-accent" />
@@ -103,6 +123,7 @@ export default function TileLens({
           backgroundRepeat: "no-repeat",
           opacity: active && size.w > 0 ? 1 : 0,
           transition: "opacity 0.3s linear",
+          zIndex: 3,
         }}
       />
     </div>

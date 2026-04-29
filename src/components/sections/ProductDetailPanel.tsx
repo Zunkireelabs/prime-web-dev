@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import { X, ArrowRight, Calculator } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
-import { tileVisualRatio, tileImageFrameStyle, tileShowcaseFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
+import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tileShowcaseFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
 import TileLens from "@/components/ui/TileLens";
 import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
@@ -255,11 +255,11 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             }}
           >
             {hasImage ? (
-              <div style={{ ...tileShowcaseFrameStyle(product.size, 85, 40), borderRadius: "4px" }}>
+              <div style={{ ...tileShowcaseFrameStyle(product.size, 85, 40), borderRadius: "4px", overflow: "hidden" }}>
                 <img
                   src={product.image}
                   alt={product.name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  style={tileImageCropStyle}
                 />
               </div>
             ) : (
@@ -459,8 +459,8 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                           src={tile.image}
                           alt={tile.name}
                           loading="lazy"
-                          className="absolute inset-0 w-full h-full object-cover group-hover/sim:scale-[1.03]"
-                          style={{ transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
+                          className="block group-hover/sim:scale-[1.03]"
+                          style={{ ...tileImageCropStyle, transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
                         />
                       ) : (
                         <div className="absolute inset-0" style={{ background: "hsl(35,10%,85%)" }} />

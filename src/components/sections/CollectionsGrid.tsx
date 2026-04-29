@@ -7,7 +7,7 @@ import FadeIn from "@/components/animations/FadeIn";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import TiltCard from "@/components/ui/TiltCard";
 import { ArrowUpRight, ArrowRight, ArrowLeft } from "lucide-react";
-import { tileCardCSSVars, tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
+import { tileCardCSSVars, tileCardHeight, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
 import { collections } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -193,13 +193,14 @@ export default function CollectionsGrid() {
                             src={imgSrc}
                             alt={c.name}
                             loading="lazy"
-                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            className={`block transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                               hoveredIdx === i
                                 ? "scale-[1.06]"
                                 : hoveredIdx !== null
                                   ? "scale-[0.98] brightness-[0.85]"
                                   : ""
                             }`}
+                            style={tileImageCropStyle}
                           />
                         </div>
 

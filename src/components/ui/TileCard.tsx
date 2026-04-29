@@ -1,7 +1,7 @@
 "use client";
 
 import type { CatalogProduct } from "@/data/catalog";
-import { tileCardCSSVars, tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
+import { tileCardCSSVars, tileCardHeight, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
 
 interface TileCardProps {
   product: CatalogProduct;
@@ -50,8 +50,9 @@ export default function TileCard({ product, onClick }: TileCardProps) {
               alt={product.name}
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03]"
+              className="block group-hover:scale-[1.03]"
               style={{
+                ...tileImageCropStyle,
                 transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
               }}
             />

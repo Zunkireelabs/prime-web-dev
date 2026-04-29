@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { ArrowRight } from "lucide-react";
-import { tileCardCSSVars, tileCardHeight, tileImageFrameStyle } from "@/lib/utils";
+import { tileCardCSSVars, tileCardHeight, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
 import { browseData as data } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -94,7 +94,8 @@ export default function BrowseBy() {
                       src={item.image}
                       alt={item.name}
                       loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                      className="block transition-transform duration-700 group-hover:scale-[1.05]"
+                      style={tileImageCropStyle}
                     />
                   </div>
                   {/* Bottom gradient */}

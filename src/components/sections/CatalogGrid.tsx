@@ -6,7 +6,7 @@ import CatalogFilter from "./CatalogFilter";
 import ProductDetailPanel from "./ProductDetailPanel";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
-import { tileCardCSSVars, tileCardHeight, tileGridColSpan, tileImageFrameStyle } from "@/lib/utils";
+import { tileCardCSSVars, tileCardHeight, tileGridColSpan, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
 
 const BATCH = 24;
 
@@ -41,7 +41,8 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
               src={product.image}
               alt={product.name}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="block transition-transform duration-500 group-hover:scale-105"
+              style={tileImageCropStyle}
             />
           ) : (
             <>

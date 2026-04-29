@@ -177,6 +177,34 @@ export function tilePickerSize(size: string, basePx = 48): { w: number; h: numbe
   };
 }
 
+/**
+ * Catalog tile photos often have manufacturer artifacts baked in: a black
+ * brand banner / product label at the bottom (~10% of image height) and
+ * thin frame edges. `tileImageCropStyle` overscales the inner <img> and
+ * offsets it upward so those artifacts fall outside the parent's
+ * `overflow: hidden` area.
+ *
+ * Apply to a positioned `<img>` inside a `position: relative; overflow: hidden`
+ * parent. Pair with `TILE_IMAGE_CROP` when you also need to drive zoom-lens
+ * background math (see TileLens).
+ */
+export const TILE_IMAGE_CROP = {
+  top: 0.03,
+  bottom: 0.10,
+  left: 0.04,
+  right: 0.04,
+} as const;
+
+export const tileImageCropStyle: CSSProperties = {
+  position: "absolute",
+  // Overscale = 100% + (cropOpposite + cropThis), offset = -cropThis
+  width: `${(1 + TILE_IMAGE_CROP.left + TILE_IMAGE_CROP.right) * 100}%`,
+  height: `${(1 + TILE_IMAGE_CROP.top + TILE_IMAGE_CROP.bottom) * 100}%`,
+  left: `${-TILE_IMAGE_CROP.left * 100}%`,
+  top: `${-TILE_IMAGE_CROP.top * 100}%`,
+  objectFit: "cover",
+};
+
 /** All standard tile sizes in order */
 export const ALL_TILE_SIZES = [
   "300×300 mm",
