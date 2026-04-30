@@ -2,14 +2,14 @@
 
 import FadeIn from "@/components/animations/FadeIn";
 import { footerColumns as cols } from "@/data/navigation";
-import { Mail, Phone, Factory, Building2, ArrowUpRight } from "lucide-react";
+import { Mail, Phone, Factory, Building2, ArrowUpRight, Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
 import Image from "next/image";
 
 const socials = [
-  { name: "Facebook", href: "https://www.facebook.com/PrimeTiles.Official/" },
-  { name: "Instagram", href: "https://www.instagram.com/primetiles.official/" },
-  { name: "YouTube", href: "https://www.youtube.com/@primetiles.Official" },
-  { name: "LinkedIn", href: "https://www.linkedin.com/company/primetilesofficial/" },
+  { name: "Facebook", href: "https://www.facebook.com/PrimeTiles.Official/", Icon: Facebook },
+  { name: "Instagram", href: "https://www.instagram.com/primetiles.official/", Icon: Instagram },
+  { name: "YouTube", href: "https://www.youtube.com/@primetiles.Official", Icon: Youtube },
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/primetilesofficial/", Icon: Linkedin },
 ];
 
 const contactItems = [
@@ -74,7 +74,7 @@ export default function Footer() {
                     <li key={l.label}>
                       <a
                         href={l.href}
-                        className="text-white/35 hover:text-white/70 transition-colors duration-300"
+                        className="text-white/70 hover:text-white transition-colors duration-300"
                         style={{ fontSize: "0.85rem", lineHeight: "1.6" }}
                       >
                         {l.label}
@@ -106,14 +106,14 @@ export default function Footer() {
                   const inner = (
                     <>
                       <span
-                        className="text-accent/30 group-hover:text-accent transition-colors duration-300"
+                        className="text-accent/60 group-hover:text-accent transition-colors duration-300"
                         style={{ marginTop: "2px", flexShrink: 0 }}
                       >
                         {iconMap[item.icon]}
                       </span>
                       <span>
                         <span
-                          className="text-white/18 block"
+                          className="text-white/55 block"
                           style={{
                             fontSize: "0.62rem",
                             letterSpacing: "0.14em",
@@ -124,7 +124,7 @@ export default function Footer() {
                           {item.label}
                         </span>
                         <span
-                          className="text-white/35 group-hover:text-white/70 transition-colors duration-300"
+                          className="text-white/85 group-hover:text-white transition-colors duration-300"
                           style={{ fontSize: "0.82rem", lineHeight: "1.5" }}
                         >
                           {item.value}
@@ -169,29 +169,29 @@ export default function Footer() {
       <div className="container relative z-10">
         <div
           style={{
-            padding: "24px 0",
+            padding: "28px 0",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            gap: "clamp(20px, 4vw, 40px)",
+            gap: "clamp(28px, 5vw, 44px)",
             flexWrap: "wrap",
           }}
         >
-          {socials.map((s) => (
+          {socials.map(({ name, href, Icon }) => (
             <a
-              key={s.name}
-              href={s.href}
+              key={name}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/20 hover:text-accent transition-colors duration-300"
+              aria-label={name}
+              className="text-white/55 hover:text-accent transition-colors duration-300 inline-flex items-center justify-center"
               style={{
-                fontSize: "0.72rem",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                fontWeight: 500,
+                width: "44px",
+                height: "44px",
+                borderRadius: "50%",
               }}
             >
-              {s.name}
+              <Icon size={22} strokeWidth={1.6} aria-hidden="true" />
             </a>
           ))}
         </div>
@@ -216,7 +216,7 @@ export default function Footer() {
         >
           {/* Copyright */}
           <p
-            className="text-white/20"
+            className="text-white/50"
             style={{ fontSize: "0.72rem", letterSpacing: "0.03em" }}
           >
             &copy; {new Date().getFullYear()} Prime Ceramics Pvt. Ltd. All
@@ -234,7 +234,7 @@ export default function Footer() {
           >
             <a
               href="/privacy"
-              className="text-white/20 hover:text-white/45 transition-colors duration-300"
+              className="text-white/50 hover:text-white/80 transition-colors duration-300"
               style={{ fontSize: "0.72rem" }}
             >
               Privacy Policy
@@ -248,7 +248,7 @@ export default function Footer() {
             />
             <a
               href="/terms"
-              className="text-white/20 hover:text-white/45 transition-colors duration-300"
+              className="text-white/50 hover:text-white/80 transition-colors duration-300"
               style={{ fontSize: "0.72rem" }}
             >
               Terms
@@ -294,7 +294,7 @@ export default function Footer() {
                 }}
               >
                 <span
-                  className="text-white/25 group-hover:text-white/45 transition-colors duration-300"
+                  className="text-white/50 group-hover:text-white/70 transition-colors duration-300"
                   style={{
                     fontSize: "0.55rem",
                     letterSpacing: "0.08em",
@@ -304,7 +304,7 @@ export default function Footer() {
                   Designed &amp; built by
                 </span>
                 <span
-                  className="text-white/45 group-hover:text-white/70 transition-colors duration-300"
+                  className="text-white/70 group-hover:text-white transition-colors duration-300"
                   style={{
                     fontSize: "0.78rem",
                     fontWeight: 600,
@@ -321,7 +321,7 @@ export default function Footer() {
               <ArrowUpRight
                 size={11}
                 strokeWidth={1.8}
-                className="text-white/25 group-hover:text-white/50 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all duration-300"
+                className="text-white/50 group-hover:text-white/80 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all duration-300"
               />
 
               {/* Underline on hover */}
