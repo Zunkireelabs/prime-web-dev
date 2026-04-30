@@ -65,7 +65,7 @@ export default function Header() {
             : "shadow-[0_1px_0_rgba(0,0,0,0.06)]")
         )}
       >
-        <div className="container flex items-center justify-between" style={{ height: "clamp(72px, 9vw, 96px)" }}>
+        <div className="container flex items-center justify-between" style={{ height: "clamp(72px, 8vw, 88px)" }}>
           {/* Logo */}
           <a href="/" className="relative z-50">
             <img
