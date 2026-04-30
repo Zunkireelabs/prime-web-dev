@@ -93,8 +93,13 @@ export const browseData: BrowseData = {
     { name: "Ceramic", image: "/images/browse/type-ceramic.webp", slug: "classy-beige-hl" },
     { name: "Vitrified", image: "/images/browse/type-vitrified.webp", slug: "earthen-light-grey" },
     { name: "Glazed Vitrified", image: "/images/browse/type-glazed.webp", slug: "helix-marble-brown" },
+    { name: "Marble Look", image: "/images/browse/type-glazed.webp", slug: "godawari-marble-beige" },
     { name: "Wood Look", image: "/images/browse/type-wood.webp", slug: "woody-teak" },
     { name: "Stone Look", image: "/images/browse/type-stone.webp", slug: "stonelo-brown" },
+    { name: "Monochrome", image: "/images/browse/color-white.webp", slug: "pleasant-white" },
+    { name: "Cultural Heritage", image: "/images/browse/type-art.webp", slug: "sunaulo-dhaka" },
+    { name: "Patio", image: "/images/browse/type-stone.webp", slug: "citrine-slate" },
+    { name: "Driveway", image: "/images/browse/type-stone.webp", slug: "intex-grey" },
     { name: "Art", image: "/images/browse/type-art.webp", slug: "mithila-art-buddha" },
   ],
 };

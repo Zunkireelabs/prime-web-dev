@@ -20,7 +20,6 @@ const finishOptions = [
   { label: "Matt", value: "Matt" },
   { label: "High Gloss", value: "High Gloss" },
   { label: "Carving", value: "Carving" },
-  { label: "Satin", value: "Satin" },
 ];
 
 interface Props {
