@@ -295,14 +295,6 @@ export const dealers: Dealer[] = [
     contactPerson: "SANJAY AGRAWAL",
   },
   {
-    name: "KANTIPUR PUBLICATIONS LTD",
-    city: "Radhe Radhe Bhaktapur",
-    province: "Bagmati",
-    address: "RADHE RADHE BHAKTAPUR, KATHMANDU, BAGMATI",
-    phone: "9818339337",
-    contactPerson: "RAKESH THAKUR",
-  },
-  {
     name: "KARKI MULTI TRADERS AND SUPPLIERS",
     city: "Shantinagar",
     province: "Bagmati",
