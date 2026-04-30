@@ -33,14 +33,14 @@ export default function ClientsSection() {
         <div className="grid grid-cols-3 md:grid-cols-6 items-center justify-items-center" style={{ gap: "clamp(24px, 4vw, 32px)" }}>
           {clients.map((c, i) => (
             <FadeIn key={c.name} delay={Math.min(i * 0.08, 0.4)} direction="up" distance={16}>
-              <div className="flex items-center justify-center w-full group" style={{ height: "clamp(64px, 8vw, 72px)", padding: "0 16px" }}>
-                <div className="relative grayscale opacity-35 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
+              <div className="flex items-center justify-center w-full group" style={{ height: "clamp(72px, 9vw, 80px)", padding: "0 16px" }}>
+                <div className="relative opacity-80 md:grayscale md:opacity-65 md:group-hover:grayscale-0 md:group-hover:opacity-100 transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
                   <Image
                     src={c.logo}
                     alt={c.name}
                     width={c.width}
                     height={c.height}
-                    className="object-contain max-h-[36px] md:max-h-[44px] w-auto"
+                    className="object-contain max-h-[52px] md:max-h-[56px] w-auto"
                     unoptimized
                   />
                 </div>
