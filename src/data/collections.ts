@@ -75,6 +75,7 @@ export const browseData: BrowseData = {
   ],
   Sizes: [
     { name: "300×300 mm", image: "/images/browse/size-300x600.webp", slug: "alcazar-300x300" },
+    { name: "300×450 mm", image: "/images/browse/size-300x600.webp", slug: "atlantica-light" },
     { name: "300×600 mm", image: "/images/browse/size-300x600.webp", slug: "desert-marble-hl" },
     { name: "400×400 mm", image: "/images/browse/size-400x400.webp", slug: "cassion-velvet" },
     { name: "600×600 mm", image: "/images/browse/size-600x600.webp", slug: "driftwood-ash" },
