@@ -5,7 +5,7 @@ import type { NavItem, FooterColumn, FooterLink } from "./types";
 export const navItems: NavItem[] = [
   { label: "Home", href: "/", hasMega: false },
   { label: "Tiles", href: "/products", hasMega: true },
-  { label: "Catalog", href: "/catalog", hasMega: false },
+  { label: "Catalogue", href: "/catalog", hasMega: false },
   // { label: "Projects", href: "#projects", hasMega: false },
   { label: "Find a Dealer", href: "/dealers", hasMega: false },
   {

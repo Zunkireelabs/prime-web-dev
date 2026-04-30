@@ -326,7 +326,7 @@ export default function Header() {
       {/* ─── Mobile Menu ─── */}
       <div
         className={cn(
-          "lg:hidden fixed inset-0 z-40 bg-surface-dark transition-opacity duration-500",
+          "lg:hidden fixed inset-0 z-40 bg-surface-card transition-opacity duration-500",
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
@@ -334,9 +334,9 @@ export default function Header() {
         <button
           onClick={() => setMobileOpen(false)}
           aria-label="Close menu"
-          className="absolute top-6 left-6 z-50 w-12 h-12 rounded-full border border-ink-on-dark/15 flex items-center justify-center text-ink-on-dark hover:text-white hover:border-ink-on-dark/40 transition-all duration-300"
+          className="absolute top-6 left-6 z-50 w-11 h-11 rounded-full border border-ink/15 flex items-center justify-center text-ink hover:text-accent hover:border-accent/40 transition-all duration-300"
         >
-          <X size={22} />
+          <X size={20} />
         </button>
 
         <div className="h-full overflow-y-auto" style={{ padding: "clamp(80px, 12vw, 96px) clamp(20px, 5vw, 32px) clamp(40px, 6vw, 64px)" }}>
@@ -353,26 +353,31 @@ export default function Header() {
                     setMobileOpen(false);
                   }}
                   className={cn(
-                    "flex items-center justify-between py-5 border-b border-ink-on-dark/6 h2 text-ink-on-dark transition-all duration-500",
+                    "flex items-center justify-between py-4 border-b border-ink/8 font-serif font-light text-ink hover:text-accent transition-all duration-500",
                     mobileOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   )}
-                  style={{ transitionDelay: mobileOpen ? `${120 + i * 50}ms` : "0ms" }}
+                  style={{
+                    fontSize: "clamp(1.4rem, 5vw, 1.75rem)",
+                    lineHeight: 1.25,
+                    letterSpacing: "-0.005em",
+                    transitionDelay: mobileOpen ? `${120 + i * 50}ms` : "0ms",
+                  }}
                 >
                   {item.label}
-                  <ChevronRight size={18} className={cn("text-ink-on-dark-muted transition-transform duration-200", item.dropdown?.length && activeDropdown === item.label ? "rotate-90" : "")} />
+                  <ChevronRight size={18} className={cn("text-ink-muted transition-transform duration-200", item.dropdown?.length && activeDropdown === item.label ? "rotate-90" : "")} />
                 </a>
                 {/* Mobile sub-links */}
                 {item.dropdown?.length && activeDropdown === item.label && (
-                  <div className="pl-6 border-b border-ink-on-dark/6">
+                  <div className="pl-6 border-b border-ink/8">
                     {item.dropdown.map((link) => (
                       <a
                         key={link.href}
                         href={link.href}
                         onClick={() => setMobileOpen(false)}
-                        className="flex items-center justify-between py-4 text-[1rem] font-serif text-ink-on-dark-light hover:text-white transition-colors duration-200"
+                        className="flex items-center justify-between py-3 text-[0.95rem] font-serif text-ink-light hover:text-accent transition-colors duration-200"
                       >
                         {link.label}
-                        <ArrowRight size={14} className="text-ink-on-dark-muted" />
+                        <ArrowRight size={14} className="text-ink-muted" />
                       </a>
                     ))}
                   </div>
@@ -389,7 +394,7 @@ export default function Header() {
             <a
               href="/dealers"
               onClick={() => setMobileOpen(false)}
-              className="inline-block text-[0.65rem] font-medium tracking-[0.15em] uppercase px-6 py-3 border border-accent-light/30 text-accent-light hover:border-accent-light transition-all duration-300"
+              className="inline-block text-[0.65rem] font-medium tracking-[0.15em] uppercase px-6 py-3 border border-accent/40 text-accent hover:bg-accent hover:text-white transition-all duration-300"
             >
               Find a Dealer
             </a>
@@ -400,7 +405,7 @@ export default function Header() {
             className={cn("transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
             style={{ transitionDelay: mobileOpen ? "450ms" : "0ms" }}
           >
-            <div className="space-y-2 body-sm text-ink-on-dark-muted">
+            <div className="space-y-2 body-sm text-ink-light">
               <p>info@primeceramics.com.np</p>
               <p>+977-1-5978860/61/62</p>
               <p>Tripureshwor, Kathmandu</p>
