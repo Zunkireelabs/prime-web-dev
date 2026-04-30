@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { Search, X, Menu, ChevronRight, ArrowRight } from "lucide-react";
+import { Search, X, Menu, ChevronRight, ArrowRight, Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
 import {
   navItems,
   megaSpaces as spaces,
@@ -339,8 +339,12 @@ export default function Header() {
           <X size={20} />
         </button>
 
-        <div className="h-full overflow-y-auto" style={{ padding: "clamp(80px, 12vw, 96px) clamp(20px, 5vw, 32px) clamp(40px, 6vw, 64px)" }}>
-          <nav className="space-y-0" style={{ marginBottom: "40px" }}>
+        <div
+          className="h-full overflow-y-auto flex flex-col"
+          style={{ padding: "clamp(80px, 12vw, 96px) clamp(20px, 5vw, 32px) clamp(28px, 5vw, 40px)" }}
+        >
+          {/* ─── Nav (top) ─── */}
+          <nav className="space-y-0">
             {navItems.map((item, i) => (
               <div key={item.label}>
                 <a
@@ -353,22 +357,24 @@ export default function Header() {
                     setMobileOpen(false);
                   }}
                   className={cn(
-                    "flex items-center justify-between py-4 border-b border-ink/8 font-serif font-light text-ink hover:text-accent transition-all duration-500",
+                    "flex items-center justify-between border-b border-ink/12 font-serif font-light text-ink hover:text-accent transition-all duration-500",
                     mobileOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   )}
                   style={{
-                    fontSize: "clamp(1.4rem, 5vw, 1.75rem)",
-                    lineHeight: 1.25,
+                    paddingTop: "clamp(14px, 2.5vw, 20px)",
+                    paddingBottom: "clamp(14px, 2.5vw, 20px)",
+                    fontSize: "clamp(1.55rem, 5.5vw, 1.95rem)",
+                    lineHeight: 1.2,
                     letterSpacing: "-0.005em",
                     transitionDelay: mobileOpen ? `${120 + i * 50}ms` : "0ms",
                   }}
                 >
                   {item.label}
-                  <ChevronRight size={18} className={cn("text-ink-muted transition-transform duration-200", item.dropdown?.length && activeDropdown === item.label ? "rotate-90" : "")} />
+                  <ChevronRight size={20} className={cn("text-ink-muted transition-transform duration-200", item.dropdown?.length && activeDropdown === item.label ? "rotate-90" : "")} />
                 </a>
-                {/* Mobile sub-links */}
+                {/* Sub-links */}
                 {item.dropdown?.length && activeDropdown === item.label && (
-                  <div className="pl-6 border-b border-ink/8">
+                  <div className="pl-6 border-b border-ink/12">
                     {item.dropdown.map((link) => (
                       <a
                         key={link.href}
@@ -386,29 +392,53 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Mobile CTA */}
+          {/* ─── Bottom block (pinned) ─── */}
           <div
-            className={cn("transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
-            style={{ marginBottom: "40px", transitionDelay: mobileOpen ? "380ms" : "0ms" }}
+            className={cn("mt-auto transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
+            style={{ paddingTop: "clamp(32px, 6vw, 56px)", transitionDelay: mobileOpen ? "380ms" : "0ms" }}
           >
+            {/* Gold accent line */}
+            <div className="gold-divider-full" style={{ marginBottom: "clamp(20px, 4vw, 32px)" }} />
+
+            {/* CTA — full width pill */}
             <a
               href="/dealers"
               onClick={() => setMobileOpen(false)}
-              className="inline-block text-[0.65rem] font-medium tracking-[0.15em] uppercase px-6 py-3 border border-accent/40 text-accent hover:bg-accent hover:text-white transition-all duration-300"
+              className="flex items-center justify-between text-[0.7rem] font-semibold tracking-[0.18em] uppercase border border-accent/50 text-accent hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+              style={{ padding: "14px 22px", marginBottom: "clamp(20px, 4vw, 28px)" }}
             >
               Find a Dealer
+              <ArrowRight size={14} />
             </a>
-          </div>
 
-          {/* Mobile contact info */}
-          <div
-            className={cn("transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
-            style={{ transitionDelay: mobileOpen ? "450ms" : "0ms" }}
-          >
-            <div className="space-y-2 body-sm text-ink-light">
-              <p>info@primeceramics.com.np</p>
-              <p>+977-1-5978860/61/62</p>
-              <p>Tripureshwor, Kathmandu</p>
+            {/* Contact info */}
+            <div className="space-y-1.5" style={{ marginBottom: "clamp(20px, 4vw, 28px)" }}>
+              <p className="eyebrow text-accent" style={{ marginBottom: "8px" }}>Get in Touch</p>
+              <a href="mailto:info@primeceramics.com.np" className="block text-[0.85rem] text-ink hover:text-accent transition-colors">info@primeceramics.com.np</a>
+              <a href="tel:+97715978860" className="block text-[0.85rem] text-ink hover:text-accent transition-colors">+977-1-5978860/61/62</a>
+              <p className="text-[0.78rem] text-ink-light" style={{ marginTop: "4px" }}>Tripureshwor, Kathmandu</p>
+            </div>
+
+            {/* Social row */}
+            <div className="flex items-center" style={{ gap: "20px", paddingTop: "clamp(12px, 3vw, 20px)", borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+              {[
+                { name: "Facebook", href: "https://www.facebook.com/PrimeTiles.Official/", Icon: Facebook },
+                { name: "Instagram", href: "https://www.instagram.com/primetiles.official/", Icon: Instagram },
+                { name: "YouTube", href: "https://www.youtube.com/@primetiles.Official", Icon: Youtube },
+                { name: "LinkedIn", href: "https://www.linkedin.com/company/primetilesofficial/", Icon: Linkedin },
+              ].map(({ name, href, Icon }) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={name}
+                  className="text-ink-light hover:text-accent transition-colors duration-300 inline-flex items-center justify-center"
+                  style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+                >
+                  <Icon size={20} strokeWidth={1.6} aria-hidden="true" />
+                </a>
+              ))}
             </div>
           </div>
         </div>
