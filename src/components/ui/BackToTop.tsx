@@ -3,25 +3,55 @@
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
 
+/**
+ * Bottom-right back-to-top button. Sits above the FloatingContact
+ * trigger so users can reach both. Auto-hides when the contact menu
+ * is open so the fanned-out actions aren't fighting for the same
+ * visual real estate.
+ *
+ * Coordinated via the `primecontact:toggle` window event dispatched
+ * by FloatingContact — no shared provider required.
+ */
 export default function BackToTop() {
   const [show, setShow] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
-    const fn = () => setShow(window.scrollY > 600);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
+    const onScroll = () => setShow(window.scrollY > 600);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const onToggle = (e: Event) => {
+      const detail = (e as CustomEvent<{ open: boolean }>).detail;
+      setChatOpen(!!detail?.open);
+    };
+    window.addEventListener("primecontact:toggle", onToggle);
+    return () => window.removeEventListener("primecontact:toggle", onToggle);
+  }, []);
+
+  const visible = show && !chatOpen;
 
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className={`fixed z-40 w-10 h-10 md:w-11 md:h-11 flex items-center justify-center border border-ink-faint text-ink-light hover:border-ink hover:text-ink transition-all duration-300 ${
-        show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
-      }`}
-      style={{ bottom: "clamp(16px, 3vw, 24px)", left: "clamp(16px, 3vw, 24px)" }}
       aria-label="Back to top"
+      className="fixed z-40 flex items-center justify-center rounded-full bg-surface-card border border-ink-faint text-ink-light hover:border-accent hover:text-accent"
+      style={{
+        right: "clamp(16px, 3vw, 24px)",
+        bottom: "clamp(84px, 16vw, 96px)",
+        width: "44px",
+        height: "44px",
+        boxShadow: "0 4px 14px rgba(0,0,0,0.10)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(8px)",
+        pointerEvents: visible ? "auto" : "none",
+        transition: "opacity 0.3s linear, transform 0.3s linear, color 0.3s linear, border-color 0.3s linear",
+      }}
     >
-      <ArrowUp size={14} />
+      <ArrowUp size={16} strokeWidth={1.8} />
     </button>
   );
 }

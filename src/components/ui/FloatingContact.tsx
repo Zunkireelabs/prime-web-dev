@@ -71,6 +71,11 @@ export default function FloatingContact() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Broadcast toggle so other floating UI (BackToTop) can react.
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("primecontact:toggle", { detail: { open } }));
+  }, [open]);
+
   // Close on Escape
   useEffect(() => {
     if (!open) return;
