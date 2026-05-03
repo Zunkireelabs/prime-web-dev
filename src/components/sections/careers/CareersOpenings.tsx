@@ -1,11 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowUpRight, MapPin, Briefcase } from "lucide-react";
 import FadeIn from "@/components/animations/FadeIn";
-import { careerOpenings, applyMailto, applyEmail } from "@/data/careers";
+import ApplyModal from "@/components/ui/ApplyModal";
+import { careerOpenings, applyEmail, type CareerOpening } from "@/data/careers";
 
 export default function CareersOpenings() {
   const hasOpenings = careerOpenings.length > 0;
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [activeOpening, setActiveOpening] = useState<CareerOpening | null>(null);
+
+  const openApply = (opening: CareerOpening | null) => {
+    setActiveOpening(opening);
+    setModalOpen(true);
+  };
 
   return (
     <section
@@ -47,16 +57,17 @@ export default function CareersOpenings() {
           <div style={{ display: "flex", flexDirection: "column" }}>
             {careerOpenings.map((opening, idx) => (
               <FadeIn key={opening.id} delay={idx * 0.04}>
-                <a
-                  href={opening.applyUrl ?? applyMailto(opening.title)}
-                  target={opening.applyUrl ? "_blank" : undefined}
-                  rel={opening.applyUrl ? "noopener noreferrer" : undefined}
-                  className="group block"
+                <button
+                  type="button"
+                  onClick={() => openApply(opening)}
+                  className="group block w-full text-left"
                   style={{
                     padding: "clamp(28px, 3.5vw, 40px) 0",
                     borderTop:
                       idx === 0 ? "1px solid rgba(43,36,28,0.10)" : undefined,
                     borderBottom: "1px solid rgba(43,36,28,0.10)",
+                    background: "transparent",
+                    cursor: "pointer",
                     transition: "background 0.3s linear",
                   }}
                   onMouseEnter={(e) => {
@@ -131,7 +142,7 @@ export default function CareersOpenings() {
                       />
                     </div>
                   </div>
-                </a>
+                </button>
               </FadeIn>
             ))}
           </div>
@@ -158,9 +169,17 @@ export default function CareersOpenings() {
                 short note about you. We read everything that lands in our
                 inbox.
               </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginTop: "8px" }}>
-                <a
-                  href={applyMailto()}
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "12px",
+                  marginTop: "8px",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => openApply(null)}
                   className="inline-flex items-center text-ink hover:text-accent"
                   style={{
                     gap: "10px",
@@ -170,6 +189,8 @@ export default function CareersOpenings() {
                     fontWeight: 500,
                     letterSpacing: "0.22em",
                     textTransform: "uppercase",
+                    background: "transparent",
+                    cursor: "pointer",
                     transition:
                       "color 0.3s linear, border-color 0.3s linear, background 0.3s linear",
                   }}
@@ -184,7 +205,7 @@ export default function CareersOpenings() {
                 >
                   Send an open application
                   <ArrowUpRight size={14} strokeWidth={1.8} />
-                </a>
+                </button>
                 <a
                   href={`mailto:${applyEmail}`}
                   className="inline-flex items-center text-ink-light hover:text-accent"
@@ -202,6 +223,12 @@ export default function CareersOpenings() {
           </FadeIn>
         )}
       </div>
+
+      <ApplyModal
+        open={modalOpen}
+        opening={activeOpening}
+        onClose={() => setModalOpen(false)}
+      />
     </section>
   );
 }
