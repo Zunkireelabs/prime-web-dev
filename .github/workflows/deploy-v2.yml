@@ -1,12 +1,12 @@
-name: Deploy V2
+name: Deploy Staging
 
 on:
   push:
-    branches: [v2]
+    branches: [staging]
   workflow_dispatch:
 
 concurrency:
-  group: deploy-v2
+  group: deploy-staging
   cancel-in-progress: false
 
 jobs:
@@ -27,33 +27,16 @@ jobs:
               -o StrictHostKeyChecking=yes \
               "${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_HOST }}" \
               'set -e
-               MAIN_DIR="/home/zunkireelabs/devprojects/websiteprojects/Prime-web-dev"
-               V2_DIR="/home/zunkireelabs/devprojects/websiteprojects/Prime-web-v2"
-
-               # Clone if first time, otherwise just fetch
-               if [ ! -d "$V2_DIR" ]; then
-                 git clone -b v2 git@github.com:Zunkireelabs/prime-web-dev.git "$V2_DIR"
-               fi
-
-               # Copy env and sanity data from main project
-               cp "$MAIN_DIR/.env.local" "$V2_DIR/.env.local" 2>/dev/null || true
-               cp "$MAIN_DIR/src/data/catalog/sanity-products.json" "$V2_DIR/src/data/catalog/sanity-products.json" 2>/dev/null || true
-
-               cd "$V2_DIR"
-               git fetch --prune origin v2
-               git checkout v2
-               git reset --hard origin/v2
-
-               # Restore env and sanity data (git reset removes them)
-               cp "$MAIN_DIR/.env.local" "$V2_DIR/.env.local" 2>/dev/null || true
-               cp "$MAIN_DIR/src/data/catalog/sanity-products.json" "$V2_DIR/src/data/catalog/sanity-products.json" 2>/dev/null || true
-
+               cd /home/zunkireelabs/devprojects/websiteprojects/Prime-web-v2
+               git fetch --prune origin staging
+               git checkout staging
+               git reset --hard origin/staging
                ./deploy-v2.sh'
 
       - name: Health check
         run: |
           for i in 1 2 3 4 5; do
-            code=$(curl -sk -o /dev/null -w "%{http_code}" https://v2-primetiles.zunkireelabs.com/)
+            code=$(curl -sk -o /dev/null -w "%{http_code}" https://dev-primetiles.zunkireelabs.com/)
             echo "Attempt $i -> HTTP $code"
             [ "$code" = "200" ] && exit 0
             sleep 6

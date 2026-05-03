@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import { X, ArrowRight, Calculator } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
-import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tileShowcaseFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
+import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
 import TileLens from "@/components/ui/TileLens";
 import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
@@ -185,7 +185,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           {hasImage && product.image ? (
             <div
               style={{
-                ...tileShowcaseFrameStyle(product.size, 85, 40),
+                ...tileImageFrameStyle(product.size),
                 boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
               }}
             >
@@ -195,7 +195,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             <div
               className="flex items-center justify-center"
               style={{
-                ...tileShowcaseFrameStyle(product.size, 85, 40),
+                ...tileImageFrameStyle(product.size),
                 background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
               }}
             >
@@ -255,7 +255,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             }}
           >
             {hasImage ? (
-              <div style={{ ...tileShowcaseFrameStyle(product.size, 85, 40), borderRadius: "4px", overflow: "hidden" }}>
+              <div style={{ ...tileImageFrameStyle(product.size), borderRadius: "4px", overflow: "hidden" }}>
                 <img
                   src={product.image}
                   alt={product.name}
@@ -266,7 +266,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               <div
                 className="flex items-center justify-center"
                 style={{
-                  ...tileShowcaseFrameStyle(product.size, 85, 40),
+                  ...tileImageFrameStyle(product.size),
                   borderRadius: "4px",
                   background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
                 }}

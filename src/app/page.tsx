@@ -14,6 +14,7 @@ const BrowseBy = dynamic(() => import("@/components/sections/BrowseBy"), { ssr: 
 const StatsBar = dynamic(() => import("@/components/sections/StatsBar"), { ssr: false });
 const SpiritSection = dynamic(() => import("@/components/sections/SpiritSection"), { ssr: false });
 const CollectionsGrid = dynamic(() => import("@/components/sections/CollectionsGrid"), { ssr: false });
+const NewsHighlight = dynamic(() => import("@/components/sections/NewsHighlight"), { ssr: false });
 const CTASection = dynamic(() => import("@/components/sections/CTASection"), { ssr: false });
 const ProductShowcase = dynamic(() => import("@/components/sections/ProductShowcase"), { ssr: false });
 const FactoryBanner = dynamic(() => import("@/components/sections/FactoryBanner"), { ssr: false });
@@ -47,6 +48,7 @@ export default function Home() {
 
         <BrowseBy />
         <CollectionsGrid />
+        <NewsHighlight />
 
         {/* ═══ Spirit of Nepal (red) ═══ */}
         <SectionTransition from="light-alt" to="red" variant="diagonal" />

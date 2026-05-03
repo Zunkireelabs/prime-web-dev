@@ -3,7 +3,7 @@ set -e
 
 COMPOSE_FILE="docker-compose.v2.yml"
 CONTAINER_NAME="prime-web-v2"
-URL="v2-primetiles.zunkireelabs.com"
+URL="dev-primetiles.zunkireelabs.com"
 echo "🚧 V2 DEPLOYMENT to $URL"
 
 echo "1. Building Next.js App..."

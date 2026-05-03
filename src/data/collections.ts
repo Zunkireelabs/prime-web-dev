@@ -12,7 +12,7 @@ export const collections: Collection[] = [
   { name: "Antiquity Grey", slug: "antiquity-grey", category: "Stone Look", sizes: ["600×600 mm"], image: "" },
   { name: "Desert Marble Dark", slug: "desert-marble-dark", category: "Ceramic", sizes: ["300×600 mm"], image: "" },
   { name: "Angel HL", slug: "angel-hl", category: "Ceramic", sizes: ["300×600 mm"], image: "" },
-  { name: "Komo Grid", slug: "komo-grid", category: "Vitrified", sizes: ["400×400 mm"], image: "" },
+  { name: "Marble Grid", slug: "marble-grid", category: "Wood Look", sizes: ["600×600 mm"], image: "" },
   { name: "Cassion Velvet", slug: "cassion-velvet", category: "Vitrified", sizes: ["400×400 mm"], image: "" },
   { name: "Mithila Art - Buddha", slug: "mithila-art-buddha", category: "Art", sizes: ["300×600 mm"], image: "" },
   { name: "Aqua Dhaka Dark", slug: "aqua-dhaka-dark", category: "Cultural Heritage", sizes: ["300×600 mm"], image: "" },
@@ -65,7 +65,7 @@ export const productCategories: ProductCategory[] = [
 
 export const browseData: BrowseData = {
   Finishes: [
-    { name: "Matt", image: "/images/browse/finish-matt.webp", slug: "komo-grid" },
+    { name: "Matt", image: "/images/browse/finish-matt.webp", slug: "marble-grid" },
     { name: "Glossy", image: "/images/browse/finish-glossy.webp", slug: "angel-hl" },
     { name: "High Gloss", image: "/images/browse/finish-high-gloss.webp", slug: "amazonite-blue" },
     { name: "Polished", image: "/images/browse/finish-polished.webp", slug: "botticino" },

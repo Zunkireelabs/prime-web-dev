@@ -11,6 +11,7 @@ const EMAIL_URL = "mailto:info@primeceramics.com.np";
 
 type ActionItem = {
   name: string;
+  label: string;
   href: string;
   bg: string;
   external?: boolean;
@@ -29,18 +30,21 @@ function WhatsAppIcon() {
 const ACTIONS: ActionItem[] = [
   {
     name: "Email Prime Tiles",
+    label: "Email",
     href: EMAIL_URL,
     bg: "var(--color-ink)",
     render: () => <Mail size={20} strokeWidth={1.8} aria-hidden="true" />,
   },
   {
     name: "Call Prime Tiles",
+    label: "Phone",
     href: PHONE_URL,
     bg: "var(--color-accent)",
     render: () => <Phone size={20} strokeWidth={1.8} aria-hidden="true" />,
   },
   {
     name: "Chat on WhatsApp",
+    label: "WhatsApp",
     href: WA_URL,
     bg: "#25D366",
     external: true,
@@ -49,27 +53,14 @@ const ACTIONS: ActionItem[] = [
 ];
 
 /**
- * Floating contact menu — replaces the single WhatsApp button.
- * Tap the chat-bubble at bottom-right to fan out three options
- * (Email / Call / WhatsApp) above it. Tap the X (or Escape, or
- * outside) to close.
- *
- * Visibility is gated on first-screen scroll — the button only
- * shows after the user has scrolled past the hero, matching the
- * previous WhatsApp-only behavior.
+ * Floating contact menu. Tap the chat-bubble at bottom-right to fan out
+ * three options (Email / Phone / WhatsApp) above it, each with a hover
+ * label to its left. Tap the X (or Escape, or outside) to close.
  */
 export default function FloatingContact() {
   const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-
-  // Show after first viewport scroll
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > window.innerHeight);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Broadcast toggle so other floating UI (BackToTop) can react.
   useEffect(() => {
@@ -108,9 +99,6 @@ export default function FloatingContact() {
         bottom: "clamp(16px, 3vw, 24px)",
         right: "clamp(16px, 3vw, 24px)",
         gap: "12px",
-        opacity: visible ? 1 : 0,
-        pointerEvents: visible ? "auto" : "none",
-        transition: "opacity 0.3s linear",
       }}
     >
       {ACTIONS.map((action, i) => {
@@ -118,29 +106,53 @@ export default function FloatingContact() {
         const openDelay = (lastIdx - i) * 50; // ms
         const closeDelay = i * 40; // ms
         const delay = open ? openDelay : closeDelay;
+        const labelVisible = open && hoveredIdx === i;
         return (
-          <a
+          <div
             key={action.name}
-            href={action.href}
-            target={action.external ? "_blank" : undefined}
-            rel={action.external ? "noopener noreferrer" : undefined}
-            aria-label={action.name}
-            tabIndex={open ? 0 : -1}
-            className="flex items-center justify-center rounded-full"
-            style={{
-              width: "48px",
-              height: "48px",
-              background: action.bg,
-              color: "white",
-              boxShadow: "0 4px 14px rgba(0,0,0,0.18)",
-              opacity: open ? 1 : 0,
-              transform: open ? "translateY(0) scale(1)" : "translateY(8px) scale(0.85)",
-              transition: `opacity 0.25s linear ${delay}ms, transform 0.25s linear ${delay}ms`,
-              pointerEvents: open ? "auto" : "none",
-            }}
+            className="relative flex items-center"
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx((curr) => (curr === i ? null : curr))}
           >
-            {action.render()}
-          </a>
+            <span
+              className="absolute right-full text-[0.65rem] font-medium tracking-[0.08em] uppercase whitespace-nowrap rounded-md pointer-events-none select-none"
+              style={{
+                marginRight: "12px",
+                padding: "7px 12px",
+                background: "rgba(26,24,21,0.92)",
+                color: "white",
+                opacity: labelVisible ? 1 : 0,
+                transform: labelVisible ? "translateX(0)" : "translateX(4px)",
+                transition: "opacity 0.2s linear, transform 0.2s linear",
+              }}
+              aria-hidden="true"
+            >
+              {action.label}
+            </span>
+            <a
+              href={action.href}
+              target={action.external ? "_blank" : undefined}
+              rel={action.external ? "noopener noreferrer" : undefined}
+              aria-label={action.name}
+              tabIndex={open ? 0 : -1}
+              onFocus={() => setHoveredIdx(i)}
+              onBlur={() => setHoveredIdx((curr) => (curr === i ? null : curr))}
+              className="flex items-center justify-center rounded-full"
+              style={{
+                width: "48px",
+                height: "48px",
+                background: action.bg,
+                color: "white",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.18)",
+                opacity: open ? 1 : 0,
+                transform: open ? "translateY(0) scale(1)" : "translateY(8px) scale(0.85)",
+                transition: `opacity 0.25s linear ${delay}ms, transform 0.25s linear ${delay}ms`,
+                pointerEvents: open ? "auto" : "none",
+              }}
+            >
+              {action.render()}
+            </a>
+          </div>
         );
       })}
 

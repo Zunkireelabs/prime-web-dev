@@ -123,44 +123,6 @@ export function tileImageFrameStyle(size: string): CSSProperties {
 }
 
 /**
- * "Showcase" sizing — for views that display a single tile at large scale
- * (e.g. product detail modal). The longest physical side maps to a percentage
- * of `--tile-base` between `longestPctMin` (300 mm tile) and `longestPctMax`
- * (1200 mm tile); the shorter side scales proportionally so each tile's own
- * w:h is preserved.
- *
- * - With `longestPctMin === longestPctMax` (default): every tile fills the
- *   panel uniformly. Same-ratio tiles render identically.
- * - With `longestPctMin < longestPctMax`: a soft physical scale — smaller
- *   tiles render visibly smaller, but with a higher floor than the strict
- *   physical scale used by `tileImageFrameStyle`. Use this for showcases
- *   that need *some* size differentiation without making 300 mm tiles tiny.
- *
- * `tileImageFrameStyle` (strict cross-tile physical truth) is the right
- * call for catalog/grid views where size comparison is the point.
- */
-export function tileShowcaseFrameStyle(
-  size: string,
-  longestPctMax = 80,
-  longestPctMin = longestPctMax,
-): CSSProperties {
-  const { w, h } = parseTileDims(size);
-  const longest = Math.max(w, h);
-  // Map longest physical dim (300–1200 mm) to a pct between min..max.
-  const t = Math.max(0, Math.min(1, (longest - 300) / 900));
-  const longestPct = longestPctMin + t * (longestPctMax - longestPctMin);
-  const wPct = (w / longest) * (longestPct / 100);
-  const hPct = (h / longest) * (longestPct / 100);
-  const base = "var(--tile-base, clamp(280px, 30vw, 380px))";
-  return {
-    width: `calc(${base} * ${wPct})`,
-    height: `calc(${base} * ${hPct})`,
-    position: "relative",
-    overflow: "hidden",
-  };
-}
-
-/**
  * Pixel dimensions for a small tile-shape icon (size-picker, mini reference).
  * Uses the same physical-mm → px rule as the main image frame, so picker
  * icons stay consistent with how the actual tile cards render.
@@ -189,19 +151,17 @@ export function tilePickerSize(size: string, basePx = 48): { w: number; h: numbe
  * background math (see TileLens).
  */
 export const TILE_IMAGE_CROP = {
-  top: 0.07,
-  bottom: 0.12,
-  left: 0.06,
-  right: 0.06,
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
 } as const;
 
 export const tileImageCropStyle: CSSProperties = {
   position: "absolute",
-  // Overscale = 100% + (cropOpposite + cropThis), offset = -cropThis
-  width: `${(1 + TILE_IMAGE_CROP.left + TILE_IMAGE_CROP.right) * 100}%`,
-  height: `${(1 + TILE_IMAGE_CROP.top + TILE_IMAGE_CROP.bottom) * 100}%`,
-  left: `${-TILE_IMAGE_CROP.left * 100}%`,
-  top: `${-TILE_IMAGE_CROP.top * 100}%`,
+  inset: 0,
+  width: "100%",
+  height: "100%",
   objectFit: "cover",
 };
 

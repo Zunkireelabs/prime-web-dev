@@ -3,6 +3,23 @@
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
 
+function smoothScrollToTop(durationMs = 800) {
+  const startY = window.scrollY || document.documentElement.scrollTop;
+  if (startY === 0) return;
+  const startTime = performance.now();
+  const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  const step = (now: number) => {
+    const elapsed = now - startTime;
+    const t = Math.min(1, elapsed / durationMs);
+    const y = startY * (1 - ease(t));
+    window.scrollTo(0, y);
+    document.documentElement.scrollTop = y;
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 /**
  * Bottom-right back-to-top button. Sits above the FloatingContact
  * trigger so users can reach both. Auto-hides when the contact menu
@@ -36,9 +53,9 @@ export default function BackToTop() {
 
   return (
     <button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={() => smoothScrollToTop()}
       aria-label="Back to top"
-      className="fixed z-40 flex items-center justify-center rounded-full bg-surface-card border border-ink-faint text-ink-light hover:border-accent hover:text-accent"
+      className="fixed z-[60] flex items-center justify-center rounded-full bg-surface-card border border-ink-faint text-ink-light hover:border-accent hover:text-accent"
       style={{
         right: "clamp(16px, 3vw, 24px)",
         bottom: "clamp(84px, 16vw, 96px)",

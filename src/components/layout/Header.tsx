@@ -71,7 +71,7 @@ export default function Header() {
             <img
               src="/images/prime-logo.png"
               alt="Prime Tiles"
-              className="h-16 sm:h-20 md:h-24 w-auto transition-[filter] duration-300"
+              className="h-12 sm:h-14 md:h-16 w-auto transition-[filter] duration-300"
               style={blendVideo ? { filter: "brightness(0) invert(1)" } : undefined}
             />
           </a>

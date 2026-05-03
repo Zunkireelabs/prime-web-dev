@@ -7,7 +7,7 @@ import { deskStructure } from "./src/sanity/desk-structure";
 export default defineConfig({
   name: "prime-ceramics",
   title: "Prime Ceramics",
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "PLACEHOLDER",
+  projectId: "3jv6o4t6",
   dataset: "production",
   plugins: [structureTool({ structure: deskStructure }), visionTool()],
   schema: {
