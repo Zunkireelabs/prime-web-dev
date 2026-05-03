@@ -44,7 +44,7 @@ export const news: NewsItem[] = [
     summary:
       "SACMI profiles its turnkey partnership with Prime Ceramics — the first plant in Nepal to produce both wall and floor tiles, with a 4 million sq m annual capacity built on Italian technology.",
     image: "/images/news/sacmi-on-top-of-the-world.jpg",
-    imagePosition: "left center",
+    imagePosition: "35% center",
     featured: true,
   },
   {
