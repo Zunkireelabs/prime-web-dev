@@ -48,6 +48,7 @@ export default function NewsCard({ item }: Props) {
           className={`absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-[1.04] ${
             item.imageFit === "contain" ? "object-contain" : "object-cover"
           }`}
+          style={{ objectPosition: item.imagePosition ?? "center" }}
         />
       </div>
 

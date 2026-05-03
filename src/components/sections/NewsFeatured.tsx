@@ -58,6 +58,7 @@ export default function NewsFeatured() {
               className={`absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-[1.03] ${
                 featuredNews.imageFit === "contain" ? "object-contain" : "object-cover"
               }`}
+              style={{ objectPosition: featuredNews.imagePosition ?? "center" }}
             />
           </div>
 
