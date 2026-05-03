@@ -34,7 +34,7 @@ export default function ClientsSection() {
           {clients.map((c, i) => (
             <FadeIn key={c.name} delay={Math.min(i * 0.08, 0.4)} direction="up" distance={16}>
               <div className="flex items-center justify-center w-full group" style={{ height: "clamp(72px, 9vw, 80px)", padding: "0 16px" }}>
-                <div className="relative opacity-80 md:grayscale md:opacity-65 md:group-hover:grayscale-0 md:group-hover:opacity-100 transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
+                <div className="relative opacity-90 hover:opacity-100 transition-opacity duration-300">
                   <Image
                     src={c.logo}
                     alt={c.name}
