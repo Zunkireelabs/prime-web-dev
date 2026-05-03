@@ -16,6 +16,8 @@ export interface NewsItem {
   url: string;
   summary: string;
   image: string;
+  /** "cover" (default) crops to fill; "contain" shows the whole image (use for panoramic / unusual ratios). */
+  imageFit?: "cover" | "contain";
   featured?: boolean;
 }
 
@@ -40,6 +42,7 @@ export const news: NewsItem[] = [
     summary:
       "SACMI profiles its turnkey partnership with Prime Ceramics — the first plant in Nepal to produce both wall and floor tiles, with a 4 million sq m annual capacity built on Italian technology.",
     image: "/images/news/sacmi-on-top-of-the-world.jpg",
+    imageFit: "contain",
     featured: true,
   },
   {

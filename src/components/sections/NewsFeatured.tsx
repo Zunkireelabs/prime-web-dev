@@ -55,7 +55,9 @@ export default function NewsFeatured() {
               src={featuredNews.image}
               alt={featuredNews.title}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              className={`absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-[1.03] ${
+                featuredNews.imageFit === "contain" ? "object-contain" : "object-cover"
+              }`}
             />
           </div>
 
