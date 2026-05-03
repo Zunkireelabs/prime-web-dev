@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo, useCallback, KeyboardEvent } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback, KeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import FadeIn from "@/components/animations/FadeIn";
@@ -38,6 +38,7 @@ type StripItem = {
   badge: string;
   meta: string;
   image: string;
+  product: CatalogProduct | null;
 };
 
 export default function CollectionsGrid() {
@@ -45,22 +46,38 @@ export default function CollectionsGrid() {
   const [activeOption, setActiveOption] = useState<string>(ALL);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
 
   const stripRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
+  const rafIdRef = useRef<number | null>(null);
+  const isDraggingRef = useRef(false);
+  const isHoveringRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragStartScrollRef = useRef(0);
+  const dragMovedRef = useRef(false);
 
   const baseItems: StripItem[] = useMemo(() => {
+    // Resolve image preferring the product's image (so card matches what the modal opens)
+    const resolveImage = (product: CatalogProduct | undefined, fallback: string) => {
+      if (product?.image) return product.image;
+      return fallback;
+    };
+
     if (activeTab === "Finishes") {
       const filtered = activeOption === ALL
         ? collections
         : collections.filter((c) => c.category === activeOption);
       return filtered.map((c) => {
         const product = productBySlug.get(c.slug);
-        const imgSrc = (product?.image && product.image.startsWith("http")) ? product.image : c.image;
-        return { name: c.name, slug: c.slug, badge: c.category, meta: c.sizes[0] || "", image: imgSrc };
+        return {
+          name: c.name,
+          slug: c.slug,
+          badge: c.category,
+          meta: c.sizes[0] || "",
+          image: resolveImage(product, c.image),
+          product: product ?? null,
+        };
       });
     }
     if (activeTab === "Sizes") {
@@ -69,33 +86,47 @@ export default function CollectionsGrid() {
         : collections.filter((c) => c.sizes.includes(activeOption));
       return filtered.map((c) => {
         const product = productBySlug.get(c.slug);
-        const imgSrc = (product?.image && product.image.startsWith("http")) ? product.image : c.image;
-        return { name: c.name, slug: c.slug, badge: c.sizes[0] || "", meta: c.category, image: imgSrc };
+        return {
+          name: c.name,
+          slug: c.slug,
+          badge: c.sizes[0] || "",
+          meta: c.category,
+          image: resolveImage(product, c.image),
+          product: product ?? null,
+        };
       });
     }
     if (activeTab === "Colors") {
       const colorEntries = activeOption === ALL
         ? browseData.Colors
         : browseData.Colors.filter((c) => c.name === activeOption);
-      return colorEntries.map((c) => ({
-        name: c.name,
-        slug: c.slug,
-        badge: "Color",
-        meta: c.name,
-        image: c.image,
-      }));
+      return colorEntries.map((c) => {
+        const product = productBySlug.get(c.slug);
+        return {
+          name: product?.name ?? c.name,
+          slug: c.slug,
+          badge: c.name,
+          meta: product?.size ?? c.name,
+          image: resolveImage(product, c.image),
+          product: product ?? null,
+        };
+      });
     }
     // Types
     const typeEntries = activeOption === ALL
       ? browseData.Types
       : browseData.Types.filter((t) => t.name === activeOption);
-    return typeEntries.map((t) => ({
-      name: t.name,
-      slug: t.slug,
-      badge: "Type",
-      meta: t.name,
-      image: t.image,
-    }));
+    return typeEntries.map((t) => {
+      const product = productBySlug.get(t.slug);
+      return {
+        name: product?.name ?? t.name,
+        slug: t.slug,
+        badge: t.name,
+        meta: product?.size ?? t.name,
+        image: resolveImage(product, t.image),
+        product: product ?? null,
+      };
+    });
   }, [activeTab, activeOption]);
 
   const items = baseItems;
@@ -133,26 +164,64 @@ export default function CollectionsGrid() {
     }
   }, [activeTab, activeOption]);
 
-  // Track strip scroll for arrow disabled state
+  // Marquee auto-scroll (pauses on hover and during drag); items rendered in duplicate so wrapping is seamless
   useEffect(() => {
     const strip = stripRef.current;
     if (!strip) return;
 
-    const update = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = strip;
-      setAtStart(scrollLeft <= 4);
-      setAtEnd(scrollLeft + clientWidth >= scrollWidth - 4);
+    const SPEED = 0.4; // px per frame at 60fps ≈ 24px/s
+
+    const tick = () => {
+      if (strip && !isDraggingRef.current && !isHoveringRef.current) {
+        const halfWidth = strip.scrollWidth / 2;
+        let next = strip.scrollLeft + SPEED;
+        if (next >= halfWidth) next -= halfWidth;
+        strip.scrollLeft = next;
+      }
+      rafIdRef.current = requestAnimationFrame(tick);
     };
 
-    update();
-    strip.addEventListener("scroll", update, { passive: true });
-    const ro = new ResizeObserver(update);
-    ro.observe(strip);
+    rafIdRef.current = requestAnimationFrame(tick);
     return () => {
-      strip.removeEventListener("scroll", update);
-      ro.disconnect();
+      if (rafIdRef.current != null) cancelAnimationFrame(rafIdRef.current);
     };
   }, [items.length]);
+
+  // Pointer drag-to-slide
+  const onPointerDown = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    isDraggingRef.current = true;
+    dragMovedRef.current = false;
+    dragStartXRef.current = e.clientX;
+    dragStartScrollRef.current = strip.scrollLeft;
+    try { strip.setPointerCapture(e.pointerId); } catch {}
+  }, []);
+
+  const onPointerMove = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const strip = stripRef.current;
+    if (!strip) return;
+    const delta = e.clientX - dragStartXRef.current;
+    if (Math.abs(delta) > 4) dragMovedRef.current = true;
+    let next = dragStartScrollRef.current - delta;
+    const halfWidth = strip.scrollWidth / 2;
+    // wrap so user can drag past the boundary seamlessly
+    if (next < 0) next += halfWidth;
+    if (next >= halfWidth) next -= halfWidth;
+    strip.scrollLeft = next;
+  }, []);
+
+  const onPointerUp = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    isDraggingRef.current = false;
+    const strip = stripRef.current;
+    if (strip) {
+      try { strip.releasePointerCapture(e.pointerId); } catch {}
+    }
+  }, []);
+
+  const onMouseEnter = useCallback(() => { isHoveringRef.current = true; }, []);
+  const onMouseLeave = useCallback(() => { isHoveringRef.current = false; }, []);
 
   const scroll = useCallback((dir: "left" | "right") => {
     const strip = stripRef.current;
@@ -161,7 +230,11 @@ export default function CollectionsGrid() {
     const cardWidth = firstCard?.getBoundingClientRect().width ?? strip.clientWidth * 0.6;
     const gap = 20;
     const step = cardWidth + gap;
-    strip.scrollBy({ left: dir === "left" ? -step : step, behavior: "smooth" });
+    const halfWidth = strip.scrollWidth / 2;
+    let next = strip.scrollLeft + (dir === "left" ? -step : step);
+    if (next < 0) next += halfWidth;
+    if (next >= halfWidth) next -= halfWidth;
+    strip.scrollLeft = next;
   }, []);
 
   const switchTab = (tab: Tab) => {
@@ -219,17 +292,15 @@ export default function CollectionsGrid() {
             <div className="flex items-center" style={{ gap: "16px" }}>
               <button
                 onClick={() => scroll("left")}
-                disabled={atStart}
                 aria-label="Scroll left"
-                className="w-10 h-10 border border-ink-faint flex items-center justify-center transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 enabled:hover:border-accent enabled:hover:text-accent"
+                className="w-10 h-10 border border-ink-faint flex items-center justify-center transition-all duration-300 cursor-pointer hover:border-accent hover:text-accent"
               >
                 <ArrowLeft size={14} />
               </button>
               <button
                 onClick={() => scroll("right")}
-                disabled={atEnd}
                 aria-label="Scroll right"
-                className="w-10 h-10 border border-ink-faint flex items-center justify-center transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 enabled:hover:border-accent enabled:hover:text-accent"
+                className="w-10 h-10 border border-ink-faint flex items-center justify-center transition-all duration-300 cursor-pointer hover:border-accent hover:text-accent"
               >
                 <ArrowRight size={14} />
               </button>
@@ -327,24 +398,34 @@ export default function CollectionsGrid() {
 
             <div
               ref={stripRef}
-              className="flex overflow-x-auto no-scrollbar scroll-smooth"
-              style={{ scrollSnapType: "x mandatory", gap: "20px", padding: "8px" }}
+              className="flex overflow-x-auto no-scrollbar select-none"
+              style={{ gap: "20px", padding: "8px", cursor: "grab", touchAction: "pan-y" }}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={onPointerUp}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={() => { onMouseLeave(); setHoveredIdx(null); }}
             >
               <div ref={cardsRef} className="flex" style={{ gap: "20px" }}>
-                {items.map((item, i) => {
-                  const product = productBySlug.get(item.slug);
+                {[...items, ...items].map((item, i) => {
+                  const realIdx = i % items.length;
+                  const product = item.product;
                   return (
                     <div
                       key={`${activeTab}-${activeOption}-${item.slug}-${i}`}
                       className="tile-card flex-shrink-0 sm:!w-[clamp(180px,25vw,280px)]"
-                      style={{ width: "clamp(150px, 42vw, 280px)", scrollSnapAlign: "start" }}
-                      onMouseEnter={() => setHoveredIdx(i)}
+                      style={{ width: "clamp(150px, 42vw, 280px)" }}
+                      onMouseEnter={() => setHoveredIdx(realIdx)}
                       onMouseLeave={() => setHoveredIdx(null)}
                     >
                       <TiltCard intensity={6} className="h-full">
                         <button
                           type="button"
-                          onClick={() => product && setSelectedProduct(product)}
+                          onClick={(e) => {
+                            if (dragMovedRef.current) { e.preventDefault(); return; }
+                            if (product) setSelectedProduct(product);
+                          }}
                           className="group block h-full w-full text-left cursor-pointer"
                           style={{ background: "none", border: "none", padding: 0 }}
                         >
@@ -354,8 +435,9 @@ export default function CollectionsGrid() {
                                 src={item.image}
                                 alt={item.name}
                                 loading="lazy"
+                                draggable={false}
                                 className={`block transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                  hoveredIdx === i
+                                  hoveredIdx === realIdx
                                     ? "scale-[1.06]"
                                     : hoveredIdx !== null
                                       ? "scale-[0.98] brightness-[0.85]"
