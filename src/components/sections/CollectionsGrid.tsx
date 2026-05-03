@@ -187,15 +187,22 @@ export default function CollectionsGrid() {
     };
   }, [items.length]);
 
-  // Pointer drag-to-slide
+  // Pointer drag-to-slide. We only setPointerCapture AFTER the user crosses a
+  // small movement threshold, so a plain click is never captured and the
+  // card's click handler runs normally.
+  const DRAG_THRESHOLD = 8;
+  const capturedRef = useRef(false);
+
   const onPointerDown = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
     const strip = stripRef.current;
     if (!strip) return;
+    // ignore right/middle mouse buttons
+    if (e.pointerType === "mouse" && e.button !== 0) return;
     isDraggingRef.current = true;
     dragMovedRef.current = false;
+    capturedRef.current = false;
     dragStartXRef.current = e.clientX;
     dragStartScrollRef.current = strip.scrollLeft;
-    try { strip.setPointerCapture(e.pointerId); } catch {}
   }, []);
 
   const onPointerMove = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
@@ -203,10 +210,14 @@ export default function CollectionsGrid() {
     const strip = stripRef.current;
     if (!strip) return;
     const delta = e.clientX - dragStartXRef.current;
-    if (Math.abs(delta) > 4) dragMovedRef.current = true;
+    if (Math.abs(delta) <= DRAG_THRESHOLD) return; // ignore jitter, let click pass through
+    if (!capturedRef.current) {
+      dragMovedRef.current = true;
+      capturedRef.current = true;
+      try { strip.setPointerCapture(e.pointerId); } catch {}
+    }
     let next = dragStartScrollRef.current - delta;
     const halfWidth = strip.scrollWidth / 2;
-    // wrap so user can drag past the boundary seamlessly
     if (next < 0) next += halfWidth;
     if (next >= halfWidth) next -= halfWidth;
     strip.scrollLeft = next;
@@ -215,9 +226,10 @@ export default function CollectionsGrid() {
   const onPointerUp = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
     isDraggingRef.current = false;
     const strip = stripRef.current;
-    if (strip) {
+    if (strip && capturedRef.current) {
       try { strip.releasePointerCapture(e.pointerId); } catch {}
     }
+    capturedRef.current = false;
   }, []);
 
   const onMouseEnter = useCallback(() => { isHoveringRef.current = true; }, []);
