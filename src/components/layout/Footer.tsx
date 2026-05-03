@@ -1,15 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { footerColumns as cols } from "@/data/navigation";
-import { Mail, Phone, Factory, Building2, ArrowUpRight, Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
+import { Mail, Phone, Factory, Building2, ArrowUpRight, ChevronDown, Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
 import Image from "next/image";
 
 const socials = [
-  { name: "Facebook", href: "https://www.facebook.com/PrimeTiles.Official/", Icon: Facebook },
-  { name: "Instagram", href: "https://www.instagram.com/primetiles.official/", Icon: Instagram },
-  { name: "YouTube", href: "https://www.youtube.com/@primetiles.Official", Icon: Youtube },
-  { name: "LinkedIn", href: "https://www.linkedin.com/company/primetilesofficial/", Icon: Linkedin },
+  { name: "Facebook", href: "https://www.facebook.com/PrimeTiles.Official/", Icon: Facebook, color: "#1877F2" },
+  { name: "Instagram", href: "https://www.instagram.com/primetiles.official/", Icon: Instagram, color: "#E4405F" },
+  { name: "YouTube", href: "https://www.youtube.com/@primetiles.Official", Icon: Youtube, color: "#FF0000" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/primetilesofficial/", Icon: Linkedin, color: "#0A66C2" },
 ];
 
 const contactItems = [
@@ -29,6 +30,10 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export default function Footer() {
+  const [openSection, setOpenSection] = useState<string | null>(null);
+  const toggleSection = (key: string) =>
+    setOpenSection((prev) => (prev === key ? null : key));
+
   return (
     <footer className="bg-surface-dark text-ink-on-dark relative overflow-hidden">
       {/* Subtle ambient glow */}
@@ -44,62 +49,119 @@ export default function Footer() {
       <div className="gold-divider-full" />
 
       {/* ═══ Navigation + Contact Grid ═══ */}
-      <div className="container relative z-10" style={{ padding: "clamp(40px, 6vw, 64px) 0" }}>
+      <div
+        className="container relative z-10"
+        style={{ padding: "clamp(28px, 5vw, 64px) 0 clamp(20px, 4vw, 56px)" }}
+      >
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "48px",
           }}
-          className="max-md:!grid-cols-2 max-sm:!grid-cols-1 max-sm:!gap-[32px] max-md:!gap-[36px]"
+          className="max-md:!grid-cols-2 max-sm:!grid-cols-1 max-sm:!gap-0 max-md:!gap-[36px]"
         >
           {/* Nav columns */}
-          {cols.map((col, i) => (
-            <FadeIn key={col.title} delay={0.06 * (i + 1)}>
-              <div>
-                <p
-                  className="eyebrow text-accent"
-                  style={{ marginBottom: "28px" }}
-                >
-                  {col.title}
-                </p>
-                <ul
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "14px",
-                  }}
-                >
-                  {col.links.map((l) => (
-                    <li key={l.label}>
-                      <a
-                        href={l.href}
-                        className="text-white/70 hover:text-white transition-colors duration-300"
-                        style={{ fontSize: "0.85rem", lineHeight: "1.6" }}
-                      >
-                        {l.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </FadeIn>
-          ))}
+          {cols.map((col, i) => {
+            const isOpen = openSection === col.title;
+            return (
+              <FadeIn key={col.title} delay={0.06 * (i + 1)}>
+                <div className="max-sm:border-b max-sm:border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => toggleSection(col.title)}
+                    aria-expanded={isOpen}
+                    aria-controls={`footer-section-${col.title}`}
+                    className="w-full flex items-center justify-between sm:cursor-default sm:pointer-events-none max-sm:py-3"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                    }}
+                  >
+                    <p
+                      className="eyebrow text-accent sm:!mb-7"
+                      style={{ margin: 0 }}
+                    >
+                      {col.title}
+                    </p>
+                    <ChevronDown
+                      size={16}
+                      strokeWidth={1.6}
+                      className="sm:hidden text-white/60 transition-transform duration-300"
+                      style={{
+                        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      }}
+                    />
+                  </button>
+                  <ul
+                    id={`footer-section-${col.title}`}
+                    className={`flex flex-col sm:!flex ${
+                      isOpen ? "max-sm:!flex" : "max-sm:!hidden"
+                    }`}
+                    style={{
+                      gap: "14px",
+                      paddingBottom: isOpen ? "16px" : undefined,
+                    }}
+                  >
+                    {col.links.map((l) => (
+                      <li key={l.label}>
+                        <a
+                          href={l.href}
+                          className="text-white/70 hover:text-white transition-colors duration-300"
+                          style={{ fontSize: "0.85rem", lineHeight: "1.6" }}
+                        >
+                          {l.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </FadeIn>
+            );
+          })}
 
           {/* Contact column */}
           <FadeIn delay={0.25}>
-            <div>
-              <p
-                className="eyebrow text-accent"
-                style={{ marginBottom: "28px" }}
-              >
-                Contact
-              </p>
-              <ul
+            <div className="max-sm:border-b max-sm:border-white/10">
+              <button
+                type="button"
+                onClick={() => toggleSection("Contact")}
+                aria-expanded={openSection === "Contact"}
+                aria-controls="footer-section-Contact"
+                className="w-full flex items-center justify-between sm:cursor-default sm:pointer-events-none max-sm:py-3"
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
+                  background: "transparent",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                }}
+              >
+                <p
+                  className="eyebrow text-accent sm:!mb-7"
+                  style={{ margin: 0 }}
+                >
+                  Contact
+                </p>
+                <ChevronDown
+                  size={16}
+                  strokeWidth={1.6}
+                  className="sm:hidden text-white/60 transition-transform duration-300"
+                  style={{
+                    transform:
+                      openSection === "Contact" ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                />
+              </button>
+              <ul
+                id="footer-section-Contact"
+                className={`flex flex-col sm:!flex ${
+                  openSection === "Contact" ? "max-sm:!flex" : "max-sm:!hidden"
+                }`}
+                style={{
                   gap: "18px",
+                  paddingBottom: openSection === "Contact" ? "16px" : undefined,
                 }}
               >
                 {contactItems.map((item) => {
@@ -177,21 +239,22 @@ export default function Footer() {
             flexWrap: "wrap",
           }}
         >
-          {socials.map(({ name, href, Icon }) => (
+          {socials.map(({ name, href, Icon, color }) => (
             <a
               key={name}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={name}
-              className="text-white/55 hover:text-accent transition-colors duration-300 inline-flex items-center justify-center"
+              className="transition-opacity duration-300 inline-flex items-center justify-center opacity-85 hover:opacity-100"
               style={{
                 width: "44px",
                 height: "44px",
                 borderRadius: "50%",
+                color,
               }}
             >
-              <Icon size={22} strokeWidth={1.6} aria-hidden="true" />
+              <Icon size={22} strokeWidth={1.8} aria-hidden="true" />
             </a>
           ))}
         </div>
