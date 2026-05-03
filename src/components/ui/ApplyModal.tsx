@@ -132,9 +132,9 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
         zIndex: 9000,
         background: "rgba(26,24,21,0.55)",
         display: "flex",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "center",
-        padding: "clamp(0px, 4vw, 64px) clamp(0px, 3vw, 32px)",
+        padding: "clamp(0px, 2vw, 32px) clamp(0px, 2.5vw, 24px)",
         overflowY: "auto",
         backdropFilter: "blur(2px)",
       }}
@@ -144,20 +144,19 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
         onMouseDown={(e) => e.stopPropagation()}
         style={{
           width: "100%",
-          maxWidth: "640px",
+          maxWidth: "680px",
+          maxHeight: "calc(100vh - 32px)",
+          overflowY: "auto",
           background: "var(--color-surface-card, #FFFFFF)",
           border: "1px solid rgba(43,36,28,0.10)",
           borderRadius: "4px",
           boxShadow: "0 24px 80px rgba(0,0,0,0.18)",
-          overflow: "hidden",
-          marginTop: "clamp(0px, 4vh, 56px)",
-          marginBottom: "clamp(0px, 4vh, 56px)",
         }}
       >
         {/* Header */}
         <div
           style={{
-            padding: "clamp(24px, 3.5vw, 36px) clamp(24px, 3.5vw, 40px) 0",
+            padding: "clamp(20px, 2.8vw, 28px) clamp(20px, 2.8vw, 32px) 0",
             position: "relative",
           }}
         >
@@ -168,10 +167,10 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
             className="text-ink-light hover:text-ink"
             style={{
               position: "absolute",
-              top: "16px",
-              right: "16px",
-              width: "36px",
-              height: "36px",
+              top: "12px",
+              right: "12px",
+              width: "32px",
+              height: "32px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -193,7 +192,7 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
 
           <p
             className="eyebrow text-accent"
-            style={{ marginBottom: "12px" }}
+            style={{ marginBottom: "8px" }}
           >
             Apply
           </p>
@@ -201,7 +200,7 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
             id={titleId}
             className="font-serif font-light text-ink"
             style={{
-              fontSize: "clamp(1.4rem, 2.4vw, 1.85rem)",
+              fontSize: "clamp(1.25rem, 2.2vw, 1.65rem)",
               lineHeight: 1.2,
             }}
           >
@@ -210,8 +209,8 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
           <p
             className="font-light text-ink-light"
             style={{
-              fontSize: "0.85rem",
-              marginTop: "8px",
+              fontSize: "0.8rem",
+              marginTop: "4px",
               lineHeight: 1.5,
             }}
           >
@@ -219,7 +218,7 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
           </p>
           <div
             className="bg-accent"
-            style={{ width: "32px", height: "1.5px", marginTop: "20px" }}
+            style={{ width: "32px", height: "1.5px", marginTop: "14px" }}
           />
         </div>
 
@@ -231,58 +230,65 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
             onSubmit={handleSubmit}
             noValidate
             style={{
-              padding: "clamp(24px, 3.5vw, 36px) clamp(24px, 3.5vw, 40px) clamp(28px, 4vw, 40px)",
+              padding: "clamp(18px, 2.4vw, 24px) clamp(20px, 2.8vw, 32px) clamp(20px, 2.8vw, 28px)",
               display: "flex",
               flexDirection: "column",
-              gap: "20px",
+              gap: "14px",
             }}
           >
-            <Field
-              label="Full name"
-              name="fullName"
-              required
-              error={errors.fullName}
-              inputRef={firstFieldRef}
-              value={data.fullName}
-              onChange={(v) => update("fullName", v)}
-              placeholder="Bibek Sharma"
-              autoComplete="name"
-            />
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2"
+              style={{ gap: "14px" }}
+            >
+              <Field
+                label="Full name"
+                name="fullName"
+                required
+                error={errors.fullName}
+                inputRef={firstFieldRef}
+                value={data.fullName}
+                onChange={(v) => update("fullName", v)}
+                placeholder="Bibek Sharma"
+                autoComplete="name"
+              />
+              <Field
+                label="Email"
+                name="email"
+                type="email"
+                required
+                error={errors.email}
+                value={data.email}
+                onChange={(v) => update("email", v)}
+                placeholder="you@example.com"
+                autoComplete="email"
+              />
+            </div>
 
-            <Field
-              label="Email"
-              name="email"
-              type="email"
-              required
-              error={errors.email}
-              value={data.email}
-              onChange={(v) => update("email", v)}
-              placeholder="you@example.com"
-              autoComplete="email"
-            />
-
-            <Field
-              label="Phone"
-              name="phone"
-              type="tel"
-              error={errors.phone}
-              value={data.phone}
-              onChange={(v) => update("phone", v)}
-              placeholder="+977 98XXXXXXXX"
-              autoComplete="tel"
-              hint="Optional, but recommended."
-            />
-
-            <Field
-              label="LinkedIn URL"
-              name="linkedin"
-              type="url"
-              error={errors.linkedin}
-              value={data.linkedin}
-              onChange={(v) => update("linkedin", v)}
-              placeholder="https://linkedin.com/in/…"
-              autoComplete="url"
-            />
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2"
+              style={{ gap: "14px" }}
+            >
+              <Field
+                label="Phone"
+                name="phone"
+                type="tel"
+                error={errors.phone}
+                value={data.phone}
+                onChange={(v) => update("phone", v)}
+                placeholder="+977 98XXXXXXXX"
+                autoComplete="tel"
+              />
+              <Field
+                label="LinkedIn URL"
+                name="linkedin"
+                type="url"
+                error={errors.linkedin}
+                value={data.linkedin}
+                onChange={(v) => update("linkedin", v)}
+                placeholder="https://linkedin.com/in/…"
+                autoComplete="url"
+              />
+            </div>
 
             <Field
               label="Resume URL"
@@ -292,7 +298,6 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
               value={data.resumeUrl}
               onChange={(v) => update("resumeUrl", v)}
               placeholder="Google Drive / Dropbox link"
-              hint="Make sure it's set to view-accessible."
             />
 
             <FieldTextarea
@@ -302,8 +307,8 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
               error={errors.coverNote}
               value={data.coverNote}
               onChange={(v) => update("coverNote", v)}
-              placeholder="A few sentences on why you'd like to join, what you'd own, anything you've shipped you're proud of."
-              rows={5}
+              placeholder="A few sentences on why you'd like to join."
+              rows={3}
             />
 
             <FieldSelect
@@ -322,8 +327,8 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
                 flexWrap: "wrap",
                 alignItems: "center",
                 justifyContent: "space-between",
-                gap: "16px",
-                marginTop: "8px",
+                gap: "12px",
+                marginTop: "4px",
               }}
             >
               <button
@@ -333,8 +338,8 @@ export default function ApplyModal({ open, opening, onClose }: ApplyModalProps) 
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "12px",
-                  padding: "16px 28px",
+                  gap: "10px",
+                  padding: "13px 24px",
                   background: "var(--color-ink, #3D3A36)",
                   fontSize: "0.7rem",
                   fontWeight: 500,
@@ -417,12 +422,12 @@ function Field({
   const hintId = `${name}-hint`;
   const errId = `${name}-error`;
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
       <label
         htmlFor={name}
         className="text-ink"
         style={{
-          fontSize: "0.7rem",
+          fontSize: "0.65rem",
           fontWeight: 500,
           letterSpacing: "0.18em",
           textTransform: "uppercase",
@@ -446,8 +451,8 @@ function Field({
         }
         className="bg-transparent text-ink placeholder:text-ink-muted/70"
         style={{
-          padding: "12px 14px",
-          fontSize: "0.95rem",
+          padding: "10px 12px",
+          fontSize: "0.9rem",
           border: error
             ? "1px solid #B5443A"
             : "1px solid rgba(43,36,28,0.18)",
@@ -513,12 +518,12 @@ function FieldTextarea({
 }: FieldTextareaProps) {
   const errId = `${name}-error`;
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
       <label
         htmlFor={name}
         className="text-ink"
         style={{
-          fontSize: "0.7rem",
+          fontSize: "0.65rem",
           fontWeight: 500,
           letterSpacing: "0.18em",
           textTransform: "uppercase",
@@ -537,17 +542,17 @@ function FieldTextarea({
         aria-describedby={error ? errId : undefined}
         className="bg-transparent text-ink placeholder:text-ink-muted/70"
         style={{
-          padding: "12px 14px",
-          fontSize: "0.95rem",
+          padding: "10px 12px",
+          fontSize: "0.9rem",
           border: error
             ? "1px solid #B5443A"
             : "1px solid rgba(43,36,28,0.18)",
           borderRadius: "2px",
           outline: "none",
           resize: "vertical",
-          minHeight: "120px",
+          minHeight: "76px",
           fontFamily: "inherit",
-          lineHeight: 1.6,
+          lineHeight: 1.55,
           transition: "border-color 0.3s linear",
         }}
         onFocus={(e) => {
@@ -591,12 +596,12 @@ function FieldSelect({
   error,
 }: FieldSelectProps) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
       <label
         htmlFor={name}
         className="text-ink"
         style={{
-          fontSize: "0.7rem",
+          fontSize: "0.65rem",
           fontWeight: 500,
           letterSpacing: "0.18em",
           textTransform: "uppercase",
@@ -611,8 +616,8 @@ function FieldSelect({
         onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
         className="bg-transparent text-ink"
         style={{
-          padding: "12px 14px",
-          fontSize: "0.95rem",
+          padding: "10px 12px",
+          fontSize: "0.9rem",
           border: "1px solid rgba(43,36,28,0.18)",
           borderRadius: "2px",
           outline: "none",
@@ -620,9 +625,9 @@ function FieldSelect({
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%237A7670' stroke-width='1.5'%3E%3Cpath d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E\")",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "right 14px center",
+          backgroundPosition: "right 12px center",
           backgroundSize: "12px",
-          paddingRight: "40px",
+          paddingRight: "36px",
           fontFamily: "inherit",
           transition: "border-color 0.3s linear",
         }}
