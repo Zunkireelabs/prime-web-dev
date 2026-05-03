@@ -23,11 +23,22 @@ type Tab = "Finishes" | "Sizes" | "Colors" | "Types";
 const tabs: Tab[] = ["Finishes", "Sizes", "Colors", "Types"];
 
 const uniqueCategories = Array.from(new Set(collections.map((c) => c.category)));
-const uniqueSizes = Array.from(new Set(collections.flatMap((c) => c.sizes)));
+// All sizes carried on the site (curated collections + full catalog), in canonical order.
+const STANDARD_SIZES = [
+  "300×300 mm",
+  "300×450 mm",
+  "300×600 mm",
+  "400×400 mm",
+  "600×600 mm",
+  "600×1200 mm",
+];
+const catalogSizes = new Set(allProducts.map((p) => p.size));
+const collectionSizes = new Set(collections.flatMap((c) => c.sizes));
+const allSizes = STANDARD_SIZES.filter((s) => collectionSizes.has(s) || catalogSizes.has(s));
 
 const optionsByTab: Record<Tab, string[]> = {
   Finishes: [ALL, ...uniqueCategories],
-  Sizes: [ALL, ...uniqueSizes],
+  Sizes: [ALL, ...allSizes],
   Colors: [ALL, ...browseData.Colors.map((c) => c.name)],
   Types: [ALL, ...browseData.Types.map((t) => t.name)],
 };
@@ -37,6 +48,9 @@ type StripItem = {
   slug: string;
   badge: string;
   meta: string;
+  /** Physical tile size (e.g. "600×1200 mm") used by tileImageFrameStyle so the
+   *  inner frame's aspect ratio matches the real tile shape. */
+  size: string;
   image: string;
   product: CatalogProduct | null;
 };
@@ -63,6 +77,8 @@ export default function CollectionsGrid() {
       if (product?.image) return product.image;
       return fallback;
     };
+    // Default size for swatch-only entries (color/type) when no product is matched.
+    const FALLBACK_SIZE = "600×600 mm";
 
     if (activeTab === "Finishes") {
       const filtered = activeOption === ALL
@@ -70,59 +86,93 @@ export default function CollectionsGrid() {
         : collections.filter((c) => c.category === activeOption);
       return filtered.map((c) => {
         const product = productBySlug.get(c.slug);
+        const size = c.sizes[0] || product?.size || FALLBACK_SIZE;
         return {
           name: c.name,
           slug: c.slug,
           badge: c.category,
-          meta: c.sizes[0] || "",
+          meta: size,
+          size,
           image: resolveImage(product, c.image),
           product: product ?? null,
         };
       });
     }
+
     if (activeTab === "Sizes") {
-      const filtered = activeOption === ALL
+      // Curated first: matching collections render the handpicked tiles.
+      const fromCollections = activeOption === ALL
         ? collections
         : collections.filter((c) => c.sizes.includes(activeOption));
-      return filtered.map((c) => {
+      const usedSlugs = new Set(fromCollections.map((c) => c.slug));
+
+      const collectionItems: StripItem[] = fromCollections.map((c) => {
         const product = productBySlug.get(c.slug);
+        const size = c.sizes[0] || product?.size || FALLBACK_SIZE;
         return {
           name: c.name,
           slug: c.slug,
-          badge: c.sizes[0] || "",
+          badge: size,
           meta: c.category,
+          size,
           image: resolveImage(product, c.image),
           product: product ?? null,
         };
       });
+
+      // For specific size selections, top up with catalog products at that size
+      // so even sizes the curated list misses (e.g. 300×300, 300×450) show real tiles.
+      if (activeOption !== ALL && collectionItems.length < 12) {
+        const need = 12 - collectionItems.length;
+        const catalogFill = allProducts
+          .filter((p) => p.size === activeOption && !usedSlugs.has(p.slug))
+          .slice(0, need)
+          .map<StripItem>((p) => ({
+            name: p.name,
+            slug: p.slug,
+            badge: p.size,
+            meta: p.category,
+            size: p.size,
+            image: p.image,
+            product: p,
+          }));
+        return [...collectionItems, ...catalogFill];
+      }
+      return collectionItems;
     }
+
     if (activeTab === "Colors") {
       const colorEntries = activeOption === ALL
         ? browseData.Colors
         : browseData.Colors.filter((c) => c.name === activeOption);
       return colorEntries.map((c) => {
         const product = productBySlug.get(c.slug);
+        const size = product?.size || FALLBACK_SIZE;
         return {
           name: product?.name ?? c.name,
           slug: c.slug,
           badge: c.name,
           meta: product?.size ?? c.name,
+          size,
           image: resolveImage(product, c.image),
           product: product ?? null,
         };
       });
     }
+
     // Types
     const typeEntries = activeOption === ALL
       ? browseData.Types
       : browseData.Types.filter((t) => t.name === activeOption);
     return typeEntries.map((t) => {
       const product = productBySlug.get(t.slug);
+      const size = product?.size || FALLBACK_SIZE;
       return {
         name: product?.name ?? t.name,
         slug: t.slug,
         badge: t.name,
         meta: product?.size ?? t.name,
+        size,
         image: resolveImage(product, t.image),
         product: product ?? null,
       };
@@ -442,7 +492,7 @@ export default function CollectionsGrid() {
                           style={{ background: "none", border: "none", padding: 0 }}
                         >
                           <div className="relative overflow-hidden bg-surface-card flex items-center justify-center" style={{ ...tileCardCSSVars(), height: tileCardHeight(), marginBottom: "16px" }}>
-                            <div style={tileImageFrameStyle(item.meta || "300×450 mm")}>
+                            <div style={tileImageFrameStyle(item.size)}>
                               <img
                                 src={item.image}
                                 alt={item.name}
