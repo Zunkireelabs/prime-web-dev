@@ -201,16 +201,24 @@ export default function Header() {
 
           </div>
 
-          {/* Mobile — close ad + menu toggle */}
+          {/* Mobile — single toggle (Menu ↔ X) */}
           <div className="lg:hidden flex items-center gap-3 relative z-50">
-            {!mobileOpen && (
-              <button
-                onClick={() => setMobileOpen(true)}
-                aria-label="Open menu"
-              >
-                <Menu size={22} className={blendVideo ? "text-white" : "text-ink"} />
-              </button>
-            )}
+            <button
+              onClick={() => setMobileOpen((prev) => !prev)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              className="inline-flex items-center justify-center transition-colors duration-300"
+              style={{ width: "44px", height: "44px" }}
+            >
+              {mobileOpen ? (
+                <X size={22} className="text-ink" />
+              ) : (
+                <Menu
+                  size={22}
+                  className={blendVideo ? "text-white" : "text-ink"}
+                />
+              )}
+            </button>
           </div>
         </div>
 
@@ -330,18 +338,9 @@ export default function Header() {
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
-        {/* Close button — top left */}
-        <button
-          onClick={() => setMobileOpen(false)}
-          aria-label="Close menu"
-          className="absolute top-6 left-6 z-50 w-11 h-11 rounded-full border border-ink/15 flex items-center justify-center text-ink hover:text-accent hover:border-accent/40 transition-all duration-300"
-        >
-          <X size={20} />
-        </button>
-
         <div
           className="h-full overflow-y-auto flex flex-col"
-          style={{ padding: "clamp(80px, 12vw, 96px) clamp(20px, 5vw, 32px) clamp(28px, 5vw, 40px)" }}
+          style={{ padding: "clamp(88px, 14vw, 104px) clamp(20px, 5vw, 32px) clamp(28px, 5vw, 40px)" }}
         >
           {/* ─── Nav (top) ─── */}
           <nav className="space-y-0">
