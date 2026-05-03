@@ -101,7 +101,62 @@ export const careerBenefits: CareerBenefit[] = [
 
 // Add openings here as roles open. When empty, the openings section
 // renders a graceful "no current openings" message.
-export const careerOpenings: CareerOpening[] = [];
+export const careerOpenings: CareerOpening[] = [
+  {
+    id: "production-engineer-rautahat",
+    title: "Production Engineer",
+    team: "Manufacturing",
+    location: "Rautahat",
+    type: "Full-time",
+    summary:
+      "Own daily operations of a SACMI kiln line — yield, quality, throughput. Mechanical or ceramic engineering background; comfortable on the shop floor.",
+  },
+  {
+    id: "qc-lead-rautahat",
+    title: "Quality Control Lead",
+    team: "Manufacturing",
+    location: "Rautahat",
+    type: "Full-time",
+    summary:
+      "Set and enforce QC standards across wall and floor lines. Build the system that keeps Nepal's only NS-617-certified plant certified.",
+  },
+  {
+    id: "showroom-lead-ktm",
+    title: "Showroom Lead — Kathmandu",
+    team: "Retail",
+    location: "Kathmandu",
+    type: "Full-time",
+    summary:
+      "Run our flagship Kathmandu experience — staffing, merchandising, dealer hosting, and turning walk-ins into long-term clients.",
+  },
+  {
+    id: "dealer-account-manager",
+    title: "Dealer Account Manager",
+    team: "Sales",
+    location: "Kathmandu (with regional travel)",
+    type: "Full-time",
+    summary:
+      "Own a region of the dealer network — onboarding, training, sample logistics, and quarterly business reviews. Heavy travel across Nepal.",
+  },
+  {
+    id: "collection-designer",
+    title: "Collection Designer",
+    team: "Design",
+    location: "Kathmandu / Hybrid",
+    type: "Full-time",
+    summary:
+      "Translate global tile trends into Prime collections. Mood, surface, finish, sizing — work directly with the kiln team to ship 3–4 collections a year.",
+  },
+  {
+    id: "brand-content-writer",
+    title: "Brand & Content Writer",
+    team: "Marketing",
+    location: "Kathmandu",
+    type: "Full-time",
+    summary:
+      "Tell the Prime story across web, dealer materials, and press. A serious editorial voice — you've shipped real long-form work, not just social posts.",
+  },
+];
 
 export const applyEmail = "info@primeceramics.com.np";
 
