@@ -30,7 +30,6 @@ export const news: NewsItem[] = [
     summary:
       "Prime Tiles is awarded NS 617 certification by the Nepal Bureau of Standards and Metrology — establishing it as the country's sole NS-certified manufacturer in the wall and floor tile sector.",
     image: "/images/services/service-1.jpg",
-    featured: true,
   },
   {
     id: "sacmi-on-top-of-the-world",
@@ -41,6 +40,7 @@ export const news: NewsItem[] = [
     summary:
       "SACMI profiles its turnkey partnership with Prime Ceramics — the first plant in Nepal to produce both wall and floor tiles, with a 4 million sq m annual capacity built on Italian technology.",
     image: "/images/news/sacmi-on-top-of-the-world.jpg",
+    featured: true,
   },
   {
     id: "ceramic-world-factory-opening",
