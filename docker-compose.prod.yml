@@ -1,0 +1,17 @@
+services:
+  prime-web-prod:
+    build: .
+    container_name: prime-web-prod
+    restart: unless-stopped
+    networks:
+      - hosting
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prime-web-prod.rule=Host(`primeceramics.com.np`) || Host(`www.primeceramics.com.np`)"
+      - "traefik.http.routers.prime-web-prod.entrypoints=websecure"
+      - "traefik.http.routers.prime-web-prod.tls.certresolver=letsencrypt"
+      - "traefik.http.services.prime-web-prod.loadbalancer.server.port=80"
+
+networks:
+  hosting:
+    external: true

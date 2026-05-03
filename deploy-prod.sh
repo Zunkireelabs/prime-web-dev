@@ -1,15 +1,16 @@
 #!/bin/bash
 set -e
 
-COMPOSE_FILE="docker-compose.v2.yml"
-CONTAINER_NAME="prime-web-v2"
-URL="dev-primetiles.zunkireelabs.com"
-echo "🚧 V2 DEPLOYMENT to $URL"
+COMPOSE_FILE="docker-compose.prod.yml"
+CONTAINER_NAME="prime-web-prod"
+URL="primeceramics.com.np"
+echo "🚀 PRODUCTION DEPLOYMENT to $URL"
+echo "Commit: $(git rev-parse --short HEAD) — $(git log -1 --pretty=%s)"
 
 echo "1. Building Next.js App..."
 npm install
 
-# Load env vars for Sanity data generation
+# Load env vars for Sanity data generation (production dataset lives in this dir's .env.local)
 if [ -f .env.local ]; then
     export $(grep -v '^#' .env.local | xargs)
 fi
@@ -32,5 +33,5 @@ echo "3. Restarting Container..."
 docker compose -f $COMPOSE_FILE down 2>/dev/null || true
 docker compose -f $COMPOSE_FILE up -d
 
-echo "✅ V2 Deployment Success!"
+echo "✅ Production Deployment Success!"
 echo "👉 https://$URL"
