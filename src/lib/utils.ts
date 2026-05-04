@@ -148,7 +148,7 @@ export function tilePickerSize(size: string, basePx = 48): { w: number; h: numbe
  *
  * Apply to a positioned `<img>` inside a `position: relative; overflow: hidden`
  * parent. Pair with `TILE_IMAGE_CROP` when you also need to drive zoom-lens
- * background math (see TileLens).
+ * background math (see TileZoom).
  */
 export const TILE_IMAGE_CROP = {
   top: 0,
