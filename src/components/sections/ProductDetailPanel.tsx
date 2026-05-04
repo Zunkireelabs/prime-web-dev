@@ -513,8 +513,8 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
         {hasImage && (
           <div
             aria-hidden="true"
-            className="hidden md:block absolute"
-            style={{ top: 0, right: 0, bottom: 0, width: "50%", zIndex: 4 }}
+            className="hidden md:flex absolute items-center justify-center"
+            style={{ top: 0, right: 0, bottom: 0, width: "50%", zIndex: 4, pointerEvents: "none" }}
           >
             <TileZoomPanel />
           </div>

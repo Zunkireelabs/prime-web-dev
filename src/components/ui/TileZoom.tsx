@@ -128,10 +128,17 @@ export function TileZoomSource({
     [size.w, size.h, setPos, setSize],
   );
 
-  const lensW = size.w / zoom;
-  const lensH = size.h / zoom;
+  // Lens is ALWAYS square so it maps cleanly into the always-square panel.
+  // Side = the source's smaller dimension. For square tiles this means the
+  // lens covers the entire source (panel shows the full tile). For rectangles
+  // (e.g. 600×1200 = 1:2 portrait) the lens covers half the tile by area,
+  // and the cursor picks which half is shown.
+  const lensSide = size.w > 0 && size.h > 0 ? Math.min(size.w, size.h) : 0;
+  const lensW = lensSide;
+  const lensH = lensSide;
   const lensX = Math.max(0, Math.min(size.w - lensW, pos.x - lensW / 2));
   const lensY = Math.max(0, Math.min(size.h - lensH, pos.y - lensH / 2));
+  const lensCoversSource = size.w > 0 && size.h > 0 && lensW >= size.w - 0.5 && lensH >= size.h - 0.5;
 
   return (
     <div
@@ -172,23 +179,27 @@ export function TileZoomSource({
         </div>
       )}
 
-      {/* Square lens region indicator — Amazon-style */}
-      <div
-        aria-hidden="true"
-        className="absolute pointer-events-none"
-        style={{
-          width: `${lensW}px`,
-          height: `${lensH}px`,
-          left: `${lensX}px`,
-          top: `${lensY}px`,
-          background: "rgba(255,255,255,0.28)",
-          border: "1.5px solid var(--color-accent)",
-          boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.18)",
-          opacity: active && size.w > 0 ? 1 : 0,
-          transition: "opacity 0.18s linear",
-          zIndex: 3,
-        }}
-      />
+      {/* Square lens region indicator — only shown for rectangular tiles where
+          moving the cursor changes which half of the tile is magnified. For
+          square tiles the lens already covers the whole source, so no marker. */}
+      {!lensCoversSource && (
+        <div
+          aria-hidden="true"
+          className="absolute pointer-events-none"
+          style={{
+            width: `${lensW}px`,
+            height: `${lensH}px`,
+            left: `${lensX}px`,
+            top: `${lensY}px`,
+            background: "rgba(255,255,255,0.28)",
+            border: "1.5px solid var(--color-accent)",
+            boxShadow: "0 0 0 1px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.18)",
+            opacity: active && size.w > 0 ? 1 : 0,
+            transition: "opacity 0.18s linear",
+            zIndex: 3,
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -233,7 +244,7 @@ interface PanelProps {
 }
 
 export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
-  const { src, zoom, active, pos, size } = useZoomCtx();
+  const { src, active, pos, size } = useZoomCtx();
   const panelRef = useRef<HTMLDivElement>(null);
   const [panelSize, setPanelSize] = useState({ w: 0, h: 0 });
 
@@ -254,15 +265,16 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
     return () => ro.disconnect();
   }, []);
 
-  const lensW = size.w / zoom;
-  const lensH = size.h / zoom;
+  // Match the source's lens calculation: lens is always square, side = the
+  // source's smaller dimension. Square tiles → lens fills source. Rectangles
+  // → lens is half the tile, cursor picks which half.
+  const lensSide = size.w > 0 && size.h > 0 ? Math.min(size.w, size.h) : 0;
+  const lensW = lensSide;
+  const lensH = lensSide;
   const cx = Math.max(lensW / 2, Math.min(size.w - lensW / 2, pos.x));
   const cy = Math.max(lensH / 2, Math.min(size.h - lensH / 2, pos.y));
 
-  // Uniform scale chosen so the lens region fits fully within the panel along
-  // its binding dimension; the other dimension shows surrounding source
-  // context. Using min() keeps the source's aspect ratio intact — without it,
-  // tall tiles get stretched into the squarer panel rectangle.
+  // Panel is square (Option A). Uniform scale so lens fits the panel exactly.
   const scale =
     lensW > 0 && lensH > 0
       ? Math.min(panelSize.w / lensW, panelSize.h / lensH)
@@ -273,9 +285,18 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
   const bgY = panelSize.h / 2 - cy * scale;
 
   const hiResSrc = highResVariant(src, 2000);
+  // Default panel sizing → a square that fits inside its parent. The parent
+  // is expected to flex-center this element (no-op when already centered).
   const sizingStyle: CSSProperties = tileSize
     ? tileImageFrameStyle(tileSize)
-    : { position: "absolute", inset: 0 };
+    : {
+        position: "relative",
+        aspectRatio: "1 / 1",
+        height: "100%",
+        width: "auto",
+        maxWidth: "100%",
+        maxHeight: "100%",
+      };
 
   return (
     <div
