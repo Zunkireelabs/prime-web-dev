@@ -80,11 +80,82 @@ export default function CollectionsGrid() {
     // Default size for swatch-only entries (color/type) when no product is matched.
     const FALLBACK_SIZE = "600×600 mm";
 
+    // Round-robin interleave across sizes, in canonical order
+    // (300×300 → 300×450 → 300×600 → 400×400 → 600×600 → 600×1200, repeat).
+    // Cards visibly cycle through all available dimensions instead of clumping
+    // by size.
+    const SIZE_ORDER = [
+      "300×300 mm",
+      "300×450 mm",
+      "300×600 mm",
+      "400×400 mm",
+      "600×600 mm",
+      "600×1200 mm",
+    ];
+    const interleaveBySize = (list: StripItem[]): StripItem[] => {
+      if (list.length <= 2) return list;
+      const buckets = new Map<string, StripItem[]>();
+      for (const item of list) {
+        const bucket = buckets.get(item.size) ?? [];
+        bucket.push(item);
+        buckets.set(item.size, bucket);
+      }
+      if (buckets.size <= 1) return list;
+      // Walk sizes in canonical order; any unknown size gets appended last
+      // so we still emit it.
+      const order = [
+        ...SIZE_ORDER.filter((s) => buckets.has(s)),
+        ...[...buckets.keys()].filter((s) => !SIZE_ORDER.includes(s)),
+      ];
+      const result: StripItem[] = [];
+      let added = true;
+      while (added) {
+        added = false;
+        for (const size of order) {
+          const next = buckets.get(size)!.shift();
+          if (next) {
+            result.push(next);
+            added = true;
+          }
+        }
+      }
+      return result;
+    };
+
+    // Pull 2 catalog products at each standard size that isn't already in
+    // the curated 15 collections — this lets the strip rotate through all
+    // six dimensions (300×300, 300×450, …) instead of just the four the
+    // collections cover.
+    const enrichWithAllSizes = (current: StripItem[]): StripItem[] => {
+      const presentSizes = new Set(current.map((i) => i.size));
+      const usedSlugs = new Set(current.map((i) => i.slug));
+      const additions: StripItem[] = [];
+      for (const size of SIZE_ORDER) {
+        if (presentSizes.has(size)) continue;
+        const fill = allProducts
+          .filter((p) => p.size === size && !usedSlugs.has(p.slug))
+          .slice(0, 2);
+        for (const p of fill) {
+          additions.push({
+            name: p.name,
+            slug: p.slug,
+            badge: p.category,
+            meta: p.size,
+            size: p.size,
+            image: p.image,
+            product: p,
+          });
+          usedSlugs.add(p.slug);
+        }
+      }
+      return [...current, ...additions];
+    };
+
     if (activeTab === "Finishes") {
       const filtered = activeOption === ALL
         ? collections
         : collections.filter((c) => c.category === activeOption);
-      return filtered.map((c) => {
+      const built = filtered.map<StripItem>((c) => {
         const product = productBySlug.get(c.slug);
         const size = c.sizes[0] || product?.size || FALLBACK_SIZE;
         return {
@@ -97,6 +168,8 @@ export default function CollectionsGrid() {
           product: product ?? null,
         };
       });
+      const enriched = activeOption === ALL ? enrichWithAllSizes(built) : built;
+      return interleaveBySize(enriched);
     }
 
     if (activeTab === "Sizes") {
@@ -136,16 +209,18 @@ export default function CollectionsGrid() {
             image: p.image,
             product: p,
           }));
-        return [...collectionItems, ...catalogFill];
+        return interleaveBySize([...collectionItems, ...catalogFill]);
       }
-      return collectionItems;
+      // ALL → enrich with the missing standard sizes (300×300, 300×450)
+      const enriched = activeOption === ALL ? enrichWithAllSizes(collectionItems) : collectionItems;
+      return interleaveBySize(enriched);
     }
 
     if (activeTab === "Colors") {
       const colorEntries = activeOption === ALL
         ? browseData.Colors
         : browseData.Colors.filter((c) => c.name === activeOption);
-      return colorEntries.map((c) => {
+      const built = colorEntries.map<StripItem>((c) => {
         const product = productBySlug.get(c.slug);
         const size = product?.size || FALLBACK_SIZE;
         return {
@@ -158,13 +233,14 @@ export default function CollectionsGrid() {
           product: product ?? null,
         };
       });
+      return interleaveBySize(built);
     }
 
     // Types
     const typeEntries = activeOption === ALL
       ? browseData.Types
       : browseData.Types.filter((t) => t.name === activeOption);
-    return typeEntries.map((t) => {
+    const built = typeEntries.map<StripItem>((t) => {
       const product = productBySlug.get(t.slug);
       const size = product?.size || FALLBACK_SIZE;
       return {
@@ -177,6 +253,7 @@ export default function CollectionsGrid() {
         product: product ?? null,
       };
     });
+    return interleaveBySize(built);
   }, [activeTab, activeOption]);
 
   const items = baseItems;

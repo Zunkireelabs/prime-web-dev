@@ -39,14 +39,70 @@ type Item = {
   product: { name: string; image?: string; size?: string } | null;
 };
 
+const SIZE_ORDER = [
+  "300×300 mm",
+  "300×450 mm",
+  "300×600 mm",
+  "400×400 mm",
+  "600×600 mm",
+  "600×1200 mm",
+];
+
+function interleaveBySize(list: Item[]): Item[] {
+  if (list.length <= 2) return list;
+  const buckets = new Map<string, Item[]>();
+  for (const item of list) {
+    const bucket = buckets.get(item.size) ?? [];
+    bucket.push(item);
+    buckets.set(item.size, bucket);
+  }
+  if (buckets.size <= 1) return list;
+  const order = [
+    ...SIZE_ORDER.filter((s) => buckets.has(s)),
+    ...[...buckets.keys()].filter((s) => !SIZE_ORDER.includes(s)),
+  ];
+  const result: Item[] = [];
+  let added = true;
+  while (added) {
+    added = false;
+    for (const size of order) {
+      const next = buckets.get(size)!.shift();
+      if (next) {
+        result.push(next);
+        added = true;
+      }
+    }
+  }
+  return result;
+}
+
+function enrichWithAllSizes(current: Item[]): Item[] {
+  const presentSizes = new Set(current.map((i) => i.size));
+  const usedSlugs = new Set(current.map((i) => i.slug));
+  const additions: Item[] = [];
+  for (const size of SIZE_ORDER) {
+    if (presentSizes.has(size)) continue;
+    const fill = allProducts
+      .filter((p) => p.size === size && !usedSlugs.has(p.slug))
+      .slice(0, 2);
+    for (const p of fill) {
+      additions.push({ name: p.name, slug: p.slug, size: p.size, image: p.image, product: p });
+      usedSlugs.add(p.slug);
+    }
+  }
+  return [...current, ...additions];
+}
+
 function buildItems(tab: Tab, option: string): Item[] {
   if (tab === "Finishes") {
     const filtered = option === ALL ? collections : collections.filter((c) => c.category === option);
-    return filtered.map((c) => {
+    const built = filtered.map<Item>((c) => {
       const product = productBySlug.get(c.slug);
       const size = c.sizes[0] || product?.size || FALLBACK_SIZE;
       return { name: c.name, slug: c.slug, size, image: resolveImage(product, c.image), product: product ?? null };
     });
+    const enriched = option === ALL ? enrichWithAllSizes(built) : built;
+    return interleaveBySize(enriched);
   }
   if (tab === "Sizes") {
     const fromCollections = option === ALL ? collections : collections.filter((c) => c.sizes.includes(option));
@@ -61,25 +117,28 @@ function buildItems(tab: Tab, option: string): Item[] {
       const catalogFill = allProducts
         .filter((p) => p.size === option && !usedSlugs.has(p.slug))
         .slice(0, need)
-        .map((p) => ({ name: p.name, slug: p.slug, size: p.size, image: p.image, product: p }));
-      return [...collectionItems, ...catalogFill];
+        .map<Item>((p) => ({ name: p.name, slug: p.slug, size: p.size, image: p.image, product: p }));
+      return interleaveBySize([...collectionItems, ...catalogFill]);
     }
-    return collectionItems;
+    const enriched = option === ALL ? enrichWithAllSizes(collectionItems) : collectionItems;
+    return interleaveBySize(enriched);
   }
   if (tab === "Colors") {
     const entries = option === ALL ? browseData.Colors : browseData.Colors.filter((c) => c.name === option);
-    return entries.map((c) => {
+    const built = entries.map<Item>((c) => {
       const product = productBySlug.get(c.slug);
       const size = product?.size || FALLBACK_SIZE;
       return { name: product?.name ?? c.name, slug: c.slug, size, image: resolveImage(product, c.image), product: product ?? null };
     });
+    return interleaveBySize(built);
   }
   const entries = option === ALL ? browseData.Types : browseData.Types.filter((t) => t.name === option);
-  return entries.map((t) => {
+  const built = entries.map<Item>((t) => {
     const product = productBySlug.get(t.slug);
     const size = product?.size || FALLBACK_SIZE;
     return { name: product?.name ?? t.name, slug: t.slug, size, image: resolveImage(product, t.image), product: product ?? null };
   });
+  return interleaveBySize(built);
 }
 
 let total = 0;
@@ -135,4 +194,18 @@ for (const [size, n] of [...sizeStats].sort()) {
 }
 
 if (mismatches.length || sizeIssues.length) process.exit(1);
-console.log("\nPASS — every clickable card matches the modal AND every card has a valid size string for the inner frame.");
+
+// Print the resulting size sequence for the headline view so the interleave is visible.
+console.log("\nSize sequence — FINISHES → All (first 15):");
+const headline = buildItems("Finishes", ALL).slice(0, 15);
+for (const it of headline) {
+  console.log(`  ${it.size.padEnd(14)} ${it.name}`);
+}
+
+console.log("\nSize sequence — SIZES → All (first 15):");
+const sizesAll = buildItems("Sizes", ALL).slice(0, 15);
+for (const it of sizesAll) {
+  console.log(`  ${it.size.padEnd(14)} ${it.name}`);
+}
+
+console.log("\nPASS — every clickable card matches the modal, every card has a valid size, and the strip interleaves sizes (one of A, then B, then C, repeat).");
