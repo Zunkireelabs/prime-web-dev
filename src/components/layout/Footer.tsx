@@ -1,14 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { footerColumns as cols } from "@/data/navigation";
-import { Mail, Phone, Factory, Building2, ArrowUpRight, ChevronDown, Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
+import { Mail, Phone, Factory, Building2, ArrowUpRight, ChevronDown, Facebook, Youtube, Linkedin, type LucideIcon } from "lucide-react";
 import Image from "next/image";
 
-const socials = [
+/** Instagram glyph with the official brand radial gradient — replaces the
+ *  flat lucide outline so the icon doesn't look fake on a dark footer. */
+function InstagramBrandIcon({ size = 22, strokeWidth = 1.8 }: { size?: number; strokeWidth?: number }) {
+  const id = useId().replace(/:/g, "");
+  const stroke = `url(#${id}-stroke)`;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <defs>
+        {/* Instagram brand gradient — diagonal from yellow/orange to magenta/purple. */}
+        <linearGradient id={`${id}-stroke`} x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#FEDA77" />
+          <stop offset="20%" stopColor="#F58529" />
+          <stop offset="50%" stopColor="#DD2A7B" />
+          <stop offset="75%" stopColor="#8134AF" />
+          <stop offset="100%" stopColor="#515BD4" />
+        </linearGradient>
+      </defs>
+      <rect x="2" y="2" width="20" height="20" rx="5" stroke={stroke} />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke={stroke} />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke={stroke} />
+    </svg>
+  );
+}
+
+type SocialEntry = {
+  name: string;
+  href: string;
+  Icon?: LucideIcon;
+  Custom?: () => React.ReactElement;
+  color?: string;
+};
+
+const socials: SocialEntry[] = [
   { name: "Facebook", href: "https://www.facebook.com/PrimeTiles.Official/", Icon: Facebook, color: "#1877F2" },
-  { name: "Instagram", href: "https://www.instagram.com/primetiles.official/", Icon: Instagram, color: "#E4405F" },
+  { name: "Instagram", href: "https://www.instagram.com/primetiles.official/", Custom: () => <InstagramBrandIcon size={22} strokeWidth={1.8} /> },
   { name: "YouTube", href: "https://www.youtube.com/@primetiles.Official", Icon: Youtube, color: "#FF0000" },
   { name: "LinkedIn", href: "https://www.linkedin.com/company/primetilesofficial/", Icon: Linkedin, color: "#0A66C2" },
 ];
@@ -239,7 +280,7 @@ export default function Footer() {
             flexWrap: "wrap",
           }}
         >
-          {socials.map(({ name, href, Icon, color }) => (
+          {socials.map(({ name, href, Icon, Custom, color }) => (
             <a
               key={name}
               href={href}
@@ -254,7 +295,7 @@ export default function Footer() {
                 color,
               }}
             >
-              <Icon size={22} strokeWidth={1.8} aria-hidden="true" />
+              {Custom ? <Custom /> : Icon ? <Icon size={22} strokeWidth={1.8} /> : null}
             </a>
           ))}
         </div>
