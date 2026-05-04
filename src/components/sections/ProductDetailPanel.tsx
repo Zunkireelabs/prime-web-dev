@@ -5,7 +5,7 @@ import { X, ArrowRight, Calculator } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
 import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
-import { TileZoomProvider, TileZoomSource, TileZoomPanel, TileZoomBackdrop, zoomForTileSize } from "@/components/ui/TileZoom";
+import { TileZoomProvider, TileZoomSource, TileZoomPanel } from "@/components/ui/TileZoom";
 import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
 interface Props {
@@ -134,7 +134,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
         onClick={onClose}
       />
 
-      <TileZoomProvider src={hasImage && product.image ? product.image : ""} zoom={zoomForTileSize(product.size)}>
+      <TileZoomProvider src={hasImage && product.image ? product.image : ""} zoom={2}>
       {/* Modal container */}
       <div
         className="absolute bg-surface overflow-hidden"
@@ -507,35 +507,17 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           </div>
         </div>
 
-        {/* Amazon-style zoom: a backdrop hides the right details column on
-            hover, then the zoom panel mirrors the source image (same size,
-            same vertical center) so the eye reads it as a clone showing the
-            magnified slice. */}
+        {/* Zoom panel fills the entire right column on hover. The panel's
+            opaque background covers the details underneath — no separate
+            backdrop needed. */}
         {hasImage && (
-          <>
-            <TileZoomBackdrop
-              className="hidden md:block absolute"
-              style={{ top: 0, right: 0, bottom: 0, width: "50%", zIndex: 3 }}
-            />
-            <div
-              aria-hidden="true"
-              className="hidden md:flex absolute pointer-events-none items-center justify-center"
-              style={{
-                top: 0,
-                right: 0,
-                bottom: 0,
-                width: "50%",
-                zIndex: 4,
-                // Match the source column exactly so the panel mirrors the source image.
-                ["--tile-base" as never]: "clamp(440px, 50vw, 580px)",
-              }}
-            >
-              <TileZoomPanel
-                tileSize={product.size}
-                style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}
-              />
-            </div>
-          </>
+          <div
+            aria-hidden="true"
+            className="hidden md:block absolute"
+            style={{ top: 0, right: 0, bottom: 0, width: "50%", zIndex: 4 }}
+          >
+            <TileZoomPanel />
+          </div>
         )}
       </div>
       </TileZoomProvider>

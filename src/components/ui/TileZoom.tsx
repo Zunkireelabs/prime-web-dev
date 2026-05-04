@@ -259,15 +259,18 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
   const cx = Math.max(lensW / 2, Math.min(size.w - lensW / 2, pos.x));
   const cy = Math.max(lensH / 2, Math.min(size.h - lensH / 2, pos.y));
 
-  const xPct = size.w > 0 ? cx / size.w : 0.5;
-  const yPct = size.h > 0 ? cy / size.h : 0.5;
-
-  // Background sized so the source's visible area fills the panel at `zoom`x.
-  // The lens region (1/zoom of the source) maps 1:1 to the full panel.
-  const bgW = panelSize.w * zoom;
-  const bgH = panelSize.h * zoom;
-  const bgX = panelSize.w / 2 - xPct * bgW;
-  const bgY = panelSize.h / 2 - yPct * bgH;
+  // Uniform scale chosen so the lens region fits fully within the panel along
+  // its binding dimension; the other dimension shows surrounding source
+  // context. Using min() keeps the source's aspect ratio intact — without it,
+  // tall tiles get stretched into the squarer panel rectangle.
+  const scale =
+    lensW > 0 && lensH > 0
+      ? Math.min(panelSize.w / lensW, panelSize.h / lensH)
+      : 0;
+  const bgW = size.w * scale;
+  const bgH = size.h * scale;
+  const bgX = panelSize.w / 2 - cx * scale;
+  const bgY = panelSize.h / 2 - cy * scale;
 
   const hiResSrc = highResVariant(src, 2000);
   const sizingStyle: CSSProperties = tileSize
