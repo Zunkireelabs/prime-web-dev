@@ -1,9 +1,9 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { footerColumns as cols } from "@/data/navigation";
-import { Mail, Phone, Factory, Building2, ArrowUpRight, ChevronDown, Facebook, Youtube, Linkedin, type LucideIcon } from "lucide-react";
+import { Mail, Phone, Factory, Building2, ArrowUpRight, Facebook, Youtube, Linkedin, type LucideIcon } from "lucide-react";
 import Image from "next/image";
 
 /** Instagram glyph with the official brand radial gradient — replaces the
@@ -71,10 +71,6 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export default function Footer() {
-  const [openSection, setOpenSection] = useState<string | null>(null);
-  const toggleSection = (key: string) =>
-    setOpenSection((prev) => (prev === key ? null : key));
-
   return (
     <footer className="bg-surface-dark text-ink-on-dark relative overflow-hidden">
       {/* Subtle ambient glow */}
@@ -100,109 +96,55 @@ export default function Footer() {
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "48px",
           }}
-          className="max-md:!grid-cols-2 max-sm:!grid-cols-1 max-sm:!gap-0 max-md:!gap-[36px]"
+          className="max-md:!grid-cols-2 max-sm:!gap-x-[20px] max-sm:!gap-y-[32px] max-md:!gap-[36px]"
         >
           {/* Nav columns */}
-          {cols.map((col, i) => {
-            const isOpen = openSection === col.title;
-            return (
-              <FadeIn key={col.title} delay={0.06 * (i + 1)}>
-                <div className="max-sm:border-b max-sm:border-white/10">
-                  <button
-                    type="button"
-                    onClick={() => toggleSection(col.title)}
-                    aria-expanded={isOpen}
-                    aria-controls={`footer-section-${col.title}`}
-                    className="w-full flex items-center justify-between sm:cursor-default sm:pointer-events-none max-sm:py-3"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
-                    }}
-                  >
-                    <p
-                      className="eyebrow text-accent sm:!mb-7"
-                      style={{ margin: 0 }}
-                    >
-                      {col.title}
-                    </p>
-                    <ChevronDown
-                      size={16}
-                      strokeWidth={1.6}
-                      className="sm:hidden text-white/60 transition-transform duration-300"
-                      style={{
-                        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                      }}
-                    />
-                  </button>
-                  <ul
-                    id={`footer-section-${col.title}`}
-                    className={`flex flex-col sm:!flex ${
-                      isOpen ? "max-sm:!flex" : "max-sm:!hidden"
-                    }`}
-                    style={{
-                      gap: "14px",
-                      paddingBottom: isOpen ? "16px" : undefined,
-                    }}
-                  >
-                    {col.links.map((l) => (
-                      <li key={l.label}>
-                        <a
-                          href={l.href}
-                          className="text-white/70 hover:text-white transition-colors duration-300"
-                          style={{ fontSize: "0.85rem", lineHeight: "1.6" }}
-                        >
-                          {l.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </FadeIn>
-            );
-          })}
+          {cols.map((col, i) => (
+            <FadeIn key={col.title} delay={0.06 * (i + 1)}>
+              <div>
+                <p
+                  className="eyebrow text-accent"
+                  style={{ marginBottom: "20px" }}
+                >
+                  {col.title}
+                </p>
+                <ul
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "14px",
+                  }}
+                >
+                  {col.links.map((l) => (
+                    <li key={l.label}>
+                      <a
+                        href={l.href}
+                        className="text-white/70 hover:text-white transition-colors duration-300"
+                        style={{ fontSize: "0.85rem", lineHeight: "1.6" }}
+                      >
+                        {l.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </FadeIn>
+          ))}
 
           {/* Contact column */}
           <FadeIn delay={0.25}>
-            <div className="max-sm:border-b max-sm:border-white/10">
-              <button
-                type="button"
-                onClick={() => toggleSection("Contact")}
-                aria-expanded={openSection === "Contact"}
-                aria-controls="footer-section-Contact"
-                className="w-full flex items-center justify-between sm:cursor-default sm:pointer-events-none max-sm:py-3"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  padding: 0,
-                  cursor: "pointer",
-                }}
+            <div>
+              <p
+                className="eyebrow text-accent"
+                style={{ marginBottom: "20px" }}
               >
-                <p
-                  className="eyebrow text-accent sm:!mb-7"
-                  style={{ margin: 0 }}
-                >
-                  Contact
-                </p>
-                <ChevronDown
-                  size={16}
-                  strokeWidth={1.6}
-                  className="sm:hidden text-white/60 transition-transform duration-300"
-                  style={{
-                    transform:
-                      openSection === "Contact" ? "rotate(180deg)" : "rotate(0deg)",
-                  }}
-                />
-              </button>
+                Contact
+              </p>
               <ul
-                id="footer-section-Contact"
-                className={`flex flex-col sm:!flex ${
-                  openSection === "Contact" ? "max-sm:!flex" : "max-sm:!hidden"
-                }`}
                 style={{
+                  display: "flex",
+                  flexDirection: "column",
                   gap: "18px",
-                  paddingBottom: openSection === "Contact" ? "16px" : undefined,
                 }}
               >
                 {contactItems.map((item) => {
