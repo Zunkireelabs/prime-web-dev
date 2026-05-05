@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronDown, Search, X } from "lucide-react";
 import StaggerGrid from "@/components/animations/StaggerGrid";
 import TileCard from "@/components/ui/TileCard";
@@ -10,6 +10,7 @@ import { tileGridColSpan } from "@/lib/utils";
 import type { FilterKey, ProductFilters, SortKey } from "./ProductsBrowser";
 
 const BATCH = 24;
+const SEARCH_DEBOUNCE_MS = 200;
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "name-asc", label: "Name A–Z" },
@@ -48,24 +49,40 @@ export default function ProductsGrid({
 }: Props) {
   const [count, setCount] = useState(BATCH);
   const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
+  const [searchInput, setSearchInput] = useState(filters.search);
 
   useEffect(() => {
     setCount(BATCH);
   }, [products.length, filters.sort, filters.search]);
 
+  // Sync external resets (clearAll, chip removal) into the local input
+  useEffect(() => {
+    setSearchInput(filters.search);
+  }, [filters.search]);
+
+  // Debounce input → upstream filter
+  useEffect(() => {
+    if (searchInput === filters.search) return;
+    const id = setTimeout(() => onSearchChange(searchInput), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(id);
+  }, [searchInput, filters.search, onSearchChange]);
+
   const visible = products.slice(0, count);
   const hasMore = count < products.length;
 
-  const chips: { key: FilterKey; value: string; label: string }[] = [];
-  CHIP_GROUPS.forEach(({ key, label }) => {
-    filters[key].forEach((v) => {
-      chips.push({
-        key,
-        value: v,
-        label: `${label}: ${key === "size" ? v.replace(" mm", "") : v}`,
+  const chips = useMemo(() => {
+    const out: { key: FilterKey; value: string; label: string }[] = [];
+    CHIP_GROUPS.forEach(({ key, label }) => {
+      filters[key].forEach((v) => {
+        out.push({
+          key,
+          value: v,
+          label: `${label}: ${key === "size" ? v.replace(" mm", "") : v}`,
+        });
       });
     });
-  });
+    return out;
+  }, [filters]);
 
   const handleCardClick = useCallback((product: CatalogProduct) => {
     setSelectedProduct(product);
@@ -74,6 +91,17 @@ export default function ProductsGrid({
   const handleClosePanel = useCallback(() => {
     setSelectedProduct(null);
   }, []);
+
+  const handleLoadMore = useCallback(() => {
+    startTransition(() => {
+      setCount((c) => c + BATCH);
+    });
+  }, []);
+
+  const handleClearSearch = useCallback(() => {
+    setSearchInput("");
+    onSearchChange("");
+  }, [onSearchChange]);
 
   const staggerKey = useMemo(
     () => `${products.length}-${filters.sort}-${filters.search}`,
@@ -101,8 +129,8 @@ export default function ProductsGrid({
           />
           <input
             type="text"
-            value={filters.search}
-            onChange={(e) => onSearchChange(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search tiles..."
             className="w-full text-sm text-ink placeholder:text-ink-muted focus:outline-none focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{
@@ -113,10 +141,10 @@ export default function ProductsGrid({
               transition: "border-color 0.3s cubic-bezier(0.22,1,0.36,1)",
             }}
           />
-          {filters.search && (
+          {searchInput && (
             <button
               type="button"
-              onClick={() => onSearchChange("")}
+              onClick={handleClearSearch}
               aria-label="Clear search"
               className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-ink-muted hover:text-ink"
               style={{ transition: "color 0.3s" }}
@@ -212,7 +240,7 @@ export default function ProductsGrid({
             <div style={{ marginTop: "72px", textAlign: "center" }}>
               <button
                 type="button"
-                onClick={() => setCount((c) => c + BATCH)}
+                onClick={handleLoadMore}
                 className="btn-line"
               >
                 Load More Tiles ({products.length - count} remaining)

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { CatalogProduct } from "@/data/catalog";
 import { tileCardCSSVars, tileCardHeight, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
 
@@ -14,7 +15,7 @@ function tileHue(name: string): number {
   return 25 + (Math.abs(h) % 25);
 }
 
-export default function TileCard({ product, onClick }: TileCardProps) {
+function TileCard({ product, onClick }: TileCardProps) {
   const hue = tileHue(product.name);
   const hasImage = product.image && product.image.startsWith("http");
 
@@ -139,3 +140,5 @@ export default function TileCard({ product, onClick }: TileCardProps) {
     </article>
   );
 }
+
+export default memo(TileCard);
