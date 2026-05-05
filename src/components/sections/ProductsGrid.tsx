@@ -1,9 +1,10 @@
 "use client";
 
-import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Search, X } from "lucide-react";
 import StaggerGrid from "@/components/animations/StaggerGrid";
 import TileCard from "@/components/ui/TileCard";
+import Pagination from "@/components/ui/Pagination";
 import ProductDetailPanel from "./ProductDetailPanel";
 import type { CatalogProduct } from "@/data/catalog";
 import { tileGridColSpan } from "@/lib/utils";
@@ -36,6 +37,7 @@ interface Props {
   onClearAll: () => void;
   onSearchChange: (q: string) => void;
   onSortChange: (s: SortKey) => void;
+  onPageChange: (page: number) => void;
 }
 
 export default function ProductsGrid({
@@ -46,14 +48,12 @@ export default function ProductsGrid({
   onClearAll,
   onSearchChange,
   onSortChange,
+  onPageChange,
 }: Props) {
-  const [count, setCount] = useState(BATCH);
   const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
   const [searchInput, setSearchInput] = useState(filters.search);
-
-  useEffect(() => {
-    setCount(BATCH);
-  }, [products.length, filters.sort, filters.search]);
+  const toolbarRef = useRef<HTMLDivElement>(null);
+  const isFirstPageRender = useRef(true);
 
   // Sync external resets (clearAll, chip removal) into the local input
   useEffect(() => {
@@ -67,8 +67,22 @@ export default function ProductsGrid({
     return () => clearTimeout(id);
   }, [searchInput, filters.search, onSearchChange]);
 
-  const visible = products.slice(0, count);
-  const hasMore = count < products.length;
+  const totalPages = Math.max(1, Math.ceil(products.length / BATCH));
+  const safePage = Math.min(Math.max(1, filters.page), totalPages);
+  const sliceStart = (safePage - 1) * BATCH;
+  const sliceEnd = Math.min(sliceStart + BATCH, products.length);
+  const visible = products.slice(sliceStart, sliceEnd);
+  const rangeStart = products.length === 0 ? 0 : sliceStart + 1;
+  const rangeEnd = sliceEnd;
+
+  // Smooth-scroll back to the toolbar on page change (skip initial mount)
+  useEffect(() => {
+    if (isFirstPageRender.current) {
+      isFirstPageRender.current = false;
+      return;
+    }
+    toolbarRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [filters.page]);
 
   const chips = useMemo(() => {
     const out: { key: FilterKey; value: string; label: string }[] = [];
@@ -92,12 +106,6 @@ export default function ProductsGrid({
     setSelectedProduct(null);
   }, []);
 
-  const handleLoadMore = useCallback(() => {
-    startTransition(() => {
-      setCount((c) => c + BATCH);
-    });
-  }, []);
-
   const handleClearSearch = useCallback(() => {
     setSearchInput("");
     onSearchChange("");
@@ -112,12 +120,14 @@ export default function ProductsGrid({
     <div className="flex-1 min-w-0" style={{ background: "#fff", padding: "clamp(24px, 3vw, 40px)", borderRadius: "4px" }}>
       {/* Toolbar — search + sort */}
       <div
+        ref={toolbarRef}
         className="flex flex-col md:flex-row md:items-center md:justify-between"
         style={{
           gap: "16px",
           paddingBottom: "24px",
           borderBottom: "1px solid rgba(43,36,28,0.06)",
           marginBottom: "28px",
+          scrollMarginTop: "120px",
         }}
       >
         {/* Search */}
@@ -157,7 +167,9 @@ export default function ProductsGrid({
         {/* Count + sort */}
         <div className="flex items-center justify-between md:justify-end" style={{ gap: "20px" }}>
           <span className="text-[0.6rem] font-medium tracking-[0.14em] uppercase text-ink-muted tabular-nums whitespace-nowrap">
-            {visible.length} of {products.length}
+            {products.length === 0
+              ? "0 of 0"
+              : `${rangeStart}–${rangeEnd} of ${products.length}`}
           </span>
           <div
             className="relative"
@@ -236,15 +248,13 @@ export default function ProductsGrid({
             ))}
           </StaggerGrid>
 
-          {hasMore && (
-            <div style={{ marginTop: "72px", textAlign: "center" }}>
-              <button
-                type="button"
-                onClick={handleLoadMore}
-                className="btn-line"
-              >
-                Load More Tiles ({products.length - count} remaining)
-              </button>
+          {totalPages > 1 && (
+            <div style={{ marginTop: "72px" }}>
+              <Pagination
+                page={safePage}
+                totalPages={totalPages}
+                onPageChange={onPageChange}
+              />
             </div>
           )}
         </>
