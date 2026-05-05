@@ -23,7 +23,10 @@ function TileCard({ product, onClick }: TileCardProps) {
   const hasImage = product.image && product.image.startsWith("http");
   const dwellTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handlePointerEnter = useCallback(() => {
+  const handlePointerEnter = useCallback((e: React.PointerEvent) => {
+    // Skip on touch/pen — mobile/tablet has no zoom panel, so prewarming
+    // the hi-res variant would just waste bandwidth.
+    if (e.pointerType !== "mouse") return;
     if (!hasImage || !product.image) return;
     if (dwellTimerRef.current) clearTimeout(dwellTimerRef.current);
     dwellTimerRef.current = setTimeout(() => {

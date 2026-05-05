@@ -83,7 +83,7 @@ export default function Pagination({
 
   return (
     <nav
-      className={`flex flex-wrap items-center justify-center ${className}`}
+      className={`flex items-center justify-center ${className}`}
       style={{ gap: "8px" }}
       aria-label="Product pagination"
     >
@@ -99,30 +99,42 @@ export default function Pagination({
         Prev
       </button>
 
-      {pages.map((p, i) =>
-        p === "..." ? (
-          <span
-            key={`ellipsis-${i}`}
-            className={`${labelClasses} text-ink-muted`}
-            style={ellipsisBtn}
-            aria-hidden="true"
-          >
-            …
-          </span>
-        ) : (
-          <button
-            key={p}
-            type="button"
-            onClick={() => onPageChange(p)}
-            aria-label={`Page ${p}`}
-            aria-current={p === page ? "page" : undefined}
-            className={`${labelClasses} ${p === page ? "" : "text-ink-light hover:text-accent"}`}
-            style={p === page ? activeBtn : baseBtn}
-          >
-            {p}
-          </button>
-        ),
-      )}
+      {/* Desktop: full numbered pagination with ellipsis */}
+      <div className="hidden md:flex items-center" style={{ gap: "8px" }}>
+        {pages.map((p, i) =>
+          p === "..." ? (
+            <span
+              key={`ellipsis-${i}`}
+              className={`${labelClasses} text-ink-muted`}
+              style={ellipsisBtn}
+              aria-hidden="true"
+            >
+              …
+            </span>
+          ) : (
+            <button
+              key={p}
+              type="button"
+              onClick={() => onPageChange(p)}
+              aria-label={`Page ${p}`}
+              aria-current={p === page ? "page" : undefined}
+              className={`${labelClasses} ${p === page ? "" : "text-ink-light hover:text-accent"}`}
+              style={p === page ? activeBtn : baseBtn}
+            >
+              {p}
+            </button>
+          ),
+        )}
+      </div>
+
+      {/* Mobile: compact "X of Y" indicator */}
+      <span
+        className={`${labelClasses} md:hidden text-ink-light`}
+        style={{ ...baseBtn, cursor: "default", minWidth: "auto", padding: "0 14px" }}
+        aria-current="page"
+      >
+        {page} of {totalPages}
+      </span>
 
       <button
         type="button"
