@@ -37,7 +37,7 @@ const TILE_DIMS: Record<string, { w: number; h: number }> = {
   "600×1200 mm": { w: 600, h: 1200 },
 };
 
-function parseTileDims(size: string): { w: number; h: number } {
+export function parseTileDims(size: string): { w: number; h: number } {
   if (TILE_DIMS[size]) return TILE_DIMS[size];
   const m = size.match(/(\d+)\s*[×x]\s*(\d+)/);
   if (m) return { w: parseInt(m[1], 10), h: parseInt(m[2], 10) };

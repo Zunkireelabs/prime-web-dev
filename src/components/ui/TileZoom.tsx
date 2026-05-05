@@ -18,12 +18,25 @@ import { tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
  * stores small variants (`?w=800`) for fast catalog/modal loads. The zoom
  * panel needs more pixels to stay sharp under magnification, so it requests a
  * larger variant from the same source URL only on demand.
+ *
+ * When `aspect` is provided, the URL also asks Sanity to crop to that ratio
+ * (`fit=crop`). This matches the thumbnail's `object-fit: cover` semantics so
+ * the zoom panel doesn't stretch a non-square photo into a square footprint.
  */
-function highResVariant(src: string, w = 2000): string {
+function highResVariant(
+  src: string,
+  w = 2000,
+  aspect?: { w: number; h: number },
+): string {
   if (!src || !src.includes("cdn.sanity.io")) return src;
   try {
     const u = new URL(src);
     u.searchParams.set("w", String(w));
+    if (aspect && aspect.w > 0 && aspect.h > 0) {
+      const h = Math.round((w * aspect.h) / aspect.w);
+      u.searchParams.set("h", String(h));
+      u.searchParams.set("fit", "crop");
+    }
     return u.toString();
   } catch {
     return src;
@@ -36,6 +49,7 @@ interface ZoomContextValue {
   active: boolean;
   pos: { x: number; y: number };
   size: { w: number; h: number };
+  cropAspect?: { w: number; h: number };
   setActive: (a: boolean) => void;
   setPos: (p: { x: number; y: number }) => void;
   setSize: (s: { w: number; h: number }) => void;
@@ -62,10 +76,19 @@ export function TileZoomProvider({
   children,
   src,
   zoom = 3,
+  cropAspect,
 }: {
   children: React.ReactNode;
   src: string;
   zoom?: number;
+  /**
+   * When set, the hi-res panel variant is requested cropped to this aspect
+   * ratio. This keeps the zoom view aligned with the thumbnail's
+   * `object-fit: cover` for tiles whose source photo isn't already in the
+   * tile's physical aspect ratio (e.g. square 600×600 tiles served from
+   * non-square photos).
+   */
+  cropAspect?: { w: number; h: number };
 }) {
   const [active, setActive] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -80,15 +103,15 @@ export function TileZoomProvider({
   // blank/loading flash while the larger image fetches from the CDN.
   useEffect(() => {
     if (!src) return;
-    const hiRes = highResVariant(src, 2000);
+    const hiRes = highResVariant(src, 2000, cropAspect);
     if (hiRes === src) return;
     const img = new Image();
     img.src = hiRes;
-  }, [src]);
+  }, [src, cropAspect?.w, cropAspect?.h]);
 
   return (
     <Ctx.Provider
-      value={{ src, zoom, active, pos, size, setActive, setPos, setSize }}
+      value={{ src, zoom, active, pos, size, cropAspect, setActive, setPos, setSize }}
     >
       {children}
     </Ctx.Provider>
@@ -244,7 +267,7 @@ interface PanelProps {
 }
 
 export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
-  const { src, active, pos, size } = useZoomCtx();
+  const { src, active, pos, size, cropAspect } = useZoomCtx();
   const panelRef = useRef<HTMLDivElement>(null);
   const [panelSize, setPanelSize] = useState({ w: 0, h: 0 });
 
@@ -284,7 +307,7 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
   const bgX = panelSize.w / 2 - cx * scale;
   const bgY = panelSize.h / 2 - cy * scale;
 
-  const hiResSrc = highResVariant(src, 2000);
+  const hiResSrc = highResVariant(src, 2000, cropAspect);
   // Default panel sizing → a square that fits inside its parent. The parent
   // is expected to flex-center this element (no-op when already centered).
   const sizingStyle: CSSProperties = tileSize

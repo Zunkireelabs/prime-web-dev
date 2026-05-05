@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import { X, ArrowRight, Calculator } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
-import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tilePickerSize, ALL_TILE_SIZES } from "@/lib/utils";
+import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tilePickerSize, parseTileDims, ALL_TILE_SIZES } from "@/lib/utils";
 import { TileZoomProvider, TileZoomSource, TileZoomPanel } from "@/components/ui/TileZoom";
 import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
@@ -134,7 +134,14 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
         onClick={onClose}
       />
 
-      <TileZoomProvider src={hasImage && product.image ? product.image : ""} zoom={2}>
+      <TileZoomProvider
+        src={hasImage && product.image ? product.image : ""}
+        zoom={2}
+        cropAspect={(() => {
+          const dims = parseTileDims(product.size);
+          return dims.w === dims.h ? dims : undefined;
+        })()}
+      >
       {/* Modal container */}
       <div
         className="absolute bg-surface overflow-hidden"
