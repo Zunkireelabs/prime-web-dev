@@ -14,6 +14,13 @@ import { ZoomIn } from "lucide-react";
 import { tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
 
 /**
+ * Hi-res panel target width. The panel renders at ~580 px on desktop with up
+ * to 2.25× zoom → effective max resolution ~1305 px. 1400 gives a small
+ * safety margin without paying for pixels the screen can't show.
+ */
+const HI_RES_W = 1400;
+
+/**
  * Sanity CDN serves on-the-fly resizing via the `w` query param. The catalog
  * stores small variants (`?w=800`) for fast catalog/modal loads. The zoom
  * panel needs more pixels to stay sharp under magnification, so it requests a
@@ -25,7 +32,7 @@ import { tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
  */
 function highResVariant(
   src: string,
-  w = 2000,
+  w = HI_RES_W,
   aspect?: { w: number; h: number },
 ): string {
   if (!src || !src.includes("cdn.sanity.io")) return src;
@@ -41,6 +48,23 @@ function highResVariant(
   } catch {
     return src;
   }
+}
+
+/**
+ * Fire-and-forget pre-fetch of the hi-res zoom variant. Call this when the
+ * user expresses intent to view a tile (e.g. hovering its card) so the image
+ * is already in browser cache by the time the modal opens. Cheap to call
+ * repeatedly — browsers dedupe identical URLs.
+ */
+export function prewarmTileZoomImage(
+  src: string,
+  cropAspect?: { w: number; h: number },
+): void {
+  if (!src) return;
+  const hiRes = highResVariant(src, HI_RES_W, cropAspect);
+  if (hiRes === src) return;
+  const img = new Image();
+  img.src = hiRes;
 }
 
 interface ZoomContextValue {
@@ -103,7 +127,7 @@ export function TileZoomProvider({
   // blank/loading flash while the larger image fetches from the CDN.
   useEffect(() => {
     if (!src) return;
-    const hiRes = highResVariant(src, 2000, cropAspect);
+    const hiRes = highResVariant(src, HI_RES_W, cropAspect);
     if (hiRes === src) return;
     const img = new Image();
     img.src = hiRes;
@@ -307,7 +331,7 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
   const bgX = panelSize.w / 2 - cx * scale;
   const bgY = panelSize.h / 2 - cy * scale;
 
-  const hiResSrc = highResVariant(src, 2000, cropAspect);
+  const hiResSrc = highResVariant(src, HI_RES_W, cropAspect);
   // Default panel sizing → a square that fits inside its parent. The parent
   // is expected to flex-center this element (no-op when already centered).
   const sizingStyle: CSSProperties = tileSize

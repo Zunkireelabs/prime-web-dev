@@ -1,8 +1,11 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useCallback, useRef } from "react";
 import type { CatalogProduct } from "@/data/catalog";
-import { tileCardCSSVars, tileCardHeight, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
+import { parseTileDims, tileCardCSSVars, tileCardHeight, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
+import { prewarmTileZoomImage } from "@/components/ui/TileZoom";
+
+const HOVER_PREWARM_DELAY_MS = 100;
 
 interface TileCardProps {
   product: CatalogProduct;
@@ -18,11 +21,32 @@ function tileHue(name: string): number {
 function TileCard({ product, onClick }: TileCardProps) {
   const hue = tileHue(product.name);
   const hasImage = product.image && product.image.startsWith("http");
+  const dwellTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handlePointerEnter = useCallback(() => {
+    if (!hasImage || !product.image) return;
+    if (dwellTimerRef.current) clearTimeout(dwellTimerRef.current);
+    dwellTimerRef.current = setTimeout(() => {
+      const dims = parseTileDims(product.size);
+      const cropAspect = dims.w === dims.h ? dims : undefined;
+      prewarmTileZoomImage(product.image!, cropAspect);
+      dwellTimerRef.current = null;
+    }, HOVER_PREWARM_DELAY_MS);
+  }, [hasImage, product.image, product.size]);
+
+  const handlePointerLeave = useCallback(() => {
+    if (dwellTimerRef.current) {
+      clearTimeout(dwellTimerRef.current);
+      dwellTimerRef.current = null;
+    }
+  }, []);
 
   return (
     <article
       className="group"
       onClick={() => onClick?.(product)}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => {
