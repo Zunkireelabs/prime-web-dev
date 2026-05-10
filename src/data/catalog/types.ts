@@ -15,7 +15,7 @@ export type CatalogFinish =
   | "High Gloss"
   | "Carving"
   | "Satin"
-  | "Rustic"
+
   | "Polished";
 
 export type CatalogApplication =

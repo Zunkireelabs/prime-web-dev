@@ -70,7 +70,7 @@ export const browseData: BrowseData = {
     { name: "High Gloss", image: "/images/browse/finish-high-gloss.webp", slug: "amazonite-blue" },
     { name: "Polished", image: "/images/browse/finish-polished.webp", slug: "botticino" },
     { name: "Satin", image: "/images/browse/finish-satin.webp", slug: "silken-gris" },
-    { name: "Rustic", image: "/images/browse/finish-rustic.webp", slug: "kavre-slate" },
+
     { name: "Carving", image: "/images/browse/finish-carving.webp", slug: "canterbury-beige" },
   ],
   Sizes: [

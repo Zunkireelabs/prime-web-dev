@@ -34,7 +34,7 @@ export const megaCollections = [
 ];
 
 export const megaFinishes = [
-  "Matt", "Glossy", "Polished", "Rustic", "Satin", "Carving",
+  "Matt", "Glossy", "Polished", "Satin", "Carving",
 ];
 
 export const megaSizes = [
