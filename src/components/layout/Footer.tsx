@@ -308,7 +308,7 @@ export default function Footer() {
               }}
             />
 
-            {/* ── Zunkiee Labs — Designed by badge ── */}
+            {/* ── Zunkiree Labs — Designed by badge ── */}
             <a
               href="https://zunkireelabs.com"
               target="_blank"
@@ -323,7 +323,7 @@ export default function Footer() {
               >
                 <Image
                   src="/images/zunkiee-labs-logo.png"
-                  alt="Zunkiee Labs"
+                  alt="Zunkiree Labs"
                   width={24}
                   height={24}
                   unoptimized
@@ -359,7 +359,7 @@ export default function Footer() {
                     marginTop: "2px",
                   }}
                 >
-                  Zunkiee Labs
+                  Zunkiree Labs
                 </span>
               </span>
 
