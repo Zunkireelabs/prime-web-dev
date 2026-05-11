@@ -38,8 +38,8 @@ export const megaFinishes = [
 ];
 
 export const megaSizes = [
-  "300×300 mm", "300×450 mm", "300×600 mm",
-  "400×400 mm", "600×600 mm", "600×1200 mm",
+  "600×1200 mm", "600×600 mm", "400×400 mm",
+  "300×600 mm", "300×450 mm", "300×300 mm",
 ];
 
 // ── Footer ──

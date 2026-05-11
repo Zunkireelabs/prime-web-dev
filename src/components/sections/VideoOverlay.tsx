@@ -12,7 +12,11 @@ export default function VideoOverlay() {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (video) video.play().catch(() => {});
+    if (video) {
+      // If the browser already loaded the video before hydration, mark as loaded
+      if (video.readyState >= 2) setLoaded(true);
+      video.play().catch(() => {});
+    }
     window.dispatchEvent(new CustomEvent("video-ad", { detail: { visible: true } }));
     return () => {
       window.dispatchEvent(new CustomEvent("video-ad", { detail: { visible: false } }));
