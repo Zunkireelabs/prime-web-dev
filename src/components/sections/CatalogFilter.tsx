@@ -20,7 +20,6 @@ const finishOptions = [
   { label: "Matt", value: "Matt" },
   { label: "High Gloss", value: "High Gloss" },
   { label: "Carving", value: "Carving" },
-  { label: "Satin", value: "Satin" },
 ];
 
 interface Props {
@@ -48,7 +47,7 @@ export default function CatalogFilter(props: Props) {
   const hasFilters = activeSize !== "all" || activeFinish !== "all" || activeSeries !== "all" || searchQuery !== "";
 
   return (
-    <div className="sticky z-30 bg-surface-alt/98 backdrop-blur-lg border-b border-ink/6" style={{ top: "clamp(64px, 8vw, 88px)" }}>
+    <div className="sticky z-30 bg-surface-alt/98 backdrop-blur-lg border-b border-ink/6" style={{ top: "clamp(72px, 8vw, 88px)" }}>
       <div className="container">
         {/* ── Desktop ── */}
         <div className="hidden md:block" style={{ padding: "20px 0", marginRight: "64px" }}>

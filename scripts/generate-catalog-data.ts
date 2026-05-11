@@ -70,6 +70,18 @@ interface SanityProduct {
   sortOrder: number;
 }
 
+function dimsFor(size: string): { w: number; h: number } {
+  const m = size.match(/(\d+)\s*[×x]\s*(\d+)/);
+  if (!m) return { w: 800, h: 800 };
+  const sw = parseInt(m[1], 10);
+  const sh = parseInt(m[2], 10);
+  const longest = Math.max(sw, sh);
+  return {
+    w: Math.round((sw / longest) * 800),
+    h: Math.round((sh / longest) * 800),
+  };
+}
+
 async function generate() {
   console.log("📦 Fetching catalog data from Sanity...");
 
@@ -82,22 +94,37 @@ async function generate() {
     process.exit(0);
   }
 
-  const transformed = products.map((p) => ({
-    name: p.name,
-    slug: p.slug,
-    catalog: p.catalog,
-    category: p.category,
-    series: p.series,
-    collection: p.collection || undefined,
-    size: p.size,
-    finish: p.finish,
-    application: p.application,
-    hasMatchingFloor: p.hasMatchingFloor || undefined,
-    variants: p.variants || undefined,
-    image: p.image
-      ? urlFor(p.image).width(800).quality(80).format("webp").url()
-      : "",
-  }));
+  const transformed = products.map((p) => {
+    const dims = dimsFor(p.size);
+    const isSquare = dims.w === dims.h;
+    let imageUrl = "";
+    if (p.image) {
+      const builder = urlFor(p.image);
+      imageUrl = isSquare
+        ? builder
+            .width(dims.w)
+            .height(dims.h)
+            .fit("crop")
+            .quality(80)
+            .format("webp")
+            .url()
+        : builder.width(800).quality(80).format("webp").url();
+    }
+    return {
+      name: p.name,
+      slug: p.slug,
+      catalog: p.catalog,
+      category: p.category,
+      series: p.series,
+      collection: p.collection || undefined,
+      size: p.size,
+      finish: p.finish,
+      application: p.application,
+      hasMatchingFloor: p.hasMatchingFloor || undefined,
+      variants: p.variants || undefined,
+      image: imageUrl,
+    };
+  });
 
   const outputPath = resolve(
     __dirname,

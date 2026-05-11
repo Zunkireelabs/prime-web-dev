@@ -23,7 +23,7 @@ export type TileFinish =
   | "HD Polished"
   | "Super Glossy"
   | "Polished"
-  | "Rustic"
+
   | "Satin"
   | "Carving"
   | "Lappato"

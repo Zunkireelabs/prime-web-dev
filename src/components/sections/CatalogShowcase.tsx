@@ -5,6 +5,7 @@ import { ArrowRight, Download, Layers, Weight, Ruler } from "lucide-react";
 import { catalogEntries } from "@/data/catalogs";
 import type { CatalogEntry } from "@/data/types";
 import { tileSpecsBySize } from "@/data/catalog/tile-specs";
+import { tileCardHeight } from "@/lib/utils";
 
 function CatalogCard({
   cat,
@@ -25,8 +26,8 @@ function CatalogCard({
         {/* Image — use 3:4 portrait ratio to match actual cover images */}
         <a
           href={isComingSoon ? undefined : `/catalog/view/${cat.slug}`}
-          className={`relative block overflow-hidden bg-surface-alt ${large ? "aspect-[3/2]" : "aspect-[3/4]"}`}
-          style={{ marginBottom: "20px", borderRadius: "4px", cursor: isComingSoon ? "default" : "pointer" }}
+          className="relative block overflow-hidden bg-surface-alt"
+          style={{ height: large ? "320px" : tileCardHeight(), marginBottom: "20px", borderRadius: "4px", cursor: isComingSoon ? "default" : "pointer" }}
         >
           <img
             src={cat.image}

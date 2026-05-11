@@ -17,9 +17,10 @@ export interface ProductFilters {
   series: string[];
   search: string;
   sort: SortKey;
+  page: number;
 }
 
-export type FilterKey = Exclude<keyof ProductFilters, "search" | "sort">;
+export type FilterKey = Exclude<keyof ProductFilters, "search" | "sort" | "page">;
 
 const EMPTY_FILTERS: ProductFilters = {
   category: [],
@@ -30,6 +31,7 @@ const EMPTY_FILTERS: ProductFilters = {
   series: [],
   search: "",
   sort: "name-asc",
+  page: 1,
 };
 
 const MULTI_KEYS: FilterKey[] = ["category", "collection", "size", "finish", "application", "series"];
@@ -41,6 +43,12 @@ function parseMulti(value: string | null): string[] {
 
 function isSortKey(v: string | null): v is SortKey {
   return v === "name-asc" || v === "name-desc" || v === "size-asc" || v === "size-desc";
+}
+
+function parsePage(value: string | null): number {
+  if (!value) return 1;
+  const n = parseInt(value, 10);
+  return Number.isNaN(n) || n < 1 ? 1 : n;
 }
 
 function sizeToNumber(size: string): number {
@@ -64,6 +72,7 @@ export default function ProductsBrowser() {
       series: parseMulti(searchParams.get("series")),
       search: searchParams.get("search") ?? "",
       sort: isSortKey(sort) ? sort : "name-asc",
+      page: parsePage(searchParams.get("page")),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -78,6 +87,7 @@ export default function ProductsBrowser() {
     });
     if (filters.search.trim()) params.set("search", filters.search.trim());
     if (filters.sort !== "name-asc") params.set("sort", filters.sort);
+    if (filters.page > 1) params.set("page", String(filters.page));
     const qs = params.toString();
     const next = qs ? `/products?${qs}` : "/products";
     router.replace(next, { scroll: false });
@@ -142,12 +152,12 @@ export default function ProductsBrowser() {
       const next = current.includes(value)
         ? current.filter((v) => v !== value)
         : [...current, value];
-      return { ...f, [key]: next };
+      return { ...f, [key]: next, page: 1 };
     });
   }, []);
 
   const clearGroup = useCallback((key: FilterKey) => {
-    setFilters((f) => ({ ...f, [key]: [] }));
+    setFilters((f) => ({ ...f, [key]: [], page: 1 }));
   }, []);
 
   const clearAll = useCallback(() => {
@@ -155,11 +165,15 @@ export default function ProductsBrowser() {
   }, []);
 
   const setSearch = useCallback((search: string) => {
-    setFilters((f) => ({ ...f, search }));
+    setFilters((f) => ({ ...f, search, page: 1 }));
   }, []);
 
   const setSort = useCallback((sort: SortKey) => {
-    setFilters((f) => ({ ...f, sort }));
+    setFilters((f) => ({ ...f, sort, page: 1 }));
+  }, []);
+
+  const setPage = useCallback((page: number) => {
+    setFilters((f) => ({ ...f, page }));
   }, []);
 
   const activeCount = MULTI_KEYS.reduce((sum, k) => sum + filters[k].length, 0) + (filters.search ? 1 : 0);
@@ -188,6 +202,7 @@ export default function ProductsBrowser() {
             onClearAll={clearAll}
             onSearchChange={setSearch}
             onSortChange={setSort}
+            onPageChange={setPage}
           />
         </div>
       </div>

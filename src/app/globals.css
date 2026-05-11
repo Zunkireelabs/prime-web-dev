@@ -48,7 +48,7 @@
   --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
 
   /* ── Spacing ── */
-  --spacing-gutter: clamp(24px, 5vw, 56px);
+  --spacing-gutter: clamp(18px, 5vw, 56px);
   --spacing-section: clamp(64px, 8vw, 112px);
 
   /* ── Duration tokens ── */

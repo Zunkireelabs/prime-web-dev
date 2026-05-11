@@ -58,3 +58,11 @@ data-drafts/
 
 # Temp files
 temp_ss/
+temp-ss/
+
+# Backup originals
+*.original.png
+*.original.jpg
+
+# Local Claude skills (machine-specific)
+.claude/skills/tile-image-crop/

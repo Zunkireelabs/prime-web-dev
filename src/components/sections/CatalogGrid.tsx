@@ -6,6 +6,7 @@ import CatalogFilter from "./CatalogFilter";
 import ProductDetailPanel from "./ProductDetailPanel";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
+import { tileCardCSSVars, tileCardHeight, tileGridColSpan, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
 
 const BATCH = 24;
 
@@ -32,20 +33,22 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
       }}
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
-      {/* Swatch — 4:5 uniform grid */}
-      <div className="relative aspect-[4/5] overflow-hidden" style={{ marginBottom: "16px" }}>
-        {product.image && product.image.startsWith("http") ? (
-          <img
-            src={product.image}
-            alt={product.name}
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <>
-            <div
-              className="absolute inset-0"
-              style={{ background: `linear-gradient(155deg, hsl(${hue}, 12%, 89%), hsl(${hue}, 8%, 83%), hsl(${hue}, 5%, 79%))` }}
+      {/* Outer frame: cream-white stage. */}
+      <div className="relative overflow-hidden flex items-center justify-center bg-surface-card" style={{ ...tileCardCSSVars(), height: tileCardHeight(), marginBottom: "16px" }}>
+        <div style={tileImageFrameStyle(product.size)}>
+          {product.image && product.image.startsWith("http") ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              loading="lazy"
+              className="block transition-transform duration-500 group-hover:scale-105"
+              style={tileImageCropStyle}
+            />
+          ) : (
+            <>
+              <div
+                className="absolute inset-0"
+                style={{ background: `linear-gradient(155deg, hsl(${hue}, 12%, 89%), hsl(${hue}, 8%, 83%), hsl(${hue}, 5%, 79%))` }}
             >
               <div
                 className="absolute inset-0 opacity-[0.12] mix-blend-multiply"
@@ -57,15 +60,16 @@ function TileCard({ product, onClick }: { product: CatalogProduct; onClick?: (p:
             <div className="absolute inset-0 flex items-center justify-center px-4">
               <p
                 className="font-serif font-light text-center leading-tight select-none"
-                style={{ fontSize: "clamp(0.75rem, 1.2vw, 0.95rem)", color: `hsl(${hue}, 6%, 62%)` }}
+                style={{ fontSize: "clamp(0.7rem, 1.1vw, 0.9rem)", color: `hsl(${hue}, 6%, 62%)` }}
               >
                 {product.name}
               </p>
             </div>
           </>
-        )}
+          )}
+        </div>
 
-        {/* Finish badge */}
+        {/* Finish badge — pinned to outer frame */}
         <span
           className="absolute top-2.5 right-2.5 px-2.5 py-1 text-[0.45rem] font-medium tracking-[0.12em] uppercase"
           style={{ background: `hsl(${hue}, 6%, 95%)`, color: `hsl(${hue}, 8%, 48%)` }}
@@ -191,11 +195,23 @@ export default function CatalogGrid({ initialSize = "all" }: { initialSize?: str
           {filtered.length > 0 ? (
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4" style={{ columnGap: "clamp(20px, 3vw, 24px)", rowGap: "clamp(32px, 4vw, 40px)" }}>
-                {visible.map((p, i) => (
-                  <FadeIn key={p.slug} delay={Math.min(i * 0.02, 0.2)} direction="up" distance={12}>
-                    <TileCard product={p} onClick={setSelectedProduct} />
-                  </FadeIn>
-                ))}
+                {visible.map((p, i) => {
+                  const colSpan = tileGridColSpan(p.size);
+                  return (
+                    <div
+                      key={p.slug}
+                      style={colSpan === 2 ? { gridColumn: "span 2" } : undefined}
+                    >
+                      <FadeIn
+                        delay={Math.min(i * 0.02, 0.2)}
+                        direction="up"
+                        distance={12}
+                      >
+                        <TileCard product={p} onClick={setSelectedProduct} />
+                      </FadeIn>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Load More — per product-grid-master: centered, btn-line, mt-16 */}

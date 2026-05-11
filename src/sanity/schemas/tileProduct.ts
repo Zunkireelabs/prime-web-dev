@@ -92,7 +92,7 @@ export const tileProduct = defineType({
           "High Gloss",
           "Carving",
           "Satin",
-          "Rustic",
+
           "Polished",
         ],
       },

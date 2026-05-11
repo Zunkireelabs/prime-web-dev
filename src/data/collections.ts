@@ -12,7 +12,7 @@ export const collections: Collection[] = [
   { name: "Antiquity Grey", slug: "antiquity-grey", category: "Stone Look", sizes: ["600×600 mm"], image: "" },
   { name: "Desert Marble Dark", slug: "desert-marble-dark", category: "Ceramic", sizes: ["300×600 mm"], image: "" },
   { name: "Angel HL", slug: "angel-hl", category: "Ceramic", sizes: ["300×600 mm"], image: "" },
-  { name: "Komo Grid", slug: "komo-grid", category: "Vitrified", sizes: ["400×400 mm"], image: "" },
+  { name: "Marble Grid", slug: "marble-grid", category: "Wood Look", sizes: ["600×600 mm"], image: "" },
   { name: "Cassion Velvet", slug: "cassion-velvet", category: "Vitrified", sizes: ["400×400 mm"], image: "" },
   { name: "Mithila Art - Buddha", slug: "mithila-art-buddha", category: "Art", sizes: ["300×600 mm"], image: "" },
   { name: "Aqua Dhaka Dark", slug: "aqua-dhaka-dark", category: "Cultural Heritage", sizes: ["300×600 mm"], image: "" },
@@ -65,16 +65,17 @@ export const productCategories: ProductCategory[] = [
 
 export const browseData: BrowseData = {
   Finishes: [
-    { name: "Matt", image: "/images/browse/finish-matt.webp", slug: "komo-grid" },
+    { name: "Matt", image: "/images/browse/finish-matt.webp", slug: "marble-grid" },
     { name: "Glossy", image: "/images/browse/finish-glossy.webp", slug: "angel-hl" },
     { name: "High Gloss", image: "/images/browse/finish-high-gloss.webp", slug: "amazonite-blue" },
     { name: "Polished", image: "/images/browse/finish-polished.webp", slug: "botticino" },
     { name: "Satin", image: "/images/browse/finish-satin.webp", slug: "silken-gris" },
-    { name: "Rustic", image: "/images/browse/finish-rustic.webp", slug: "kavre-slate" },
+
     { name: "Carving", image: "/images/browse/finish-carving.webp", slug: "canterbury-beige" },
   ],
   Sizes: [
     { name: "300×300 mm", image: "/images/browse/size-300x600.webp", slug: "alcazar-300x300" },
+    { name: "300×450 mm", image: "/images/browse/size-300x600.webp", slug: "atlantica-light" },
     { name: "300×600 mm", image: "/images/browse/size-300x600.webp", slug: "desert-marble-hl" },
     { name: "400×400 mm", image: "/images/browse/size-400x400.webp", slug: "cassion-velvet" },
     { name: "600×600 mm", image: "/images/browse/size-600x600.webp", slug: "driftwood-ash" },
@@ -92,8 +93,13 @@ export const browseData: BrowseData = {
     { name: "Ceramic", image: "/images/browse/type-ceramic.webp", slug: "classy-beige-hl" },
     { name: "Vitrified", image: "/images/browse/type-vitrified.webp", slug: "earthen-light-grey" },
     { name: "Glazed Vitrified", image: "/images/browse/type-glazed.webp", slug: "helix-marble-brown" },
+    { name: "Marble Look", image: "/images/browse/type-glazed.webp", slug: "godawari-marble-beige" },
     { name: "Wood Look", image: "/images/browse/type-wood.webp", slug: "woody-teak" },
     { name: "Stone Look", image: "/images/browse/type-stone.webp", slug: "stonelo-brown" },
+    { name: "Monochrome", image: "/images/browse/color-white.webp", slug: "pleasant-white" },
+    { name: "Cultural Heritage", image: "/images/browse/type-art.webp", slug: "sunaulo-dhaka" },
+    { name: "Patio", image: "/images/browse/type-stone.webp", slug: "citrine-slate" },
+    { name: "Driveway", image: "/images/browse/type-stone.webp", slug: "intex-grey" },
     { name: "Art", image: "/images/browse/type-art.webp", slug: "mithila-art-buddha" },
   ],
 };

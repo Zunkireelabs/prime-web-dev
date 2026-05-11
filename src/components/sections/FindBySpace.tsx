@@ -142,26 +142,39 @@ export default function FindBySpace() {
                       {space.name}
                     </h3>
                     <p
-                      className="text-sm text-white/45 max-w-sm leading-relaxed"
+                      className="text-sm text-white/85 max-w-sm leading-relaxed"
                       style={{
                         marginBottom: "32px",
                         transform: isActive ? "translateY(0)" : "translateY(15px)",
                         opacity: isActive ? 1 : 0,
                         transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s",
+                        textShadow: "0 1px 2px rgba(0,0,0,0.35)",
                       }}
                     >
                       {space.subtitle}
                     </p>
                     <a
                       href={`/products?search=${encodeURIComponent(space.name)}`}
-                      className="link-arrow text-white/50 hover:text-accent-light text-[0.6rem]"
+                      className="inline-flex items-center self-start text-[0.65rem] font-semibold tracking-[0.18em] uppercase text-white hover:text-accent-light transition-colors duration-300"
                       style={{
+                        gap: "10px",
+                        padding: "12px 20px",
+                        border: "1px solid rgba(255,255,255,0.85)",
+                        borderRadius: "100px",
+                        background: "rgba(0,0,0,0.30)",
+                        backdropFilter: "blur(6px)",
+                        WebkitBackdropFilter: "blur(6px)",
+                        textShadow: "0 1px 2px rgba(0,0,0,0.4)",
                         transform: isActive ? "translateY(0)" : "translateY(10px)",
                         opacity: isActive ? 1 : 0,
-                        transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s, opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.2s",
+                        transitionProperty: "transform, opacity, color",
+                        transitionDuration: "0.4s, 0.4s, 0.3s",
+                        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1), cubic-bezier(0.22, 1, 0.36, 1), linear",
+                        transitionDelay: "0.2s, 0.2s, 0s",
                       }}
                     >
-                      Explore {space.name} <ArrowRight size={11} />
+                      Explore {space.name}
+                      <ArrowRight size={12} strokeWidth={2} />
                     </a>
                   </div>
                 </div>
@@ -192,14 +205,14 @@ export default function FindBySpace() {
           </div>
         ))}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/20 z-[1]" />
+        <div className="absolute inset-0 z-[1]" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 35%, rgba(0,0,0,0.15) 65%, transparent 100%)" }} />
 
         <div className="absolute inset-0 z-10 flex flex-col justify-end" style={{ padding: "32px clamp(20px, 5vw, 40px) 48px" }}>
           <p className="text-[0.65rem] font-medium tracking-[0.3em] uppercase text-accent-light" style={{ marginBottom: "12px" }}>
             Find Tiles By Space
           </p>
 
-          <p className="text-[0.6rem] font-medium tracking-[0.2em] text-white/30" style={{ marginBottom: "8px" }}>
+          <p className="text-[0.6rem] font-medium tracking-[0.2em] text-white/65" style={{ marginBottom: "8px" }}>
             <span className="text-accent-light">{String(mobileIndex + 1).padStart(2, "0")}</span>
             <span style={{ marginLeft: "6px", marginRight: "6px" }}>/</span>
             {String(spaces.length).padStart(2, "0")}
@@ -212,7 +225,7 @@ export default function FindBySpace() {
             {spaces[mobileIndex].name}
           </h2>
 
-          <p className="text-sm text-white/50" style={{ marginBottom: "32px" }}>
+          <p className="text-sm text-white/85" style={{ marginBottom: "32px" }}>
             {spaces[mobileIndex].subtitle}
           </p>
 
@@ -224,15 +237,29 @@ export default function FindBySpace() {
                 className="h-[2px] transition-all duration-300"
                 style={{
                   width: i === mobileIndex ? "28px" : "10px",
-                  background: i === mobileIndex ? "var(--color-accent-light)" : "rgba(255,255,255,0.2)",
+                  background: i === mobileIndex ? "var(--color-accent-light)" : "rgba(255,255,255,0.45)",
                 }}
                 aria-label={`Go to ${spaces[i].name}`}
               />
             ))}
           </div>
 
-          <a href={`/products?search=${encodeURIComponent(spaces[mobileIndex].name)}`} className="link-arrow text-white/60 hover:text-white text-[0.6rem]">
-            Explore {spaces[mobileIndex].name} <ArrowRight size={11} />
+          <a
+            href={`/products?search=${encodeURIComponent(spaces[mobileIndex].name)}`}
+            className="inline-flex items-center self-start text-[0.65rem] font-semibold tracking-[0.18em] uppercase text-white hover:text-accent-light transition-colors duration-300"
+            style={{
+              gap: "10px",
+              padding: "12px 20px",
+              border: "1px solid rgba(255,255,255,0.85)",
+              borderRadius: "100px",
+              background: "rgba(0,0,0,0.35)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+              textShadow: "0 1px 2px rgba(0,0,0,0.4)",
+            }}
+          >
+            Explore {spaces[mobileIndex].name}
+            <ArrowRight size={12} strokeWidth={2} />
           </a>
         </div>
       </div>

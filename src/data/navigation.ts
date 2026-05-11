@@ -5,9 +5,8 @@ import type { NavItem, FooterColumn, FooterLink } from "./types";
 export const navItems: NavItem[] = [
   { label: "Home", href: "/", hasMega: false },
   { label: "Tiles", href: "/products", hasMega: true },
-  { label: "Catalog", href: "/catalog", hasMega: false },
+  { label: "Catalogue", href: "/catalog", hasMega: false },
   // { label: "Projects", href: "#projects", hasMega: false },
-  { label: "Find a Dealer", href: "/dealers", hasMega: false },
   {
     label: "About",
     href: "/about",
@@ -15,6 +14,7 @@ export const navItems: NavItem[] = [
     dropdown: [
       { label: "Company Information", href: "/about" },
       { label: "Awards & Certification", href: "/about/awards" },
+      { label: "News & Media", href: "/news" },
       { label: "Installation Guide", href: "/resources/installation" },
     ],
   },
@@ -34,7 +34,7 @@ export const megaCollections = [
 ];
 
 export const megaFinishes = [
-  "Matt", "Glossy", "Polished", "Rustic", "Satin", "Carving",
+  "Matt", "Glossy", "Polished", "Satin", "Carving",
 ];
 
 export const megaSizes = [
@@ -62,7 +62,7 @@ export const footerColumns: FooterColumn[] = [
       { label: "Company Information", href: "/about" },
       { label: "Awards & Certification", href: "/about/awards" },
       { label: "Projects", href: "/#projects" },
-      { label: "Careers", href: "mailto:info@primeceramics.com.np?subject=Careers" },
+      { label: "Careers", href: "/careers" },
     ],
   },
   {

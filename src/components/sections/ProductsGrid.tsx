@@ -1,14 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Search, X } from "lucide-react";
 import StaggerGrid from "@/components/animations/StaggerGrid";
 import TileCard from "@/components/ui/TileCard";
+import Pagination from "@/components/ui/Pagination";
 import ProductDetailPanel from "./ProductDetailPanel";
 import type { CatalogProduct } from "@/data/catalog";
+import { tileGridColSpan } from "@/lib/utils";
 import type { FilterKey, ProductFilters, SortKey } from "./ProductsBrowser";
 
 const BATCH = 24;
+const SEARCH_DEBOUNCE_MS = 200;
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "name-asc", label: "Name A–Z" },
@@ -34,6 +37,7 @@ interface Props {
   onClearAll: () => void;
   onSearchChange: (q: string) => void;
   onSortChange: (s: SortKey) => void;
+  onPageChange: (page: number) => void;
 }
 
 export default function ProductsGrid({
@@ -44,27 +48,55 @@ export default function ProductsGrid({
   onClearAll,
   onSearchChange,
   onSortChange,
+  onPageChange,
 }: Props) {
-  const [count, setCount] = useState(BATCH);
   const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
+  const [searchInput, setSearchInput] = useState(filters.search);
+  const toolbarRef = useRef<HTMLDivElement>(null);
+  const isFirstPageRender = useRef(true);
 
+  // Sync external resets (clearAll, chip removal) into the local input
   useEffect(() => {
-    setCount(BATCH);
-  }, [products.length, filters.sort, filters.search]);
+    setSearchInput(filters.search);
+  }, [filters.search]);
 
-  const visible = products.slice(0, count);
-  const hasMore = count < products.length;
+  // Debounce input → upstream filter
+  useEffect(() => {
+    if (searchInput === filters.search) return;
+    const id = setTimeout(() => onSearchChange(searchInput), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(id);
+  }, [searchInput, filters.search, onSearchChange]);
 
-  const chips: { key: FilterKey; value: string; label: string }[] = [];
-  CHIP_GROUPS.forEach(({ key, label }) => {
-    filters[key].forEach((v) => {
-      chips.push({
-        key,
-        value: v,
-        label: `${label}: ${key === "size" ? v.replace(" mm", "") : v}`,
+  const totalPages = Math.max(1, Math.ceil(products.length / BATCH));
+  const safePage = Math.min(Math.max(1, filters.page), totalPages);
+  const sliceStart = (safePage - 1) * BATCH;
+  const sliceEnd = Math.min(sliceStart + BATCH, products.length);
+  const visible = products.slice(sliceStart, sliceEnd);
+  const rangeStart = products.length === 0 ? 0 : sliceStart + 1;
+  const rangeEnd = sliceEnd;
+
+  // Smooth-scroll back to the toolbar on page change (skip initial mount)
+  useEffect(() => {
+    if (isFirstPageRender.current) {
+      isFirstPageRender.current = false;
+      return;
+    }
+    toolbarRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [filters.page]);
+
+  const chips = useMemo(() => {
+    const out: { key: FilterKey; value: string; label: string }[] = [];
+    CHIP_GROUPS.forEach(({ key, label }) => {
+      filters[key].forEach((v) => {
+        out.push({
+          key,
+          value: v,
+          label: `${label}: ${key === "size" ? v.replace(" mm", "") : v}`,
+        });
       });
     });
-  });
+    return out;
+  }, [filters]);
 
   const handleCardClick = useCallback((product: CatalogProduct) => {
     setSelectedProduct(product);
@@ -73,6 +105,11 @@ export default function ProductsGrid({
   const handleClosePanel = useCallback(() => {
     setSelectedProduct(null);
   }, []);
+
+  const handleClearSearch = useCallback(() => {
+    setSearchInput("");
+    onSearchChange("");
+  }, [onSearchChange]);
 
   const staggerKey = useMemo(
     () => `${products.length}-${filters.sort}-${filters.search}`,
@@ -83,12 +120,14 @@ export default function ProductsGrid({
     <div className="flex-1 min-w-0" style={{ background: "#fff", padding: "clamp(24px, 3vw, 40px)", borderRadius: "4px" }}>
       {/* Toolbar — search + sort */}
       <div
+        ref={toolbarRef}
         className="flex flex-col md:flex-row md:items-center md:justify-between"
         style={{
           gap: "16px",
           paddingBottom: "24px",
           borderBottom: "1px solid rgba(43,36,28,0.06)",
           marginBottom: "28px",
+          scrollMarginTop: "120px",
         }}
       >
         {/* Search */}
@@ -100,8 +139,8 @@ export default function ProductsGrid({
           />
           <input
             type="text"
-            value={filters.search}
-            onChange={(e) => onSearchChange(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search tiles..."
             className="w-full text-sm text-ink placeholder:text-ink-muted focus:outline-none focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{
@@ -112,10 +151,10 @@ export default function ProductsGrid({
               transition: "border-color 0.3s cubic-bezier(0.22,1,0.36,1)",
             }}
           />
-          {filters.search && (
+          {searchInput && (
             <button
               type="button"
-              onClick={() => onSearchChange("")}
+              onClick={handleClearSearch}
               aria-label="Clear search"
               className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-ink-muted hover:text-ink"
               style={{ transition: "color 0.3s" }}
@@ -128,7 +167,9 @@ export default function ProductsGrid({
         {/* Count + sort */}
         <div className="flex items-center justify-between md:justify-end" style={{ gap: "20px" }}>
           <span className="text-[0.6rem] font-medium tracking-[0.14em] uppercase text-ink-muted tabular-nums whitespace-nowrap">
-            {visible.length} of {products.length}
+            {products.length === 0
+              ? "0 of 0"
+              : `${rangeStart}–${rangeEnd} of ${products.length}`}
           </span>
           <div
             className="relative"
@@ -201,19 +242,19 @@ export default function ProductsGrid({
             }}
           >
             {visible.map((p) => (
-              <TileCard key={p.slug} product={p} onClick={handleCardClick} />
+              <div key={p.slug} style={tileGridColSpan(p.size) === 2 ? { gridColumn: "span 2" } : undefined}>
+                <TileCard product={p} onClick={handleCardClick} />
+              </div>
             ))}
           </StaggerGrid>
 
-          {hasMore && (
-            <div style={{ marginTop: "72px", textAlign: "center" }}>
-              <button
-                type="button"
-                onClick={() => setCount((c) => c + BATCH)}
-                className="btn-line"
-              >
-                Load More Tiles ({products.length - count} remaining)
-              </button>
+          {totalPages > 1 && (
+            <div style={{ marginTop: "72px" }}>
+              <Pagination
+                page={safePage}
+                totalPages={totalPages}
+                onPageChange={onPageChange}
+              />
             </div>
           )}
         </>

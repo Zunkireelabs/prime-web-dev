@@ -4,7 +4,8 @@ import { useEffect, useMemo } from "react";
 import { X, ArrowRight, Calculator } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
-import { tileVisualRatio, tileContainerWidth, ALL_TILE_SIZES } from "@/lib/utils";
+import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tilePickerSize, parseTileDims, ALL_TILE_SIZES } from "@/lib/utils";
+import { TileZoomProvider, TileZoomSource, TileZoomPanel } from "@/components/ui/TileZoom";
 import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
 interface Props {
@@ -26,25 +27,19 @@ function SpecItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** Mini tile shape at the custom visual ratio */
-/** Pixel dimensions per tile — scaled from real mm (÷15), width also reflects physical size */
-const TILE_SHAPE_SIZES: Record<string, { w: number; h: number }> = {
-  "300×300 mm": { w: 20, h: 20 },
-  "300×450 mm": { w: 20, h: 30 },
-  "300×600 mm": { w: 16, h: 32 },
-  "400×400 mm": { w: 26, h: 26 },
-  "600×600 mm": { w: 32, h: 32 },
-  "600×1200 mm": { w: 22, h: 44 },
-};
-
+/**
+ * Mini tile-shape icon for the size picker. Width and height both derive
+ * from physical mm via `tilePickerSize` (1200 mm → 48 px), so picker icons
+ * stay consistent with the rest of the tile sizing system.
+ */
 function TileShape({ size, active }: { size: string; active: boolean }) {
-  const dims = TILE_SHAPE_SIZES[size] || { w: 22, h: 22 };
+  const { w, h } = tilePickerSize(size, 48);
 
   return (
     <div
       style={{
-        width: `${dims.w}px`,
-        height: `${dims.h}px`,
+        width: `${w}px`,
+        height: `${h}px`,
         border: `1.5px solid ${active ? "var(--color-accent)" : "rgba(43,36,28,0.2)"}`,
         background: active ? "rgba(181,138,82,0.08)" : "transparent",
         borderRadius: "2px",
@@ -139,6 +134,14 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
         onClick={onClose}
       />
 
+      <TileZoomProvider
+        src={hasImage && product.image ? product.image : ""}
+        zoom={2}
+        cropAspect={(() => {
+          const dims = parseTileDims(product.size);
+          return dims.w === dims.h ? dims : undefined;
+        })()}
+      >
       {/* Modal container */}
       <div
         className="absolute bg-surface overflow-hidden"
@@ -173,43 +176,34 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           <X size={18} />
         </button>
 
-        {/* Left — product image with custom visual ratio */}
+        {/* Left — product image, showcase fit (each tile fills the panel
+            uniformly while keeping its own aspect ratio). */}
         <div
           className="hidden md:flex shrink-0 items-center justify-center"
           style={{
             width: "50%",
-            minHeight: "500px",
+            minHeight: "620px",
             position: "relative",
             overflow: "hidden",
             background: "var(--color-surface-alt)",
+            // Showcase base — longest physical side renders at 80% of this.
+            ["--tile-base" as never]: "clamp(440px, 50vw, 580px)",
           }}
         >
-          {hasImage ? (
+          {hasImage && product.image ? (
             <div
               style={{
-                width: tileContainerWidth(product.size),
-                maxHeight: "90%",
-                aspectRatio: tileVisualRatio(product.size),
-                position: "relative",
-                overflow: "hidden",
+                ...tileImageFrameStyle(product.size),
                 boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
               }}
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                loading="eager"
-                decoding="async"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
+              <TileZoomSource alt={product.name} />
             </div>
           ) : (
             <div
               className="flex items-center justify-center"
               style={{
-                width: tileContainerWidth(product.size),
-                maxHeight: "90%",
-                aspectRatio: tileVisualRatio(product.size),
+                ...tileImageFrameStyle(product.size),
                 background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
               }}
             >
@@ -257,26 +251,35 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           className="flex-1 overflow-y-auto"
           style={{ padding: "clamp(16px, 3vw, 48px)" }}
         >
-          {/* Mobile-only image */}
-          <div className="md:hidden" style={{ marginBottom: "12px" }}>
+          {/* Mobile-only image — showcase fit, centered on cream stage */}
+          <div
+            className="md:hidden flex items-center justify-center bg-surface-card"
+            style={{
+              marginBottom: "12px",
+              padding: "12px",
+              borderRadius: "8px",
+              // Showcase base for phone — longest side renders at 80% of this.
+              ["--tile-base" as never]: "clamp(220px, 70vw, 320px)",
+            }}
+          >
             {hasImage ? (
-              <div style={{ aspectRatio: tileVisualRatio(product.size), maxHeight: "160px", borderRadius: "8px", overflow: "hidden" }}>
+              <div style={{ ...tileImageFrameStyle(product.size), borderRadius: "4px", overflow: "hidden" }}>
                 <img
                   src={product.image}
                   alt={product.name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  style={tileImageCropStyle}
                 />
               </div>
             ) : (
               <div
                 className="flex items-center justify-center"
                 style={{
-                  aspectRatio: tileVisualRatio(product.size),
-                  borderRadius: "12px",
+                  ...tileImageFrameStyle(product.size),
+                  borderRadius: "4px",
                   background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
                 }}
               >
-                <p className="font-serif font-light text-ink-muted text-xl text-center" style={{ padding: "0 24px" }}>
+                <p className="font-serif font-light text-ink-muted text-base text-center" style={{ padding: "0 16px" }}>
                   {product.name}
                 </p>
               </div>
@@ -402,7 +405,10 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                       minWidth: "64px",
                     }}
                   >
-                    <div style={{ marginBottom: "6px" }}>
+                    <div
+                      className="flex items-end justify-center"
+                      style={{ height: "52px", marginBottom: "6px" }}
+                    >
                       <TileShape size={size} active={isActive} />
                     </div>
                     <p
@@ -435,34 +441,42 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               >
                 Similar Tiles
               </p>
-              <div className="flex" style={{ gap: "12px" }}>
+              <div
+                className="flex"
+                style={{
+                  gap: "16px",
+                  alignItems: "flex-end",
+                  // Picker base — 1200mm reads ~100px tall; 600mm is half that.
+                  ["--tile-base" as never]: "100px",
+                }}
+              >
                 {similar.map((tile) => (
                   <button
                     key={tile.slug}
                     type="button"
                     onClick={() => onProductChange(tile)}
-                    className="group/sim text-left shrink-0"
-                    style={{ width: "80px" }}
+                    className="group/sim shrink-0"
+                    style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}
                   >
                     <div
-                      className="overflow-hidden"
-                      style={{ aspectRatio: tileVisualRatio(tile.size), borderRadius: "8px", marginBottom: "6px" }}
+                      className="overflow-hidden bg-surface-card"
+                      style={{ ...tileImageFrameStyle(tile.size), borderRadius: "4px" }}
                     >
                       {tile.image && tile.image.startsWith("http") ? (
                         <img
                           src={tile.image}
                           alt={tile.name}
                           loading="lazy"
-                          className="w-full h-full object-cover group-hover/sim:scale-[1.03]"
-                          style={{ transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
+                          className="block group-hover/sim:scale-[1.03]"
+                          style={{ ...tileImageCropStyle, transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
                         />
                       ) : (
-                        <div className="w-full h-full" style={{ background: "hsl(35,10%,85%)" }} />
+                        <div className="absolute inset-0" style={{ background: "hsl(35,10%,85%)" }} />
                       )}
                     </div>
                     <p
-                      className="text-[0.6rem] text-ink-light group-hover/sim:text-accent truncate"
-                      style={{ transition: "color 0.3s" }}
+                      className="text-[0.6rem] text-ink-light group-hover/sim:text-accent text-center truncate"
+                      style={{ transition: "color 0.3s", maxWidth: "84px" }}
                     >
                       {tile.name}
                     </p>
@@ -499,7 +513,21 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             </a>
           </div>
         </div>
+
+        {/* Zoom panel fills the entire right column on hover. The panel's
+            opaque background covers the details underneath — no separate
+            backdrop needed. */}
+        {hasImage && (
+          <div
+            aria-hidden="true"
+            className="hidden md:flex absolute items-center justify-center"
+            style={{ top: 0, right: 0, bottom: 0, width: "50%", zIndex: 4, pointerEvents: "none" }}
+          >
+            <TileZoomPanel />
+          </div>
+        )}
       </div>
+      </TileZoomProvider>
     </div>
   );
 }

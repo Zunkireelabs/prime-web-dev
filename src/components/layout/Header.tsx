@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { Search, X, Menu, ChevronRight, ArrowRight } from "lucide-react";
+import { Search, X, Menu, ChevronRight, ArrowRight, Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
 import {
   navItems,
   megaSpaces as spaces,
@@ -65,13 +65,13 @@ export default function Header() {
             : "shadow-[0_1px_0_rgba(0,0,0,0.06)]")
         )}
       >
-        <div className="container flex items-center justify-between" style={{ height: "clamp(64px, 8vw, 88px)" }}>
+        <div className="container flex items-center justify-between" style={{ height: "clamp(72px, 8vw, 88px)" }}>
           {/* Logo */}
           <a href="/" className="relative z-50">
             <img
               src="/images/prime-logo.png"
               alt="Prime Tiles"
-              className="h-12 sm:h-16 md:h-24 w-auto transition-[filter] duration-300"
+              className="h-12 sm:h-14 md:h-16 w-auto transition-[filter] duration-300"
               style={blendVideo ? { filter: "brightness(0) invert(1)" } : undefined}
             />
           </a>
@@ -201,16 +201,24 @@ export default function Header() {
 
           </div>
 
-          {/* Mobile — close ad + menu toggle */}
+          {/* Mobile — single toggle (Menu ↔ X) */}
           <div className="lg:hidden flex items-center gap-3 relative z-50">
-            {!mobileOpen && (
-              <button
-                onClick={() => setMobileOpen(true)}
-                aria-label="Open menu"
-              >
-                <Menu size={22} className={blendVideo ? "text-white" : "text-ink"} />
-              </button>
-            )}
+            <button
+              onClick={() => setMobileOpen((prev) => !prev)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              className="inline-flex items-center justify-center transition-colors duration-300"
+              style={{ width: "44px", height: "44px" }}
+            >
+              {mobileOpen ? (
+                <X size={22} className="text-ink" />
+              ) : (
+                <Menu
+                  size={22}
+                  className={blendVideo ? "text-white" : "text-ink"}
+                />
+              )}
+            </button>
           </div>
         </div>
 
@@ -326,21 +334,16 @@ export default function Header() {
       {/* ─── Mobile Menu ─── */}
       <div
         className={cn(
-          "lg:hidden fixed inset-0 z-40 bg-surface-dark transition-opacity duration-500",
+          "lg:hidden fixed inset-0 z-40 bg-surface-card transition-opacity duration-500",
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
-        {/* Close button — top left */}
-        <button
-          onClick={() => setMobileOpen(false)}
-          aria-label="Close menu"
-          className="absolute top-6 left-6 z-50 w-12 h-12 rounded-full border border-ink-on-dark/15 flex items-center justify-center text-ink-on-dark hover:text-white hover:border-ink-on-dark/40 transition-all duration-300"
+        <div
+          className="h-full overflow-y-auto flex flex-col"
+          style={{ padding: "clamp(88px, 14vw, 104px) clamp(20px, 5vw, 32px) clamp(28px, 5vw, 40px)" }}
         >
-          <X size={22} />
-        </button>
-
-        <div className="h-full overflow-y-auto" style={{ padding: "clamp(80px, 12vw, 96px) clamp(20px, 5vw, 32px) clamp(40px, 6vw, 64px)" }}>
-          <nav className="space-y-0" style={{ marginBottom: "40px" }}>
+          {/* ─── Nav (top) ─── */}
+          <nav className="space-y-0">
             {navItems.map((item, i) => (
               <div key={item.label}>
                 <a
@@ -353,26 +356,33 @@ export default function Header() {
                     setMobileOpen(false);
                   }}
                   className={cn(
-                    "flex items-center justify-between py-5 border-b border-ink-on-dark/6 h2 text-ink-on-dark transition-all duration-500",
+                    "flex items-center justify-between border-b border-ink/12 font-serif font-light text-ink hover:text-accent transition-all duration-500",
                     mobileOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   )}
-                  style={{ transitionDelay: mobileOpen ? `${120 + i * 50}ms` : "0ms" }}
+                  style={{
+                    paddingTop: "clamp(14px, 2.5vw, 20px)",
+                    paddingBottom: "clamp(14px, 2.5vw, 20px)",
+                    fontSize: "clamp(1.55rem, 5.5vw, 1.95rem)",
+                    lineHeight: 1.2,
+                    letterSpacing: "-0.005em",
+                    transitionDelay: mobileOpen ? `${120 + i * 50}ms` : "0ms",
+                  }}
                 >
                   {item.label}
-                  <ChevronRight size={18} className={cn("text-ink-on-dark-muted transition-transform duration-200", item.dropdown?.length && activeDropdown === item.label ? "rotate-90" : "")} />
+                  <ChevronRight size={20} className={cn("text-ink-muted transition-transform duration-200", item.dropdown?.length && activeDropdown === item.label ? "rotate-90" : "")} />
                 </a>
-                {/* Mobile sub-links */}
+                {/* Sub-links */}
                 {item.dropdown?.length && activeDropdown === item.label && (
-                  <div className="pl-6 border-b border-ink-on-dark/6">
+                  <div className="pl-6 border-b border-ink/12">
                     {item.dropdown.map((link) => (
                       <a
                         key={link.href}
                         href={link.href}
                         onClick={() => setMobileOpen(false)}
-                        className="flex items-center justify-between py-4 text-[1rem] font-serif text-ink-on-dark-light hover:text-white transition-colors duration-200"
+                        className="flex items-center justify-between py-3 text-[0.95rem] font-serif text-ink-light hover:text-accent transition-colors duration-200"
                       >
                         {link.label}
-                        <ArrowRight size={14} className="text-ink-on-dark-muted" />
+                        <ArrowRight size={14} className="text-ink-muted" />
                       </a>
                     ))}
                   </div>
@@ -381,29 +391,53 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Mobile CTA */}
+          {/* ─── Bottom block (pinned) ─── */}
           <div
-            className={cn("transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
-            style={{ marginBottom: "40px", transitionDelay: mobileOpen ? "380ms" : "0ms" }}
+            className={cn("mt-auto transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
+            style={{ paddingTop: "clamp(32px, 6vw, 56px)", transitionDelay: mobileOpen ? "380ms" : "0ms" }}
           >
+            {/* Gold accent line */}
+            <div className="gold-divider-full" style={{ marginBottom: "clamp(20px, 4vw, 32px)" }} />
+
+            {/* CTA — full width pill */}
             <a
               href="/dealers"
               onClick={() => setMobileOpen(false)}
-              className="inline-block text-[0.65rem] font-medium tracking-[0.15em] uppercase px-6 py-3 border border-accent-light/30 text-accent-light hover:border-accent-light transition-all duration-300"
+              className="flex items-center justify-between text-[0.7rem] font-semibold tracking-[0.18em] uppercase border border-accent/50 text-accent hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+              style={{ padding: "14px 22px", marginBottom: "clamp(20px, 4vw, 28px)" }}
             >
               Find a Dealer
+              <ArrowRight size={14} />
             </a>
-          </div>
 
-          {/* Mobile contact info */}
-          <div
-            className={cn("transition-all duration-500", mobileOpen ? "opacity-100" : "opacity-0")}
-            style={{ transitionDelay: mobileOpen ? "450ms" : "0ms" }}
-          >
-            <div className="space-y-2 body-sm text-ink-on-dark-muted">
-              <p>info@primeceramics.com.np</p>
-              <p>+977-1-5978860/61/62</p>
-              <p>Tripureshwor, Kathmandu</p>
+            {/* Contact info */}
+            <div className="space-y-1.5" style={{ marginBottom: "clamp(20px, 4vw, 28px)" }}>
+              <p className="eyebrow text-accent" style={{ marginBottom: "8px" }}>Get in Touch</p>
+              <a href="mailto:info@primeceramics.com.np" className="block text-[0.85rem] text-ink hover:text-accent transition-colors">info@primeceramics.com.np</a>
+              <a href="tel:+97715978860" className="block text-[0.85rem] text-ink hover:text-accent transition-colors">+977-1-5978860/61/62</a>
+              <p className="text-[0.78rem] text-ink-light" style={{ marginTop: "4px" }}>Tripureshwor, Kathmandu</p>
+            </div>
+
+            {/* Social row */}
+            <div className="flex items-center" style={{ gap: "20px", paddingTop: "clamp(12px, 3vw, 20px)", borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+              {[
+                { name: "Facebook", href: "https://www.facebook.com/PrimeTiles.Official/", Icon: Facebook },
+                { name: "Instagram", href: "https://www.instagram.com/primetiles.official/", Icon: Instagram },
+                { name: "YouTube", href: "https://www.youtube.com/@primetiles.Official", Icon: Youtube },
+                { name: "LinkedIn", href: "https://www.linkedin.com/company/primetilesofficial/", Icon: Linkedin },
+              ].map(({ name, href, Icon }) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={name}
+                  className="text-ink-light hover:text-accent transition-colors duration-300 inline-flex items-center justify-center"
+                  style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+                >
+                  <Icon size={20} strokeWidth={1.6} aria-hidden="true" />
+                </a>
+              ))}
             </div>
           </div>
         </div>

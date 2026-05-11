@@ -1,0 +1,17 @@
+services:
+  prime-web-staging:
+    build: .
+    container_name: prime-web-staging
+    restart: unless-stopped
+    networks:
+      - hosting
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prime-web-staging.rule=Host(`dev-primetiles.zunkireelabs.com`)"
+      - "traefik.http.routers.prime-web-staging.entrypoints=websecure"
+      - "traefik.http.routers.prime-web-staging.tls.certresolver=letsencrypt"
+      - "traefik.http.services.prime-web-staging.loadbalancer.server.port=80"
+
+networks:
+  hosting:
+    external: true
