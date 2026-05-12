@@ -17,3 +17,4 @@ export * from "./nepal-map";
 export * from "./catalogs";
 export * from "./about";
 export * from "./careers";
+export * from "./csr";

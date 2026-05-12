@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { X, ArrowRight, Calculator } from "lucide-react";
+import { X, ArrowRight, Calculator, BookOpen } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
 import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tilePickerSize, parseTileDims, ALL_TILE_SIZES } from "@/lib/utils";
@@ -65,17 +65,27 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
 
   const similar = useMemo(() => {
     if (!product) return [];
-    return allProducts
-      .filter(
-        (p) =>
-          p.slug !== product.slug &&
-          p.image &&
-          p.image.startsWith("http") &&
-          (p.series === product.series ||
-            p.category === product.category ||
-            p.finish === product.finish)
-      )
-      .slice(0, 4);
+    // Prioritize: same size + same finish, then same size + same category
+    const sameSizeFinish = allProducts.filter(
+      (p) =>
+        p.slug !== product.slug &&
+        p.image &&
+        p.image.startsWith("http") &&
+        p.size === product.size &&
+        p.finish === product.finish
+    );
+    if (sameSizeFinish.length >= 4) return sameSizeFinish.slice(0, 4);
+
+    const sameSizeCategory = allProducts.filter(
+      (p) =>
+        p.slug !== product.slug &&
+        p.image &&
+        p.image.startsWith("http") &&
+        p.size === product.size &&
+        (p.finish === product.finish || p.category === product.category) &&
+        !sameSizeFinish.includes(p)
+    );
+    return [...sameSizeFinish, ...sameSizeCategory].slice(0, 4);
   }, [product]);
 
   // Find same design in other sizes by stripping name suffixes
@@ -510,6 +520,20 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             >
               <Calculator size={14} />
               Calculate Tiles Needed
+            </a>
+            <a
+              href="/resources/installation"
+              className="flex items-center text-[0.7rem] font-medium tracking-[0.1em] uppercase text-ink-light hover:text-accent"
+              style={{
+                gap: "8px",
+                padding: "8px 16px",
+                border: "1px solid rgba(43,36,28,0.1)",
+                borderRadius: "4px",
+                transition: "all 0.3s",
+              }}
+            >
+              <BookOpen size={14} />
+              Installation Guide
             </a>
           </div>
         </div>
