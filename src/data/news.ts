@@ -23,7 +23,16 @@ export interface NewsItem {
   featured?: boolean;
 }
 
-export const news: NewsItem[] = [
+// ── Load Sanity data if available ──
+
+let sanityNews: NewsItem[] | null = null;
+try {
+  sanityNews = require("./sanity-news.json") as NewsItem[];
+} catch {
+  // sanity-news.json not generated yet — using local data
+}
+
+const localNews: NewsItem[] = [
   {
     id: "ns-certified-2026",
     title:
@@ -112,6 +121,9 @@ export const news: NewsItem[] = [
     image: "/images/news/b360-revolutionising-industry.jpg",
   },
 ];
+
+export const news: NewsItem[] =
+  sanityNews && sanityNews.length > 0 ? sanityNews : localNews;
 
 export const featuredNews: NewsItem | undefined = news.find(
   (n) => n.featured

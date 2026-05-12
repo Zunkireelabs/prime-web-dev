@@ -1,6 +1,15 @@
 import type { Dealer } from "./types";
 
-export const dealers: Dealer[] = [
+// ── Load Sanity data if available ──
+
+let sanityDealers: Dealer[] | null = null;
+try {
+  sanityDealers = require("./sanity-dealers.json") as Dealer[];
+} catch {
+  // sanity-dealers.json not generated yet — using local data
+}
+
+const localDealers: Dealer[] = [
   {
     name: "AAYUSHA TILES & MARBAL HOUSE",
     city: "Khumaltar",
@@ -1984,6 +1993,9 @@ export const dealers: Dealer[] = [
     contactPerson: "ROHIT BOGATI",
   }
 ];
+
+export const dealers: Dealer[] =
+  sanityDealers && sanityDealers.length > 0 ? sanityDealers : localDealers;
 
 export const dealerProvinces = [
   "All",

@@ -99,9 +99,18 @@ export const careerBenefits: CareerBenefit[] = [
   },
 ];
 
+// ── Load Sanity data if available ──
+
+let sanityJobs: CareerOpening[] | null = null;
+try {
+  sanityJobs = require("./sanity-jobs.json") as CareerOpening[];
+} catch {
+  // sanity-jobs.json not generated yet — using local data
+}
+
 // Add openings here as roles open. When empty, the openings section
 // renders a graceful "no current openings" message.
-export const careerOpenings: CareerOpening[] = [
+const localOpenings: CareerOpening[] = [
   {
     id: "production-engineer-rautahat",
     title: "Production Engineer",
@@ -157,6 +166,9 @@ export const careerOpenings: CareerOpening[] = [
       "Tell the Prime story across web, dealer materials, and press. A serious editorial voice — you've shipped real long-form work, not just social posts.",
   },
 ];
+
+export const careerOpenings: CareerOpening[] =
+  sanityJobs && sanityJobs.length > 0 ? sanityJobs : localOpenings;
 
 export const applyEmail = "info@primeceramics.com.np";
 

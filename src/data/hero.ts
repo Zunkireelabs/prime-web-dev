@@ -1,8 +1,17 @@
 import type { HeroSlide, HeroCarouselSlide } from "./types";
 
+// ── Load Sanity data if available, otherwise use local ──
+
+let sanityHeroes: HeroSlide[] | null = null;
+try {
+  sanityHeroes = require("./sanity-heroes.json") as HeroSlide[];
+} catch {
+  // sanity-heroes.json not generated yet — using local data
+}
+
 // ── HeroMain slides ──
 
-export const heroSlides: HeroSlide[] = [
+const localHeroSlides: HeroSlide[] = [
   {
     image: "/images/hero/slide-1.jpg",
     collection: "Carrara White",
@@ -28,6 +37,9 @@ export const heroSlides: HeroSlide[] = [
     cta: "Discover More",
   },
 ];
+
+export const heroSlides: HeroSlide[] =
+  sanityHeroes && sanityHeroes.length > 0 ? sanityHeroes : localHeroSlides;
 
 // ── HeroCarousel slides (alternate hero) ──
 

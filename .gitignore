@@ -51,6 +51,7 @@ Screenshot*
 # Sanity
 .sanity/
 src/data/catalog/sanity-products.json
+src/data/sanity-*.json
 scripts/image-map*.json
 
 # CSV drafts (work in progress)

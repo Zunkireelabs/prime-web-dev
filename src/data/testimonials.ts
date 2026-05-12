@@ -1,6 +1,15 @@
 import type { Testimonial } from "./types";
 
-export const testimonials: Testimonial[] = [
+// ── Load Sanity data if available ──
+
+let sanityTestimonials: Testimonial[] | null = null;
+try {
+  sanityTestimonials = require("./sanity-testimonials.json") as Testimonial[];
+} catch {
+  // sanity-testimonials.json not generated yet — using local data
+}
+
+const localTestimonials: Testimonial[] = [
   {
     quote: "Prime Ceramics transformed our vision into reality. The quality of their porcelain is unmatched — every surface speaks of luxury and permanence.",
     author: "Rajesh Sharma",
@@ -21,6 +30,9 @@ export const testimonials: Testimonial[] = [
   },
 ];
 
+export const testimonials: Testimonial[] =
+  sanityTestimonials && sanityTestimonials.length > 0 ? sanityTestimonials : localTestimonials;
+
 // ── Project Testimonials (from TILESCAPE 2024) ──
 
 export interface ProjectTestimonial {
@@ -34,7 +46,14 @@ export interface ProjectTestimonial {
   image: string;
 }
 
-export const projectTestimonials: ProjectTestimonial[] = [
+let sanityProjectTestimonials: ProjectTestimonial[] | null = null;
+try {
+  sanityProjectTestimonials = require("./sanity-project-testimonials.json") as ProjectTestimonial[];
+} catch {
+  // sanity-project-testimonials.json not generated yet — using local data
+}
+
+const localProjectTestimonials: ProjectTestimonial[] = [
   {
     id: 1,
     project: "Nepalgunj Airport",
@@ -129,3 +148,8 @@ export const projectTestimonials: ProjectTestimonial[] = [
     image: "/images/testimonials/durbarmarg-commercial-2.jpg",
   },
 ];
+
+export const projectTestimonials: ProjectTestimonial[] =
+  sanityProjectTestimonials && sanityProjectTestimonials.length > 0
+    ? sanityProjectTestimonials
+    : localProjectTestimonials;

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npx tsx scripts/generate-catalog-data.ts",
+    "prebuild": "npx tsx scripts/generate-catalog-data.ts && npx tsx scripts/generate-sanity-data.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

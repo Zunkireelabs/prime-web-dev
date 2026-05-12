@@ -13,7 +13,16 @@ export interface ProjectHighlight {
   image: string;
 }
 
-export const projectHighlights: ProjectHighlight[] = [
+// ── Load Sanity data if available ──
+
+let sanityProjects: ProjectHighlight[] | null = null;
+try {
+  sanityProjects = require("./sanity-projects.json") as ProjectHighlight[];
+} catch {
+  // sanity-projects.json not generated yet — using local data
+}
+
+const localProjectHighlights: ProjectHighlight[] = [
   {
     id: 1,
     title: "Kamal Pokhari Commercial Complex",
@@ -185,6 +194,9 @@ export const projectHighlights: ProjectHighlight[] = [
     image: "/images/projects/manipal-hospital.jpg",
   },
 ];
+
+export const projectHighlights: ProjectHighlight[] =
+  sanityProjects && sanityProjects.length > 0 ? sanityProjects : localProjectHighlights;
 
 // ── Legacy data (used by homepage sections) ──
 
