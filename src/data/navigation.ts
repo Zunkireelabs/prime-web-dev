@@ -14,6 +14,8 @@ export const navItems: NavItem[] = [
     dropdown: [
       { label: "Company Information", href: "/about" },
       { label: "Awards & Certification", href: "/about/awards" },
+      { label: "Projects", href: "/projects" },
+      { label: "Testimonials", href: "/testimonials" },
       { label: "News & Media", href: "/news" },
       { label: "Installation Guide", href: "/resources/installation" },
     ],
@@ -61,7 +63,8 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: "Company Information", href: "/about" },
       { label: "Awards & Certification", href: "/about/awards" },
-      { label: "Projects", href: "/#projects" },
+      { label: "Projects", href: "/projects" },
+      { label: "Testimonials", href: "/testimonials" },
       { label: "Careers", href: "/careers" },
     ],
   },

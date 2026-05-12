@@ -20,3 +20,112 @@ export const testimonials: Testimonial[] = [
     project: "Metropolitan Tower, Lalitpur",
   },
 ];
+
+// ── Project Testimonials (from TILESCAPE 2024) ──
+
+export interface ProjectTestimonial {
+  id: number;
+  project: string;
+  location: string;
+  type: string;
+  tile?: string;
+  size?: string;
+  area?: string;
+  image: string;
+}
+
+export const projectTestimonials: ProjectTestimonial[] = [
+  {
+    id: 1,
+    project: "Nepalgunj Airport",
+    location: "Nepalgunj",
+    type: "Infrastructure",
+    image: "/images/testimonials/nepalgunj-airport.jpg",
+  },
+  {
+    id: 2,
+    project: "Aadhar Mall",
+    location: "Nepal",
+    type: "Commercial",
+    image: "/images/testimonials/aadhar-mall.jpg",
+  },
+  {
+    id: 3,
+    project: "Kathmandu Metropolitan Ward Office",
+    location: "Kathmandu",
+    type: "Government",
+    image: "/images/testimonials/kathmandu-metro-ward.jpg",
+  },
+  {
+    id: 4,
+    project: "Durbarmarg Commercial Building",
+    location: "Kathmandu",
+    type: "Commercial",
+    image: "/images/testimonials/durbarmarg-commercial.jpg",
+  },
+  {
+    id: 5,
+    project: "Sagacity Apartment",
+    location: "Maharajgunj, Kathmandu",
+    type: "Residential",
+    tile: "Earthen Light Grey",
+    size: "400×400 mm",
+    area: "9,000 sq.ft",
+    image: "/images/testimonials/sagacity-apartment.jpg",
+  },
+  {
+    id: 6,
+    project: "Karnali Province Stadium",
+    location: "Karnali",
+    type: "Infrastructure",
+    image: "/images/testimonials/karnali-stadium.jpg",
+  },
+  {
+    id: 7,
+    project: "S.R Complex",
+    location: "Bhairahawa",
+    type: "Commercial",
+    tile: "Lenox Grey",
+    size: "600×600 mm",
+    area: "56,000 sq.ft",
+    image: "/images/testimonials/sr-complex.jpg",
+  },
+  {
+    id: 8,
+    project: "Manipal International Teaching Hospital",
+    location: "Pokhara",
+    type: "Healthcare",
+    image: "/images/testimonials/manipal-hospital.jpg",
+  },
+  {
+    id: 9,
+    project: "Godawari Valley Housing",
+    location: "Kathmandu",
+    type: "Residential",
+    tile: "Elite Light",
+    size: "400×400 mm",
+    area: "5,000 sq.ft",
+    image: "/images/testimonials/godawari-valley.jpg",
+  },
+  {
+    id: 10,
+    project: "Suryabinayak Municipality Office",
+    location: "Bhaktapur",
+    type: "Government",
+    image: "/images/testimonials/suryabinayak-municipality.jpg",
+  },
+  {
+    id: 11,
+    project: "Agriculture Development Bank",
+    location: "Nepal",
+    type: "Commercial",
+    image: "/images/testimonials/agriculture-dev-bank.jpg",
+  },
+  {
+    id: 12,
+    project: "Durbarmarg Commercial Building",
+    location: "Kathmandu",
+    type: "Commercial",
+    image: "/images/testimonials/durbarmarg-commercial-2.jpg",
+  },
+];
