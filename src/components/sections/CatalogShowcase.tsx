@@ -5,17 +5,14 @@ import { ArrowRight, Download, Layers, Weight, Ruler } from "lucide-react";
 import { catalogEntries } from "@/data/catalogs";
 import type { CatalogEntry } from "@/data/types";
 import { tileSpecsBySize } from "@/data/catalog/tile-specs";
-import { tileCardHeight } from "@/lib/utils";
 
 function CatalogCard({
   cat,
   index,
-  large,
   onView,
 }: {
   cat: CatalogEntry;
   index: number;
-  large: boolean;
   onView?: (filterValue: string) => void;
 }) {
   const isComingSoon = !cat.pdf;
@@ -27,7 +24,7 @@ function CatalogCard({
         <a
           href={isComingSoon ? undefined : `/catalog/view/${cat.slug}`}
           className="relative block overflow-hidden bg-surface-alt"
-          style={{ height: large ? "320px" : tileCardHeight(), marginBottom: "20px", borderRadius: "4px", cursor: isComingSoon ? "default" : "pointer" }}
+          style={{ height: cat.featured ? "clamp(260px, 32vw, 380px)" : "clamp(200px, 24vw, 300px)", marginBottom: "20px", borderRadius: "4px", cursor: isComingSoon ? "default" : "pointer" }}
         >
           <img
             src={cat.image}
@@ -188,17 +185,17 @@ export default function CatalogShowcase({
         {/* Row 1: Featured (2-col span) + Secondary (1-col) */}
         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)", marginBottom: "clamp(24px, 3vw, 32px)" }}>
           <div className="md:col-span-2">
-            <CatalogCard cat={featured} index={0} large onView={onViewCollection} />
+            <CatalogCard cat={featured} index={0} onView={onViewCollection} />
           </div>
           <div>
-            <CatalogCard cat={secondary} index={1} large={false} onView={onViewCollection} />
+            <CatalogCard cat={secondary} index={1} onView={onViewCollection} />
           </div>
         </div>
 
         {/* Row 2: 3 cards */}
         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)", marginBottom: bottomRow.length > 0 ? "clamp(24px, 3vw, 32px)" : undefined }}>
           {middleRow.map((cat, i) => (
-            <CatalogCard key={cat.name} cat={cat} index={i + 2} large={false} onView={onViewCollection} />
+            <CatalogCard key={cat.name} cat={cat} index={i + 2} onView={onViewCollection} />
           ))}
         </div>
 
@@ -206,7 +203,7 @@ export default function CatalogShowcase({
         {bottomRow.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)" }}>
             {bottomRow.map((cat, i) => (
-              <CatalogCard key={cat.name} cat={cat} index={i + 5} large={false} onView={onViewCollection} />
+              <CatalogCard key={cat.name} cat={cat} index={i + 5} onView={onViewCollection} />
             ))}
           </div>
         )}

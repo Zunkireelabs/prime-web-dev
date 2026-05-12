@@ -46,5 +46,12 @@ docker compose -f $COMPOSE_FILE down 2>/dev/null || true
 docker rm -f prime-web-v2 2>/dev/null || true
 docker compose -f $COMPOSE_FILE up -d
 
+step "4. Starting webhook server..."
+command -v pm2 &>/dev/null || npm install -g pm2
+pm2 describe sanity-webhook &>/dev/null \
+  && pm2 restart sanity-webhook \
+  || pm2 start ecosystem.config.js
+pm2 save --force
+
 step "✅ Staging Deployment Success!"
 echo "👉 https://$URL"

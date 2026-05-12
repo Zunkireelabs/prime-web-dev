@@ -39,6 +39,22 @@ function imageUrl(image: any, width = 1200): string {
 // ── GROQ Queries ──
 
 const queries = {
+  catalogs: `
+    *[_type == "tileCatalog"] | order(sortOrder asc, name asc) {
+      name,
+      "slug": slug.current,
+      catalogId,
+      size,
+      filterValue,
+      count,
+      types,
+      description,
+      coverImage,
+      "pdf": catalogPdf.asset->url,
+      featured,
+      sortOrder
+    }
+  `,
   heroes: `
     *[_type == "heroBanner" && active == true] | order(sortOrder asc) {
       title, tagline, image, collection, cta
@@ -87,6 +103,28 @@ interface ContentType {
 }
 
 const contentTypes: ContentType[] = [
+  {
+    key: "catalogs",
+    query: queries.catalogs,
+    outputFile: "sanity-catalogs.json",
+    // Only include catalogs that have been fully configured for display (have a count field set)
+    transform: (items) =>
+      items
+        .filter((c) => c.count)
+        .map((c) => ({
+          name: c.name,
+          slug: c.slug || "",
+          size: c.size || "",
+          filterValue: c.filterValue || "",
+          count: c.count || "",
+          types: c.types || "",
+          description: c.description || "",
+          image: imageUrl(c.coverImage, 800),
+          pdf: c.pdf || "",
+          featured: c.featured || false,
+          sortOrder: c.sortOrder || 50,
+        })),
+  },
   {
     key: "heroes",
     query: queries.heroes,

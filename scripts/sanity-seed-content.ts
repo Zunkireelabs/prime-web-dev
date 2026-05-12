@@ -3,11 +3,13 @@
  *
  * Usage: NEXT_PUBLIC_SANITY_PROJECT_ID=3jv6o4t6 SANITY_API_TOKEN=sk... npx tsx scripts/sanity-seed-content.ts
  *
- * Seeds: hero banners, news articles, job openings, dealers,
+ * Seeds: catalog metadata, hero banners, news articles, job openings, dealers,
  *        project highlights, testimonials, project testimonials
  */
 
 import { createClient } from "@sanity/client";
+import { createReadStream, existsSync } from "fs";
+import { resolve } from "path";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const token = process.env.SANITY_API_TOKEN;
@@ -29,8 +31,149 @@ function slugify(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "").replace(/^-+/, "");
 }
 
+async function uploadPdf(localPath: string, filename: string): Promise<string | null> {
+  const absPath = resolve(__dirname, "../public", localPath.replace(/^\//, ""));
+  if (!existsSync(absPath)) {
+    console.log(`      ⚠️  PDF not found at ${absPath} — skipping`);
+    return null;
+  }
+  const asset = await client.assets.upload("file", createReadStream(absPath), {
+    filename,
+    contentType: "application/pdf",
+  });
+  return asset._id;
+}
+
+async function uploadImage(localPath: string, filename: string): Promise<string | null> {
+  const absPath = resolve(__dirname, "../public", localPath.replace(/^\//, ""));
+  if (!existsSync(absPath)) {
+    console.log(`      ⚠️  Image not found at ${absPath} — skipping`);
+    return null;
+  }
+  const ext = filename.split(".").pop()?.toLowerCase() || "png";
+  const contentType = ext === "jpg" || ext === "jpeg" ? "image/jpeg" : "image/png";
+  const asset = await client.assets.upload("image", createReadStream(absPath), {
+    filename,
+    contentType,
+  });
+  return asset._id;
+}
+
 async function seed() {
   console.log("🌱 Seeding Sanity with local content data...\n");
+
+  // ── 0. Catalog Metadata ──
+  console.log("── Catalog Metadata ──");
+  const catalogs = [
+    {
+      catalogId: "eleganz-600x1200",
+      name: "600×1200MM Tiles",
+      slug: "600x1200",
+      size: "600×1200MM",
+      filterValue: "600×1200 mm",
+      count: "59 designs",
+      types: "Glossy · High Gloss · Matt · Carving",
+      description: "Large-format glazed vitrified tiles for statement floors and feature walls.",
+      imagePath: "/images/catalogs/floor-600x1200.png",
+      pdfPath: "/catalogs/600x1200.pdf",
+      featured: true,
+      sortOrder: 10,
+    },
+    {
+      catalogId: "vitrified-600x600",
+      name: "Floor Tiles — 600×600MM & 400×400MM",
+      slug: "floor-tiles",
+      size: "600×600MM & 400×400MM",
+      filterValue: "600×600 mm",
+      count: "92 designs",
+      types: "Matt · Wood Look · Stone Look · Marble Look · Outdoor · Parking",
+      description: "Vitrified floor tiles with natural wood, stone, and marble finishes for elegant interiors and durable outdoor spaces.",
+      imagePath: "/images/catalogs/floor-600x600.png",
+      pdfPath: "/catalogs/floor-tiles.pdf",
+      featured: false,
+      sortOrder: 20,
+    },
+    {
+      catalogId: "wall-300x600",
+      name: "Wall Tiles — 300×600MM",
+      slug: "300x600",
+      size: "300×600MM",
+      filterValue: "300×600 mm",
+      count: "81 designs",
+      types: "Glossy · Ceramic · Wall",
+      description: "Premium digital ceramic wall tiles with outstanding finish and rich detailing.",
+      imagePath: "/images/catalogs/wall-300x600.png",
+      pdfPath: "/catalogs/300x600.pdf",
+      featured: false,
+      sortOrder: 30,
+    },
+    {
+      catalogId: "wall-300x450",
+      name: "Wall Tiles — 300×450MM",
+      slug: "300x450",
+      size: "300×450MM",
+      filterValue: "300×450 mm",
+      count: "191 designs",
+      types: "Glossy · Matt · Elevation",
+      description: "Our finest ceramic wall tiles featuring modern designs and superior durability.",
+      imagePath: "/images/catalogs/wall-300x450.png",
+      pdfPath: "/catalogs/300x450.pdf",
+      featured: false,
+      sortOrder: 40,
+    },
+    {
+      catalogId: "spirit-of-nepal",
+      name: "Spirit of Nepal",
+      slug: "spirit-of-nepal",
+      size: "Mixed Sizes",
+      filterValue: "spirit",
+      count: "34 designs",
+      types: "Dhaka · Thangka · Mithila · Flagstone",
+      description: "Heritage tiles inspired by Nepali culture — Palpali Dhaka, Thangka Art, Mithila Art, and natural Flagstone.",
+      imagePath: "/images/catalogs/spirit-of-nepal.png",
+      pdfPath: "/catalogs/spirit-of-nepal.pdf",
+      featured: false,
+      sortOrder: 50,
+    },
+  ];
+
+  for (const c of catalogs) {
+    // Upload cover image
+    let imageRef: { _type: "image"; asset: { _type: "reference"; _ref: string } } | undefined;
+    const imageAssetId = await uploadImage(c.imagePath, c.imagePath.split("/").pop()!);
+    if (imageAssetId) {
+      imageRef = { _type: "image", asset: { _type: "reference", _ref: imageAssetId } };
+    }
+
+    // Upload PDF
+    let pdfRef: { _type: "file"; asset: { _type: "reference"; _ref: string } } | undefined;
+    const pdfAssetId = await uploadPdf(c.pdfPath, c.pdfPath.split("/").pop()!);
+    if (pdfAssetId) {
+      pdfRef = { _type: "file", asset: { _type: "reference", _ref: pdfAssetId } };
+    }
+
+    // Patch existing catalog documents (matched by catalogId) with new metadata fields.
+    // Using patch-by-query preserves existing product references.
+    await client
+      .patch({ query: `*[_type == "tileCatalog" && catalogId == $catalogId][0]`, params: { catalogId: c.catalogId } })
+      .set({
+        name: c.name,
+        slug: { _type: "slug", current: c.slug },
+        size: c.size,
+        filterValue: c.filterValue,
+        count: c.count,
+        types: c.types,
+        description: c.description,
+        featured: c.featured,
+        sortOrder: c.sortOrder,
+        ...(imageRef ? { coverImage: imageRef } : {}),
+        ...(pdfRef ? { catalogPdf: pdfRef } : {}),
+      })
+      .commit({ returnDocuments: false });
+
+    const status = [imageRef ? "image" : null, pdfRef ? "PDF" : null].filter(Boolean).join(" + ") || "no assets";
+    console.log(`   ✅ ${c.name} (${c.catalogId}) — ${status}`);
+  }
 
   // ── 1. Hero Banners ──
   console.log("── Hero Banners ──");

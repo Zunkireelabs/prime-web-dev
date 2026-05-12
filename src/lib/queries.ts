@@ -41,14 +41,21 @@ export const productsByCatalogQuery = `
   }
 `;
 
-// All catalog documents
+// All catalog documents (ordered for the catalog showcase grid)
 export const allCatalogsQuery = `
-  *[_type == "tileCatalog"] | order(name asc) {
+  *[_type == "tileCatalog"] | order(sortOrder asc, name asc) {
     name,
     "slug": slug.current,
     catalogId,
+    size,
+    filterValue,
+    count,
+    types,
     description,
-    coverImage
+    "image": coverImage.asset->url,
+    "pdf": catalogPdf.asset->url,
+    featured,
+    sortOrder
   }
 `;
 

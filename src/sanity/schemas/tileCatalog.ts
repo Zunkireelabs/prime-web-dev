@@ -10,7 +10,7 @@ export const tileCatalog = defineType({
       title: "Display Name",
       type: "string",
       validation: (rule) => rule.required(),
-      description: 'e.g., "Wall Tiles 300×600"',
+      description: 'e.g., "Wall Tiles 300×450MM"',
     }),
     defineField({
       name: "slug",
@@ -39,6 +39,30 @@ export const tileCatalog = defineType({
       },
     }),
     defineField({
+      name: "size",
+      title: "Size Label",
+      type: "string",
+      description: 'Display size, e.g. "600×1200MM" or "600×600MM & 400×400MM"',
+    }),
+    defineField({
+      name: "filterValue",
+      title: "Filter Value",
+      type: "string",
+      description: 'Must match the product size field exactly, e.g. "600×1200 mm". Used to filter the product grid.',
+    }),
+    defineField({
+      name: "count",
+      title: "Design Count",
+      type: "string",
+      description: 'e.g. "59 designs"',
+    }),
+    defineField({
+      name: "types",
+      title: "Finish Types",
+      type: "string",
+      description: 'e.g. "Glossy · High Gloss · Matt · Carving"',
+    }),
+    defineField({
       name: "description",
       title: "Description",
       type: "text",
@@ -50,8 +74,28 @@ export const tileCatalog = defineType({
       type: "image",
       options: { hotspot: true },
     }),
+    defineField({
+      name: "catalogPdf",
+      title: "Catalog PDF",
+      type: "file",
+      options: { accept: ".pdf,application/pdf" },
+    }),
+    defineField({
+      name: "featured",
+      title: "Featured",
+      type: "boolean",
+      description: "Featured catalog appears larger in the catalog grid.",
+      initialValue: false,
+    }),
+    defineField({
+      name: "sortOrder",
+      title: "Sort Order",
+      type: "number",
+      description: "Lower numbers appear first. Use multiples of 10.",
+      initialValue: 50,
+    }),
   ],
   preview: {
-    select: { title: "name", subtitle: "catalogId" },
+    select: { title: "name", subtitle: "catalogId", media: "coverImage" },
   },
 });

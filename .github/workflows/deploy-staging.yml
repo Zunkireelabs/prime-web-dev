@@ -26,12 +26,16 @@ jobs:
           ssh -i ~/.ssh/deploy_key \
               -o StrictHostKeyChecking=yes \
               "${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_HOST }}" \
-              'set -e
+              "set -e
                cd /home/zunkireelabs/devprojects/websiteprojects/Prime-web-v2
                git fetch --prune origin staging
                git checkout staging
                git reset --hard origin/staging
-               ./deploy-staging.sh'
+               # Inject webhook secret into .env.local
+               grep -q 'SANITY_WEBHOOK_SECRET' .env.local \
+                 && sed -i 's/SANITY_WEBHOOK_SECRET=.*/SANITY_WEBHOOK_SECRET=${{ secrets.SANITY_WEBHOOK_SECRET }}/' .env.local \
+                 || echo 'SANITY_WEBHOOK_SECRET=${{ secrets.SANITY_WEBHOOK_SECRET }}' >> .env.local
+               ./deploy-staging.sh"
 
       - name: Health check
         run: |

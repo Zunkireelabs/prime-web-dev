@@ -262,8 +262,9 @@ export interface CatalogEntry {
   types: string;
   description: string;
   image: string;
-  pdf: string;
+  pdf?: string;
   featured?: boolean;
+  sortOrder?: number;
 }
 
 // ── Footer ──
