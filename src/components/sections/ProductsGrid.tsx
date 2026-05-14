@@ -14,10 +14,10 @@ const BATCH = 24;
 const SEARCH_DEBOUNCE_MS = 200;
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "name-asc", label: "Name A–Z" },
-  { value: "name-desc", label: "Name Z–A" },
-  { value: "size-asc", label: "Size (small→large)" },
-  { value: "size-desc", label: "Size (large→small)" },
+  { value: "name-asc", label: "Name A\u2013Z" },
+  { value: "name-desc", label: "Name Z\u2013A" },
+  { value: "size-asc", label: "Size (small\u2192large)" },
+  { value: "size-desc", label: "Size (large\u2192small)" },
 ];
 
 const CHIP_GROUPS: { key: FilterKey; label: string }[] = [
@@ -169,7 +169,7 @@ export default function ProductsGrid({
           <span className="text-[0.6rem] font-medium tracking-[0.14em] uppercase text-ink-muted tabular-nums whitespace-nowrap">
             {products.length === 0
               ? "0 of 0"
-              : `${rangeStart}–${rangeEnd} of ${products.length}`}
+              : `${rangeStart}\u2013${rangeEnd} of ${products.length}`}
           </span>
           <div
             className="relative"

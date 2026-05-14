@@ -108,7 +108,10 @@ export default function ProductsBrowser() {
 
   // ── Filter + sort ──
   const filtered = useMemo(() => {
-    let r = allProducts;
+    // Hide HL (highlighter) tiles and Spirit of Nepal tiles from the grid
+    let r = allProducts.filter(
+      (p) => !/\bHL\b/i.test(p.name) && p.catalog !== "spirit-of-nepal"
+    );
 
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));

@@ -1,84 +1,145 @@
 "use client";
 
 import FadeIn from "@/components/animations/FadeIn";
-import { ArrowRight } from "lucide-react";
+import CountUp from "@/components/animations/CountUp";
+import { ArrowRight, Factory, Users, Award, Leaf } from "lucide-react";
+
+const highlights = [
+  { icon: Factory, value: 4, suffix: "M", label: "Sq.m Annual Capacity" },
+  { icon: Users, value: 120, suffix: "+", label: "Dealers Nationwide" },
+  { icon: Award, value: 600, suffix: "+", label: "Tile Designs" },
+  { icon: Leaf, value: 16000, suffix: "", label: "Tons CO\u2082 Saved/Year" },
+];
 
 export default function BrandIntro() {
-
   return (
-    <section className="relative" style={{ padding: "clamp(100px, 12vw, 180px) 0" }}>
-      <div className="container relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: "clamp(40px, 6vw, 56px)", columnGap: "clamp(48px, 8vw, 96px)" }}>
-          {/* Left — Image with badge (7 cols) */}
-          <div className="lg:col-span-7">
-            <FadeIn direction="up" distance={30}>
-              <div className="relative">
-                <div className="aspect-[16/10] overflow-hidden relative group">
-                  <img
-                    src="/images/about-factory.jpg"
-                    alt="Prime Ceramics Facility"
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[1.4s] ease-[cubic-bezier(0.22,1,0.36,1)]"
-                  />
-                  {/* Warm overlay on hover */}
-                  <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/[0.04] transition-colors duration-700" />
-                </div>
-
-                {/* Badge — overlapping bottom-right */}
-                <div className="absolute right-2 bottom-2 sm:-right-3 sm:-bottom-3 md:-right-6 md:-bottom-6 w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 bg-surface rounded-full flex flex-col items-center justify-center shadow-[0_8px_40px_rgba(0,0,0,0.06)] border border-ink-faint/30 z-10">
-                  <p className="font-serif font-light text-accent leading-none text-[clamp(1.8rem,2.5vw,2.4rem)]">
-                    4+
-                  </p>
-                  <p className="text-[0.6rem] font-semibold tracking-[0.2em] uppercase text-ink-muted mt-1.5">
-                    Years
-                  </p>
-                </div>
-
-              </div>
-            </FadeIn>
-          </div>
-
-          {/* Right — Content (5 cols) */}
-          <div className="lg:col-span-5">
+    <section className="bg-surface" style={{ paddingTop: "clamp(80px, 10vw, 120px)", paddingBottom: 0 }}>
+      <div className="container">
+        {/* ── Top: Two-column layout ── */}
+        <div
+          className="grid grid-cols-1 lg:grid-cols-2"
+          style={{ gap: "clamp(40px, 5vw, 64px)", marginBottom: "clamp(56px, 7vw, 80px)" }}
+        >
+          {/* Left — Content */}
+          <div>
             <FadeIn>
-              <div className="flex items-center gap-4" style={{ marginBottom: "16px" }}>
+              <div className="flex items-center" style={{ gap: "16px", marginBottom: "20px" }}>
                 <div className="w-10 h-px bg-accent" />
                 <p className="eyebrow text-accent">About Prime Ceramics</p>
               </div>
             </FadeIn>
 
-            <FadeIn delay={0.1}>
-              <h2 className="h2" style={{ marginBottom: "24px" }}>
+            <FadeIn delay={0.06}>
+              <h2
+                className="font-serif font-light text-ink"
+                style={{
+                  fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+                  lineHeight: 1.12,
+                  marginBottom: "24px",
+                }}
+              >
                 Nepal&apos;s First Manufacturer of Both Wall &amp; Floor Tiles
               </h2>
             </FadeIn>
 
-            <FadeIn delay={0.15}>
-              <div className="w-12 h-[1.5px] bg-accent" style={{ marginBottom: "32px" }} />
+            <FadeIn delay={0.1}>
+              <div className="w-12 h-[1.5px] bg-accent" style={{ marginBottom: "24px" }} />
             </FadeIn>
 
-            <FadeIn delay={0.2}>
-              <p className="body-lg max-w-lg" style={{ marginBottom: "32px" }}>
-                Established in 2021, Prime Ceramics operates Nepal&apos;s only
-                plant equipped to manufacture both floor and wall tiles —
-                powered by Italian SACMI technology with an annual capacity
+            <FadeIn delay={0.15}>
+              <p className="body-lg text-ink-light" style={{ marginBottom: "20px", lineHeight: 1.85, maxWidth: "520px" }}>
+                Established in 2021, Prime Ceramics operates a state-of-the-art
+                production facility in Brindavan Municipality, Rautahat &mdash; powered
+                by Italian SACMI HD printing technology with an annual capacity
                 of 4 million square meters.
               </p>
             </FadeIn>
 
-            <FadeIn delay={0.3}>
-              <a
-                href="/about"
-                className="btn-fill group"
-              >
-                Know More
+            <FadeIn delay={0.2}>
+              <p className="body-sm text-ink-muted" style={{ marginBottom: "32px", lineHeight: 1.85, maxWidth: "520px" }}>
+                Promoted by CMS and Fortune Ventures &mdash; two of Nepal&apos;s
+                most respected business houses with over two decades of
+                excellence in construction materials.
+              </p>
+            </FadeIn>
+
+            <FadeIn delay={0.25}>
+              <a href="/about" className="btn-fill group">
+                Our Story
                 <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
               </a>
+            </FadeIn>
+          </div>
+
+          {/* Right — Factory image */}
+          <div>
+            <FadeIn delay={0.1} direction="left" distance={30}>
+              <div className="relative overflow-hidden group" style={{ borderRadius: "4px" }}>
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src="/images/about-factory.jpg"
+                    alt="Prime Ceramics Production Facility"
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[1.4s] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  />
+                </div>
+
+                {/* SACMI badge */}
+                <div
+                  className="absolute bg-ink text-white flex flex-col items-center justify-center"
+                  style={{
+                    width: "clamp(88px, 12vw, 120px)",
+                    height: "clamp(88px, 12vw, 120px)",
+                    borderRadius: "50%",
+                    bottom: "-16px",
+                    left: "20px",
+                    boxShadow: "0 6px 24px rgba(0,0,0,0.15)",
+                    zIndex: 2,
+                  }}
+                >
+                  <p className="text-[0.4rem] font-semibold tracking-[0.2em] uppercase text-accent" style={{ marginBottom: "2px" }}>
+                    Powered by
+                  </p>
+                  <p className="font-serif font-light text-white" style={{ fontSize: "clamp(1rem, 1.6vw, 1.3rem)", lineHeight: 1 }}>
+                    SACMI
+                  </p>
+                  <p className="text-[0.4rem] tracking-[0.12em] uppercase text-white/50" style={{ marginTop: "2px" }}>
+                    Italy
+                  </p>
+                </div>
+              </div>
             </FadeIn>
           </div>
         </div>
       </div>
 
+      {/* ── Bottom: Stats bar (full width, dark) ── */}
+      <div
+        className="grid grid-cols-2 md:grid-cols-4"
+        style={{
+          background: "var(--color-ink)",
+        }}
+      >
+        {highlights.map((item, i) => (
+          <FadeIn key={item.label} delay={0.1 + i * 0.06} direction="up" distance={10}>
+            <div
+              className="flex flex-col items-center text-center"
+              style={{
+                padding: "clamp(24px, 3.5vw, 36px) 16px",
+                borderRight: i < highlights.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+              }}
+            >
+              <item.icon size={16} className="text-accent" style={{ marginBottom: "8px", opacity: 0.6 }} />
+              <p className="font-serif font-light text-white" style={{ fontSize: "clamp(1.3rem, 2vw, 1.8rem)", lineHeight: 1, marginBottom: "6px" }}>
+                <CountUp target={item.value} suffix={item.suffix} />
+              </p>
+              <p className="text-[0.45rem] font-semibold tracking-[0.14em] uppercase text-white/40">
+                {item.label}
+              </p>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
     </section>
   );
 }

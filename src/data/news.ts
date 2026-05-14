@@ -122,8 +122,10 @@ const localNews: NewsItem[] = [
   },
 ];
 
+const validSanityNews = sanityNews?.filter((n) => n.image && n.image.startsWith("http"));
+
 export const news: NewsItem[] =
-  sanityNews && sanityNews.length > 0 ? sanityNews : localNews;
+  validSanityNews && validSanityNews.length > 0 ? validSanityNews : localNews;
 
 export const featuredNews: NewsItem | undefined = news.find(
   (n) => n.featured

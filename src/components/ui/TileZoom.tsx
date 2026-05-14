@@ -292,19 +292,17 @@ interface PanelProps {
 
 export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
   const { src, active, pos, size, cropAspect } = useZoomCtx();
-  const panelRef = useRef<HTMLDivElement>(null);
-  const [panelSize, setPanelSize] = useState({ w: 0, h: 0 });
+  const parentRef = useRef<HTMLDivElement>(null);
+  const [squareSide, setSquareSide] = useState(0);
 
+  // Measure the parent to compute the largest square that fits inside it.
   useLayoutEffect(() => {
-    const node = panelRef.current;
+    const node = parentRef.current?.parentElement;
     if (!node) return;
     const measure = () => {
       const rect = node.getBoundingClientRect();
-      setPanelSize((prev) =>
-        prev.w === rect.width && prev.h === rect.height
-          ? prev
-          : { w: rect.width, h: rect.height },
-      );
+      const side = Math.min(rect.width, rect.height);
+      setSquareSide((prev) => (prev === side ? prev : side));
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -312,52 +310,38 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
     return () => ro.disconnect();
   }, []);
 
-  // Match the source's lens calculation: lens is always square, side = the
-  // source's smaller dimension. Square tiles → lens fills source. Rectangles
-  // → lens is half the tile, cursor picks which half.
+  // Lens is always square: side = source's smaller dimension.
   const lensSide = size.w > 0 && size.h > 0 ? Math.min(size.w, size.h) : 0;
-  const lensW = lensSide;
-  const lensH = lensSide;
-  const cx = Math.max(lensW / 2, Math.min(size.w - lensW / 2, pos.x));
-  const cy = Math.max(lensH / 2, Math.min(size.h - lensH / 2, pos.y));
+  const cx = Math.max(lensSide / 2, Math.min(size.w - lensSide / 2, pos.x));
+  const cy = Math.max(lensSide / 2, Math.min(size.h - lensSide / 2, pos.y));
 
-  // Panel is square (Option A). Uniform scale so lens fits the panel exactly.
-  const scale =
-    lensW > 0 && lensH > 0
-      ? Math.min(panelSize.w / lensW, panelSize.h / lensH)
-      : 0;
+  // Scale the source into the square panel.
+  const panelSide = squareSide > 32 ? squareSide - 32 : squareSide; // 16px padding
+  const scale = lensSide > 0 ? panelSide / lensSide : 0;
   const bgW = size.w * scale;
   const bgH = size.h * scale;
-  const bgX = panelSize.w / 2 - cx * scale;
-  const bgY = panelSize.h / 2 - cy * scale;
+  const bgX = panelSide / 2 - cx * scale;
+  const bgY = panelSide / 2 - cy * scale;
 
   const hiResSrc = highResVariant(src, HI_RES_W, cropAspect);
-  // Default panel sizing → a square that fits inside its parent. The parent
-  // is expected to flex-center this element (no-op when already centered).
-  const sizingStyle: CSSProperties = tileSize
-    ? tileImageFrameStyle(tileSize)
-    : {
-        position: "relative",
-        aspectRatio: "1 / 1",
-        height: "100%",
-        width: "auto",
-        maxWidth: "100%",
-        maxHeight: "100%",
-      };
 
   return (
     <div
-      ref={panelRef}
+      ref={parentRef}
       aria-hidden="true"
       className={`pointer-events-none overflow-hidden ${className}`}
       style={{
-        ...sizingStyle,
+        position: "relative",
+        width: `${panelSide}px`,
+        height: `${panelSide}px`,
+        flexShrink: 0,
         backgroundImage: hiResSrc ? `url(${hiResSrc})` : undefined,
         backgroundSize: `${bgW}px ${bgH}px`,
         backgroundPosition: `${bgX}px ${bgY}px`,
         backgroundRepeat: "no-repeat",
-        backgroundColor: "var(--color-surface)",
-        opacity: active && size.w > 0 ? 1 : 0,
+        backgroundColor: "var(--color-surface-alt)",
+        borderRadius: "8px",
+        opacity: active && size.w > 0 && panelSide > 0 ? 1 : 0,
         transition: "opacity 0.3s linear",
         ...style,
       }}

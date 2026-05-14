@@ -95,7 +95,7 @@ export default function SpiritSection() {
               </p>
             </ScrollReveal>
             <ScrollReveal from={{ y: 20, opacity: 0 }} to={{ y: 0, opacity: 1 }} start="top 78%" end="top 52%">
-              <a href="/catalog?collection=spirit-of-nepal" className="link-arrow text-ink-on-red hover:text-white">
+              <a href="/spirit-of-nepal" className="link-arrow text-ink-on-red hover:text-white">
                 Explore Collection <ArrowRight size={14} />
               </a>
             </ScrollReveal>
@@ -115,7 +115,7 @@ export default function SpiritSection() {
             return (
               <div key={item.name} className="spirit-card opacity-0">
                 <TiltCard intensity={5}>
-                  <a href="/catalog?collection=spirit-of-nepal" className="group block">
+                  <a href="/spirit-of-nepal" className="group block">
                     {/* Image — landscape ratio */}
                     <div className="relative aspect-[16/12] overflow-hidden rounded-sm" style={{ marginBottom: "20px" }}>
                       <img

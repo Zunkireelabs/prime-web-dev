@@ -38,8 +38,10 @@ const localHeroSlides: HeroSlide[] = [
   },
 ];
 
+const validSanityHeroes = sanityHeroes?.filter((h) => h.image && h.image.startsWith("http"));
+
 export const heroSlides: HeroSlide[] =
-  sanityHeroes && sanityHeroes.length > 0 ? sanityHeroes : localHeroSlides;
+  validSanityHeroes && validSanityHeroes.length > 0 ? validSanityHeroes : localHeroSlides;
 
 // ── HeroCarousel slides (alternate hero) ──
 

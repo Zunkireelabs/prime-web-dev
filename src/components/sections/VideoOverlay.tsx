@@ -151,8 +151,8 @@ export default function VideoOverlay() {
         </button>
       </div>
 
-      {/* Sound toggle — bottom right */}
-      <div className="absolute z-10" style={{ bottom: "32px", right: "clamp(16px, 3vw, 32px)" }}>
+      {/* Sound toggle — bottom left */}
+      <div className="absolute z-10" style={{ bottom: "32px", left: "clamp(16px, 3vw, 32px)" }}>
         <button
           onClick={toggleSound}
           className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 transition-all duration-300 bg-black/20 backdrop-blur-sm"

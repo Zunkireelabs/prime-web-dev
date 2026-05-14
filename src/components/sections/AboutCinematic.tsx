@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import AboutHero from "./about/AboutHero";
 import AboutNarrative from "./about/AboutNarrative";
+import AboutLeadership from "./about/AboutLeadership";
 import AboutStats from "./about/AboutStats";
 import AboutPurpose from "./about/AboutPurpose";
 
@@ -10,6 +11,7 @@ const AboutNav = dynamic(() => import("@/components/ui/AboutNav"), { ssr: false 
 const SectionTransition = dynamic(() => import("@/components/ui/SectionTransition"), { ssr: false });
 const AboutTimeline = dynamic(() => import("./about/AboutTimeline"), { ssr: false });
 const AboutCraft = dynamic(() => import("./about/AboutCraft"), { ssr: false });
+const AboutQuality = dynamic(() => import("./about/AboutQuality"), { ssr: false });
 const AboutCertifications = dynamic(() => import("./about/AboutCertifications"), { ssr: false });
 const AboutClients = dynamic(() => import("./about/AboutClients"), { ssr: false });
 const AboutCTA = dynamic(() => import("./about/AboutCTA"), { ssr: false });
@@ -20,12 +22,15 @@ export default function AboutCinematic() {
       {/* Hero — cinematic opener */}
       <AboutHero />
 
-      <SectionTransition from="dark" to="light" variant="diagonal" />
-
-      {/* Narrative — our story + promoters */}
+      {/* Narrative — our story + promoters (dark, factory bg) */}
       <AboutNarrative />
 
-      <SectionTransition from="light" to="red" variant="wave" />
+      <SectionTransition from="dark" to="light-alt" variant="diagonal" />
+
+      {/* Leadership — Chairman & MD quotes */}
+      <AboutLeadership />
+
+      <SectionTransition from="light-alt" to="red" variant="wave" />
 
       {/* Impact numbers — red strip */}
       <AboutStats />
@@ -46,6 +51,11 @@ export default function AboutCinematic() {
       <AboutCraft />
 
       <SectionTransition from="dark" to="light" variant="wave" />
+
+      {/* Quality & Sustainability */}
+      <AboutQuality />
+
+      <SectionTransition from="light" to="light" variant="mosaic" />
 
       {/* Certifications */}
       <AboutCertifications />

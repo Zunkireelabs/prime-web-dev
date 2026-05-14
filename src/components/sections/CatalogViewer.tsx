@@ -107,55 +107,42 @@ export default function CatalogViewer({ slug }: { slug: string }) {
           />
         </div>
 
-        {/* PDF Embed */}
+        {/* Download page */}
         <div
-          style={{
-            height: "calc(100vh - 130px)",
-            position: "relative",
-          }}
+          className="flex items-center justify-center"
+          style={{ height: "calc(100vh - 130px)" }}
         >
-          {/* Loading indicator */}
-          <div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            style={{ zIndex: 1 }}
-          >
-            <div className="text-center">
-              <div
-                className="mx-auto"
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  border: "2px solid rgba(181,138,82,0.15)",
-                  borderTopColor: "var(--color-accent)",
-                  borderRadius: "50%",
-                  animation: "spin 1s linear infinite",
-                  marginBottom: "16px",
-                }}
-              />
-              <p className="text-[0.7rem] font-medium tracking-[0.1em] uppercase text-ink-on-dark-muted">
-                Loading catalog...
-              </p>
+          <div className="text-center" style={{ maxWidth: "420px" }}>
+            <div
+              className="mx-auto flex items-center justify-center"
+              style={{
+                width: "64px",
+                height: "64px",
+                borderRadius: "50%",
+                background: "rgba(181,138,82,0.1)",
+                border: "1px solid rgba(181,138,82,0.2)",
+                marginBottom: "24px",
+              }}
+            >
+              <Download size={24} className="text-accent" />
             </div>
+            <p className="font-serif font-light text-ink-on-dark" style={{ fontSize: "1.3rem", marginBottom: "12px" }}>
+              {catalog.name}
+            </p>
+            <p className="text-[0.8rem] text-ink-on-dark-muted" style={{ marginBottom: "32px", lineHeight: 1.7 }}>
+              Download the full catalog PDF to browse all designs, room scenes, and technical specifications.
+            </p>
+            <a
+              href={catalog.pdf}
+              download
+              className="inline-flex items-center text-[0.65rem] font-semibold tracking-[0.16em] uppercase bg-accent text-white hover:bg-accent-hover transition-colors duration-300"
+              style={{ gap: "10px", padding: "14px 32px", borderRadius: "4px" }}
+            >
+              <Download size={14} />
+              Download Catalog PDF
+            </a>
           </div>
-
-          <iframe
-            src={catalog.pdf}
-            title={`${catalog.name} Catalog`}
-            className="w-full h-full"
-            style={{
-              border: "none",
-              position: "relative",
-              zIndex: 2,
-              background: "transparent",
-            }}
-          />
         </div>
-
-        <style jsx>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
       </main>
     </SmoothScroll>
   );

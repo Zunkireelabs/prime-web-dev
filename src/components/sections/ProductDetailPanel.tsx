@@ -5,7 +5,7 @@ import { X, ArrowRight, Calculator, BookOpen } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
 import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tilePickerSize, parseTileDims, ALL_TILE_SIZES } from "@/lib/utils";
-import { TileZoomProvider, TileZoomSource, TileZoomPanel } from "@/components/ui/TileZoom";
+import { TileZoomProvider, TileZoomSource, TileZoomPanel, TileZoomBackdrop } from "@/components/ui/TileZoom";
 import { getSpecsBySize } from "@/data/catalog/tile-specs";
 
 interface Props {
@@ -65,22 +65,30 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
 
   const similar = useMemo(() => {
     if (!product) return [];
-    // Prioritize: same size + same finish, then same size + same category
+
+    const hasImg = (p: CatalogProduct) => !!(p.image && p.image.startsWith("http"));
+    const notSelf = (p: CatalogProduct) => p.slug !== product.slug && hasImg(p);
+
+    // Spirit of Nepal tiles: show other Spirit tiles from same or different series
+    if (product.catalog === "spirit-of-nepal") {
+      const sameSeries = allProducts.filter(
+        (p) => notSelf(p) && p.catalog === "spirit-of-nepal" && p.series === product.series
+      );
+      const otherSeries = allProducts.filter(
+        (p) => notSelf(p) && p.catalog === "spirit-of-nepal" && p.series !== product.series
+      );
+      return [...sameSeries, ...otherSeries].slice(0, 4);
+    }
+
+    // Regular tiles: same size + same finish, then same size + same category
     const sameSizeFinish = allProducts.filter(
-      (p) =>
-        p.slug !== product.slug &&
-        p.image &&
-        p.image.startsWith("http") &&
-        p.size === product.size &&
-        p.finish === product.finish
+      (p) => notSelf(p) && p.size === product.size && p.finish === product.finish
     );
     if (sameSizeFinish.length >= 4) return sameSizeFinish.slice(0, 4);
 
     const sameSizeCategory = allProducts.filter(
       (p) =>
-        p.slug !== product.slug &&
-        p.image &&
-        p.image.startsWith("http") &&
+        notSelf(p) &&
         p.size === product.size &&
         (p.finish === product.finish || p.category === product.category) &&
         !sameSizeFinish.includes(p)
@@ -116,6 +124,46 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
     return map;
   }, [product]);
 
+  // Find series variants (HL, Dark, Light, Floor) for 300x450mm wall tiles
+  const seriesVariants = useMemo(() => {
+    if (!product) return [];
+    if (product.size !== "300×450 mm") return [];
+    if (!/\b(Light|Dark|HL)\b/i.test(product.name)) return [];
+
+    const series = product.series;
+    // Same series, same size (wall tiles)
+    const wallTiles = allProducts.filter(
+      (p) => p.series === series && p.size === "300×450 mm" && p.slug !== product.slug
+    );
+    // Matching floor tile (300x300)
+    const floorTile = allProducts.find(
+      (p) => p.series === series && p.size === "300×300 mm" && p.image && p.image.startsWith("http")
+    );
+
+    const items: { product: CatalogProduct; label: string }[] = [];
+
+    // Add HL tiles
+    const hlTiles = wallTiles
+      .filter((t) => /HL/i.test(t.name))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    for (const hl of hlTiles) {
+      const hlMatch = hl.name.match(/HL\s*(\d+)?/i);
+      items.push({ product: hl, label: hlMatch?.[1] ? `HL ${hlMatch[1]}` : "HL" });
+    }
+
+    // Add Dark/Light (whichever the current product is NOT)
+    const dark = wallTiles.find((t) => /\bDark\b/i.test(t.name));
+    if (dark) items.push({ product: dark, label: "Dark" });
+
+    const light = wallTiles.find((t) => /\bLight\b/i.test(t.name));
+    if (light) items.push({ product: light, label: "Light" });
+
+    // Add floor tile
+    if (floorTile) items.push({ product: floorTile, label: "Floor 300×300" });
+
+    return items;
+  }, [product]);
+
   if (!product) return null;
 
   const hasImage = product.image && product.image.startsWith("http");
@@ -147,10 +195,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
       <TileZoomProvider
         src={hasImage && product.image ? product.image : ""}
         zoom={2}
-        cropAspect={(() => {
-          const dims = parseTileDims(product.size);
-          return dims.w === dims.h ? dims : undefined;
-        })()}
+        cropAspect={parseTileDims(product.size)}
       >
       {/* Modal container */}
       <div
@@ -201,14 +246,31 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           }}
         >
           {hasImage && product.image ? (
-            <div
-              style={{
-                ...tileImageFrameStyle(product.size),
-                boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-              }}
-            >
-              <TileZoomSource alt={product.name} />
-            </div>
+            product.application === "Art Panel" ? (
+              /* Art Panel — show the full artwork large, not as a tiny tile */
+              <img
+                src={product.image}
+                alt={product.name}
+                loading="eager"
+                decoding="async"
+                className="block"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  padding: "24px",
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  ...tileImageFrameStyle(product.size),
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+                }}
+              >
+                <TileZoomSource alt={product.name} />
+              </div>
+            )
           ) : (
             <div
               className="flex items-center justify-center"
@@ -273,6 +335,14 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             }}
           >
             {hasImage ? (
+              product.application === "Art Panel" ? (
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full"
+                  style={{ objectFit: "contain", borderRadius: "4px", maxHeight: "400px" }}
+                />
+              ) : (
               <div style={{ ...tileImageFrameStyle(product.size), borderRadius: "4px", overflow: "hidden" }}>
                 <img
                   src={product.image}
@@ -280,6 +350,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                   style={tileImageCropStyle}
                 />
               </div>
+              )
             ) : (
               <div
                 className="flex items-center justify-center"
@@ -439,6 +510,151 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               </div>
             </div>
 
+          {/* Art Panel composition for Spirit of Nepal art tiles */}
+          {product.application === "Art Panel" && (
+            <div
+              style={{
+                marginBottom: "16px",
+                background: "rgba(150,112,76,0.06)",
+                border: "1px solid rgba(150,112,76,0.15)",
+                borderRadius: "8px",
+                padding: "14px 16px",
+              }}
+            >
+              <p
+                className="text-[0.5rem] font-semibold tracking-[0.14em] uppercase"
+                style={{ color: "var(--color-accent)", marginBottom: "10px" }}
+              >
+                Art Panel Composition
+              </p>
+              <div className="flex items-center" style={{ gap: "16px" }}>
+                {/* Mini tile diagram */}
+                <div
+                  style={{
+                    display: "inline-grid",
+                    gridTemplateColumns: "repeat(4, 18px)",
+                    gridTemplateRows: "repeat(3, 27px)",
+                    gap: "2px",
+                    flexShrink: 0,
+                  }}
+                >
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        background: "rgba(150,112,76,0.15)",
+                        border: "1px solid rgba(150,112,76,0.3)",
+                        borderRadius: "1px",
+                      }}
+                    />
+                  ))}
+                </div>
+                <div
+                  className="grid grid-cols-3 flex-1"
+                  style={{ gap: "6px" }}
+                >
+                  <div>
+                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Total Tiles</p>
+                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>12 pcs</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Grid Layout</p>
+                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>4 x 3</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Each Tile</p>
+                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>300x600mm</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Width</p>
+                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>1200mm</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Height</p>
+                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>1800mm</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Coverage</p>
+                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>2.16 sq.m</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Series variants (HL, Dark, Floor) for 300x450mm tiles */}
+          {seriesVariants.length > 0 && (
+            <div style={{ marginBottom: "16px" }}>
+              <p
+                className="text-[0.55rem] font-medium tracking-[0.14em] uppercase text-ink-muted"
+                style={{ marginBottom: "8px" }}
+              >
+                Series Variants
+              </p>
+              <div
+                className="flex"
+                style={{ gap: "8px" }}
+              >
+                {seriesVariants.map((item) => {
+                  const itemHasImage = item.product.image && item.product.image.startsWith("http");
+                  const isFloor = item.product.size === "300×300 mm";
+                  return (
+                    <button
+                      key={item.product.slug}
+                      type="button"
+                      onClick={() => onProductChange(item.product)}
+                      className="group/var shrink-0 relative overflow-hidden"
+                      style={{
+                        width: "80px",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <div
+                        className="relative overflow-hidden bg-surface-card"
+                        style={{ aspectRatio: "1", borderRadius: "4px" }}
+                      >
+                        {itemHasImage ? (
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            loading="lazy"
+                            className="block w-full h-full object-cover group-hover/var:scale-[1.06]"
+                            style={{ transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)" }}
+                          />
+                        ) : (
+                          <div
+                            className="w-full h-full flex items-center justify-center"
+                            style={{ background: "hsl(35,10%,85%)" }}
+                          >
+                            <p className="text-[0.45rem] font-medium text-ink-muted text-center px-2 select-none">
+                              {item.product.name}
+                            </p>
+                          </div>
+                        )}
+                        {/* Label overlay */}
+                        <div
+                          className="absolute bottom-0 left-0 right-0"
+                          style={{
+                            background: isFloor ? "rgba(61,58,54,0.85)" : "rgba(0,0,0,0.55)",
+                            padding: "3px 4px",
+                          }}
+                        >
+                          <span
+                            className="text-[0.42rem] font-semibold tracking-[0.12em] uppercase text-center block"
+                            style={{ color: "#fff" }}
+                          >
+                            {item.label}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Gold divider */}
           <div className="gold-divider-full" style={{ marginBottom: "16px" }} />
 
@@ -538,16 +754,24 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           </div>
         </div>
 
-        {/* Zoom panel fills the entire right column on hover. The panel's
-            opaque background covers the details underneath — no separate
-            backdrop needed. */}
+        {/* Zoom panel fills the entire right column on hover. An opaque
+            backdrop covers the details text, then the square zoom sits
+            centered on top. */}
         {hasImage && (
           <div
             aria-hidden="true"
-            className="hidden md:flex absolute items-center justify-center"
+            className="hidden md:block absolute"
             style={{ top: 0, right: 0, bottom: 0, width: "50%", zIndex: 4, pointerEvents: "none" }}
           >
-            <TileZoomPanel />
+            <TileZoomBackdrop
+              style={{ position: "absolute", inset: 0 }}
+            />
+            <div
+              className="absolute inset-0 flex items-center justify-center overflow-hidden"
+              style={{ padding: "16px" }}
+            >
+              <TileZoomPanel />
+            </div>
           </div>
         )}
       </div>

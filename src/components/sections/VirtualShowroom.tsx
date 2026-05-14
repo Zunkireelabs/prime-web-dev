@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Play, ArrowRight, Crosshair, MapPin } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import FadeIn from "@/components/animations/FadeIn";
 
 const VR_MASK_PATH = [
@@ -20,7 +20,7 @@ const VR_MASK_PATH = [
 
 const INVERTED_MASK = `M -10,-10 H 1410 V 410 H -10 Z ${VR_MASK_PATH}`;
 
-export default function VirtualShowroom() {
+export default function TileVisualizer() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
@@ -107,7 +107,7 @@ export default function VirtualShowroom() {
 
             <FadeIn delay={0.1}>
               <h2 className="font-serif font-light italic text-white leading-[1.05] tracking-[-0.025em]" style={{ fontSize: "clamp(2.4rem, 6vw, 5.5rem)", marginBottom: "clamp(24px, 4vw, 40px)" }}>
-                Virtual <br /> <span className="text-accent-light not-italic">Showroom</span>
+                Tile <br /> <span className="text-accent-light not-italic">Visualizer</span>
               </h2>
             </FadeIn>
 
@@ -122,36 +122,13 @@ export default function VirtualShowroom() {
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <div className="flex flex-wrap items-center" style={{ gap: "clamp(16px, 3vw, 32px)" }}>
-                <a href="/dealers" className="group relative inline-flex items-center gap-4 px-8 py-4 bg-accent text-white overflow-hidden transition-all duration-500 hover:pr-12">
-                  <span className="relative z-10 flex items-center gap-4 text-[0.7rem] font-bold tracking-[0.2em] uppercase">
-                    <Play size={14} fill="currentColor" /> Initialize 360°
-                  </span>
-                  <ArrowRight size={16} className="absolute right-4 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500" />
-                  <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 opacity-10" />
-                </a>
-                
-                <a href="/catalog" className="link-arrow text-white/70 hover:text-white text-[0.7rem] font-medium border-b border-white/20 pb-1">
-                  Technical Specifications <ArrowRight size={14} />
-                </a>
-              </div>
-            </FadeIn>
-            
-            <FadeIn delay={0.4}>
-              <div className="grid grid-cols-2 border-t border-white/10" style={{ marginTop: "clamp(28px, 5vw, 48px)", gap: "clamp(20px, 4vw, 48px)", paddingTop: "clamp(20px, 3vw, 32px)" }}>
-                <div>
-                  <p className="text-[0.55rem] uppercase tracking-[0.3em] text-accent-light mb-2 flex items-center gap-2 font-bold">
-                    <MapPin size={10}/> COORDINATES
-                  </p>
-                  <p className="font-serif text-white text-lg tracking-wider">27.7172° N, 85.3240° E</p>
-                </div>
-                <div>
-                  <p className="text-[0.55rem] uppercase tracking-[0.3em] text-accent-light mb-2 flex items-center gap-2 font-bold">
-                    <Crosshair size={10}/> RENDER MODE
-                  </p>
-                  <p className="font-serif text-white text-lg tracking-wider">ULTRA-HD RT</p>
-                </div>
-              </div>
+              <a href="/products" className="group relative inline-flex items-center gap-4 px-8 py-4 bg-accent text-white overflow-hidden transition-all duration-500 hover:pr-12">
+                <span className="relative z-10 flex items-center gap-4 text-[0.7rem] font-bold tracking-[0.2em] uppercase">
+                  Experience It
+                </span>
+                <ArrowRight size={16} className="absolute right-4 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 opacity-10" />
+              </a>
             </FadeIn>
           </div>
 

@@ -19,6 +19,7 @@ const CTASection = dynamic(() => import("@/components/sections/CTASection"), { s
 const ProductShowcase = dynamic(() => import("@/components/sections/ProductShowcase"), { ssr: false });
 const FactoryBanner = dynamic(() => import("@/components/sections/FactoryBanner"), { ssr: false });
 const CalculatorCTA = dynamic(() => import("@/components/sections/CalculatorCTA"), { ssr: false });
+const VirtualShowroom = dynamic(() => import("@/components/sections/VirtualShowroom"), { ssr: false });
 const ClientsSection = dynamic(() => import("@/components/sections/ClientsSection"), { ssr: false });
 const DealerNetwork = dynamic(() => import("@/components/sections/DealerNetwork"), { ssr: false });
 
@@ -34,7 +35,7 @@ export default function Home() {
         {/* ═══ BLOCK 1 — Hero (dark) ═══ */}
         <HeroMain />
 
-        {/* ═══ BLOCK 2 — Light: About + Browsing ═══ */}
+        {/* ═══ BLOCK 2 — About (diagonal split) ═══ */}
         <BrandIntro />
         <FindBySpace />
         <ProductShowcase />
@@ -60,13 +61,8 @@ export default function Home() {
         {/* ═══ Calculator CTA (dark) ═══ */}
         <CalculatorCTA />
 
-        {/* ─── Transition: Dark → Light ─── */}
-        <SectionTransition from="dark" to="light-alt" variant="wave" />
-
-        <ClientsSection />
-
-        {/* ─── Transition: Light → Dark ─── */}
-        <SectionTransition from="light-alt" to="dark" variant="wave" />
+        {/* ═══ Virtual Showroom (dark) ═══ */}
+        <VirtualShowroom />
 
         {/* ═══ Dealer Network (dark) ═══ */}
         <DealerNetwork />

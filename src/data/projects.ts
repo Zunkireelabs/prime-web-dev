@@ -195,8 +195,10 @@ const localProjectHighlights: ProjectHighlight[] = [
   },
 ];
 
+const validSanityProjects = sanityProjects?.filter((p) => p.image && p.image.startsWith("http"));
+
 export const projectHighlights: ProjectHighlight[] =
-  sanityProjects && sanityProjects.length > 0 ? sanityProjects : localProjectHighlights;
+  validSanityProjects && validSanityProjects.length > 0 ? validSanityProjects : localProjectHighlights;
 
 // ── Legacy data (used by homepage sections) ──
 

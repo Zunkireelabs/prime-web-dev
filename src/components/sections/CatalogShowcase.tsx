@@ -111,12 +111,6 @@ function CatalogCard({
           <div className="flex items-center flex-wrap" style={{ gap: "16px" }}>
             {!isComingSoon ? (
               <>
-                <a
-                  href={`/catalog/view/${cat.slug}`}
-                  className="link-arrow text-accent"
-                >
-                  View Catalog <ArrowRight size={12} />
-                </a>
                 <button
                   onClick={() => onView?.(cat.filterValue)}
                   className="link-arrow cursor-pointer"

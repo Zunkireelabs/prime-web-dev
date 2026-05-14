@@ -119,7 +119,7 @@ export default function HeroMain() {
                         transition: "all 1.4s cubic-bezier(0.22, 1, 0.36, 1)",
                       }
                     : {
-                        transform: "scale(1.28)",
+                        transform: "scale(1.35)",
                         filter: "brightness(0.5)",
                       }
               }
@@ -237,7 +237,7 @@ export default function HeroMain() {
       <style jsx>{`
         @keyframes kenBurns {
           0% {
-            transform: scale(1.28) translate(0px, 0px);
+            transform: scale(1.35) translate(0px, 0px);
           }
           100% {
             transform: scale(1.0) translate(var(--drift-x), var(--drift-y));

@@ -38,7 +38,7 @@ export default function AboutCTA() {
               marginBottom: "28px",
             }}
           >
-            Tiles with <span className="italic">Stile.</span>
+            Transform Your <span className="italic">Space.</span>
           </p>
         </ScrollReveal>
 
