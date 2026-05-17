@@ -4,9 +4,23 @@ import { memo, useCallback, useRef } from "react";
 import type { CatalogProduct } from "@/data/catalog";
 import { parseTileDims, tileAspectRatio } from "@/lib/utils";
 
-/** Physical tile aspect ratio — width / height matching the real tile.
- *  Grid columns handle the width scaling (300mm=6cols, 400mm=4cols, 600mm=3cols). */
-function cardAspectRatio(tileSize: string): string {
+/** Card aspect ratio from actual image dimensions (Sanity URL contains -WxH.).
+ *  Falls back to physical tile ratio for images without dimensions. */
+function cardAspectRatio(imageUrl: string | undefined, tileSize: string): string {
+  if (imageUrl) {
+    const m = imageUrl.match(/-(\d+)x(\d+)\./);
+    if (m) {
+      const w = parseInt(m[1], 10);
+      const h = parseInt(m[2], 10);
+      if (w > 0 && h > 0) {
+        // Normalize to simpler ratios for grid consistency
+        const ratio = w / h;
+        if (Math.abs(ratio - 1) < 0.1) return "1 / 1"; // ~square
+        if (ratio > 1) return "2 / 1"; // landscape
+        return "1 / 2"; // portrait
+      }
+    }
+  }
   return tileAspectRatio(tileSize);
 }
 import { prewarmTileZoomImage } from "@/components/ui/TileZoom";
@@ -70,7 +84,7 @@ function TileCard({ product, onClick }: TileCardProps) {
       <div
         className="relative overflow-hidden bg-surface-card"
         style={{
-          aspectRatio: cardAspectRatio(product.size),
+          aspectRatio: cardAspectRatio(product.image, product.size),
           marginBottom: "16px",
           borderRadius: "4px",
           boxShadow: "var(--shadow-sm)",
