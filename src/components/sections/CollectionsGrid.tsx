@@ -37,7 +37,7 @@ const allSizes = STANDARD_SIZES.filter((s) => collectionSizes.has(s) || catalogS
 
 const optionsByTab: Record<Tab, string[]> = {
   Finishes: [ALL, ...uniqueCategories],
-  Sizes: [ALL, ...allSizes],
+  Sizes: [...allSizes],
   Colors: [ALL, ...browseData.Colors.map((c) => c.name)],
   Types: [ALL, ...browseData.Types.map((t) => t.name)],
 };
