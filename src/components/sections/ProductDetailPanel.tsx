@@ -262,14 +262,19 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 }}
               />
             ) : (
-              <div
+              <img
+                src={product.image}
+                alt={product.name}
+                loading="eager"
+                decoding="async"
+                className="block"
                 style={{
-                  ...tileImageFrameStyle(product.size),
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  padding: "24px",
                 }}
-              >
-                <TileZoomSource alt={product.name} />
-              </div>
+              />
             )
           ) : (
             <div
