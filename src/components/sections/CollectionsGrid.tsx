@@ -14,11 +14,11 @@ import ProductDetailPanel from "@/components/sections/ProductDetailPanel";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Exclude Spirit of Nepal tiles from this section (they have their own page)
-const gridProducts = allProducts.filter((p) => p.catalog !== "spirit-of-nepal");
+// Exclude Art Panel tiles (Thangka Art, Mithila Art) — they have their own page
+const gridProducts = allProducts.filter((p) => p.application !== "Art Panel");
 const productBySlug = new Map(gridProducts.map((p) => [p.slug, p]));
-const spiritSlugs = new Set(allProducts.filter((p) => p.catalog === "spirit-of-nepal").map((p) => p.slug));
-const gridCollections = collections.filter((c) => !spiritSlugs.has(c.slug));
+const artPanelSlugs = new Set(allProducts.filter((p) => p.application === "Art Panel").map((p) => p.slug));
+const gridCollections = collections.filter((c) => !artPanelSlugs.has(c.slug));
 
 const ALL = "All";
 
