@@ -15,10 +15,10 @@ import ProductDetailPanel from "@/components/sections/ProductDetailPanel";
 gsap.registerPlugin(ScrollTrigger);
 
 // Exclude Spirit of Nepal tiles from this section (they have their own page)
-const SPIRIT_CATEGORIES = new Set(["Art", "Cultural Heritage"]);
 const gridProducts = allProducts.filter((p) => p.catalog !== "spirit-of-nepal");
-const gridCollections = collections.filter((c) => !SPIRIT_CATEGORIES.has(c.category));
 const productBySlug = new Map(gridProducts.map((p) => [p.slug, p]));
+const spiritSlugs = new Set(allProducts.filter((p) => p.catalog === "spirit-of-nepal").map((p) => p.slug));
+const gridCollections = collections.filter((c) => !spiritSlugs.has(c.slug));
 
 const ALL = "All";
 
