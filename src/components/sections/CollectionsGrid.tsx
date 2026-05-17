@@ -20,28 +20,25 @@ const productBySlug = new Map(gridProducts.map((p) => [p.slug, p]));
 
 const ALL = "All";
 
-type Tab = "Finishes" | "Sizes" | "Colors" | "Types";
-const tabs: Tab[] = ["Finishes", "Sizes", "Colors", "Types"];
+type Tab = "Sizes";
+const tabs: Tab[] = ["Sizes"];
 
 const uniqueCategories = Array.from(new Set(collections.map((c) => c.category)));
 // All sizes carried on the site (curated collections + full catalog), in canonical order.
 const STANDARD_SIZES = [
-  "300×300 mm",
-  "300×450 mm",
-  "300×600 mm",
-  "400×400 mm",
-  "600×600 mm",
   "600×1200 mm",
+  "600×600 mm",
+  "400×400 mm",
+  "300×600 mm",
+  "300×450 mm",
+  "300×300 mm",
 ];
 const catalogSizes = new Set(gridProducts.map((p) => p.size));
 const collectionSizes = new Set(collections.flatMap((c) => c.sizes));
 const allSizes = STANDARD_SIZES.filter((s) => collectionSizes.has(s) || catalogSizes.has(s));
 
 const optionsByTab: Record<Tab, string[]> = {
-  Finishes: [ALL, ...uniqueCategories],
   Sizes: [...allSizes],
-  Colors: [ALL, ...browseData.Colors.map((c) => c.name)],
-  Types: [ALL, ...browseData.Types.map((t) => t.name)],
 };
 
 type StripItem = {
@@ -152,109 +149,44 @@ export default function CollectionsGrid() {
       return [...current, ...additions];
     };
 
-    if (activeTab === "Finishes") {
-      const filtered = activeOption === ALL
-        ? collections
-        : collections.filter((c) => c.category === activeOption);
-      const built = filtered.map<StripItem>((c) => {
-        const product = productBySlug.get(c.slug);
-        const size = c.sizes[0] || product?.size || FALLBACK_SIZE;
-        return {
-          name: c.name,
-          slug: c.slug,
-          badge: c.category,
-          meta: size,
-          size,
-          image: resolveImage(product, c.image),
-          product: product ?? null,
-        };
-      });
-      const enriched = activeOption === ALL ? enrichWithAllSizes(built) : built;
-      return interleaveBySize(enriched);
-    }
+    // Sizes — curated collections + catalog fill
+    const fromCollections = activeOption === ALL
+      ? collections
+      : collections.filter((c) => c.sizes.includes(activeOption));
+    const usedSlugs = new Set(fromCollections.map((c) => c.slug));
 
-    if (activeTab === "Sizes") {
-      // Curated first: matching collections render the handpicked tiles.
-      const fromCollections = activeOption === ALL
-        ? collections
-        : collections.filter((c) => c.sizes.includes(activeOption));
-      const usedSlugs = new Set(fromCollections.map((c) => c.slug));
-
-      const collectionItems: StripItem[] = fromCollections.map((c) => {
-        const product = productBySlug.get(c.slug);
-        const size = c.sizes[0] || product?.size || FALLBACK_SIZE;
-        return {
-          name: c.name,
-          slug: c.slug,
-          badge: size,
-          meta: c.category,
-          size,
-          image: resolveImage(product, c.image),
-          product: product ?? null,
-        };
-      });
-
-      // For specific size selections, top up with catalog products at that size
-      // so even sizes the curated list misses (e.g. 300×300, 300×450) show real tiles.
-      if (activeOption !== ALL && collectionItems.length < 12) {
-        const need = 12 - collectionItems.length;
-        const catalogFill = gridProducts
-          .filter((p) => p.size === activeOption && !usedSlugs.has(p.slug))
-          .slice(0, need)
-          .map<StripItem>((p) => ({
-            name: p.name,
-            slug: p.slug,
-            badge: p.size,
-            meta: p.category,
-            size: p.size,
-            image: p.image,
-            product: p,
-          }));
-        return interleaveBySize([...collectionItems, ...catalogFill]);
-      }
-      // ALL → enrich with the missing standard sizes (300×300, 300×450)
-      const enriched = activeOption === ALL ? enrichWithAllSizes(collectionItems) : collectionItems;
-      return interleaveBySize(enriched);
-    }
-
-    if (activeTab === "Colors") {
-      const colorEntries = activeOption === ALL
-        ? browseData.Colors
-        : browseData.Colors.filter((c) => c.name === activeOption);
-      const built = colorEntries.map<StripItem>((c) => {
-        const product = productBySlug.get(c.slug);
-        const size = product?.size || FALLBACK_SIZE;
-        return {
-          name: product?.name ?? c.name,
-          slug: c.slug,
-          badge: c.name,
-          meta: product?.size ?? c.name,
-          size,
-          image: resolveImage(product, c.image),
-          product: product ?? null,
-        };
-      });
-      return interleaveBySize(built);
-    }
-
-    // Types
-    const typeEntries = activeOption === ALL
-      ? browseData.Types
-      : browseData.Types.filter((t) => t.name === activeOption);
-    const built = typeEntries.map<StripItem>((t) => {
-      const product = productBySlug.get(t.slug);
-      const size = product?.size || FALLBACK_SIZE;
+    const collectionItems: StripItem[] = fromCollections.map((c) => {
+      const product = productBySlug.get(c.slug);
+      const size = c.sizes[0] || product?.size || FALLBACK_SIZE;
       return {
-        name: product?.name ?? t.name,
-        slug: t.slug,
-        badge: t.name,
-        meta: product?.size ?? t.name,
+        name: c.name,
+        slug: c.slug,
+        badge: size,
+        meta: c.category,
         size,
-        image: resolveImage(product, t.image),
+        image: resolveImage(product, c.image),
         product: product ?? null,
       };
     });
-    return interleaveBySize(built);
+
+    if (activeOption !== ALL && collectionItems.length < 12) {
+      const need = 12 - collectionItems.length;
+      const catalogFill = gridProducts
+        .filter((p) => p.size === activeOption && !usedSlugs.has(p.slug))
+        .slice(0, need)
+        .map<StripItem>((p) => ({
+          name: p.name,
+          slug: p.slug,
+          badge: p.size,
+          meta: p.category,
+          size: p.size,
+          image: p.image,
+          product: p,
+        }));
+      return interleaveBySize([...collectionItems, ...catalogFill]);
+    }
+    const enriched = activeOption === ALL ? enrichWithAllSizes(collectionItems) : collectionItems;
+    return interleaveBySize(enriched);
   }, [activeTab, activeOption]);
 
   const items = baseItems;
@@ -457,45 +389,7 @@ export default function CollectionsGrid() {
           <div className="h-[1px] bg-ink-faint" style={{ marginBottom: "clamp(28px, 3.5vw, 36px)" }} />
         </FadeIn>
 
-        {/* ── Row 1: Dimension tabs (right-aligned) ── */}
-        <FadeIn delay={0.14}>
-          <div
-            role="tablist"
-            aria-label="Filter dimension"
-            onKeyDown={handleArrowKeys}
-            className="flex items-center flex-wrap justify-end"
-            style={{ gap: "8px", marginBottom: "clamp(20px, 2.5vw, 28px)" }}
-          >
-            {tabs.map((tab) => {
-              const isActive = tab === activeTab;
-              return (
-                <button
-                  key={tab}
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => switchTab(tab)}
-                  style={{
-                    padding: "9px 22px",
-                    fontSize: "0.62rem",
-                    fontWeight: 500,
-                    letterSpacing: "0.18em",
-                    textTransform: "uppercase",
-                    borderRadius: "100px",
-                    border: "1px solid",
-                    borderColor: isActive ? "var(--color-accent)" : "rgba(61, 58, 54, 0.16)",
-                    background: isActive ? "var(--color-accent)" : "transparent",
-                    color: isActive ? "#fff" : "var(--color-ink-light)",
-                    transition: "all 0.3s linear",
-                    cursor: "pointer",
-                    boxShadow: isActive ? "0 4px 14px rgba(181, 138, 82, 0.22)" : "none",
-                  }}
-                >
-                  {tab}
-                </button>
-              );
-            })}
-          </div>
-        </FadeIn>
+        {/* Tabs hidden — only Sizes tab remains */}
 
         {/* ── Row 2: Sub-options (left-aligned) ── */}
         <div
