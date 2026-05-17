@@ -294,6 +294,7 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
   const { src, active, pos, size, cropAspect } = useZoomCtx();
   const parentRef = useRef<HTMLDivElement>(null);
   const [squareSide, setSquareSide] = useState(0);
+  const [hiResLoaded, setHiResLoaded] = useState(false);
 
   // Measure the parent to compute the largest square that fits inside it.
   useLayoutEffect(() => {
@@ -310,6 +311,17 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
     return () => ro.disconnect();
   }, []);
 
+  const hiResSrc = highResVariant(src, HI_RES_W, cropAspect);
+
+  // Preload hi-res and track when ready; use catalog image (src) immediately
+  useEffect(() => {
+    setHiResLoaded(false);
+    if (!hiResSrc || hiResSrc === src) { setHiResLoaded(true); return; }
+    const img = new Image();
+    img.onload = () => setHiResLoaded(true);
+    img.src = hiResSrc;
+  }, [hiResSrc, src]);
+
   // Lens is always square: side = source's smaller dimension.
   const lensSide = size.w > 0 && size.h > 0 ? Math.min(size.w, size.h) : 0;
   const cx = Math.max(lensSide / 2, Math.min(size.w - lensSide / 2, pos.x));
@@ -323,7 +335,8 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
   const bgX = panelSide / 2 - cx * scale;
   const bgY = panelSide / 2 - cy * scale;
 
-  const hiResSrc = highResVariant(src, HI_RES_W, cropAspect);
+  // Use catalog image immediately, upgrade to hi-res once loaded
+  const bgSrc = hiResLoaded ? hiResSrc : src;
 
   return (
     <div
@@ -335,14 +348,14 @@ export function TileZoomPanel({ className = "", style, tileSize }: PanelProps) {
         width: `${panelSide}px`,
         height: `${panelSide}px`,
         flexShrink: 0,
-        backgroundImage: hiResSrc ? `url(${hiResSrc})` : undefined,
+        backgroundImage: bgSrc ? `url(${bgSrc})` : undefined,
         backgroundSize: `${bgW}px ${bgH}px`,
         backgroundPosition: `${bgX}px ${bgY}px`,
         backgroundRepeat: "no-repeat",
         backgroundColor: "var(--color-surface-alt)",
         borderRadius: "8px",
         opacity: active && size.w > 0 && panelSide > 0 ? 1 : 0,
-        transition: "opacity 0.3s linear",
+        transition: "opacity 0.15s linear",
         ...style,
       }}
     />
