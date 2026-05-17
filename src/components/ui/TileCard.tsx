@@ -84,7 +84,7 @@ function TileCard({ product, onClick }: TileCardProps) {
               alt={product.name}
               loading="lazy"
               decoding="async"
-              className="block w-full h-full object-contain group-hover:scale-[1.03]"
+              className="block w-full h-full object-cover group-hover:scale-[1.03]"
               style={{
                 transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
               }}
