@@ -112,9 +112,9 @@ export default function ProductsBrowser() {
 
   // ── Filter + sort ──
   const filtered = useMemo(() => {
-    // Hide HL (highlighter) tiles and Spirit of Nepal tiles from the grid
+    // Hide HL (highlighter) tiles and Art Panel tiles (Thangka/Mithila Art)
     let r = allProducts.filter(
-      (p) => !/\bHL\b/i.test(p.name) && p.catalog !== "spirit-of-nepal"
+      (p) => !/\bHL\b/i.test(p.name) && p.application !== "Art Panel"
     );
 
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
