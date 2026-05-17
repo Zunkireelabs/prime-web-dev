@@ -262,27 +262,20 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 }}
               />
             ) : (
-              <img
-                src={product.image}
-                alt={product.name}
-                loading="eager"
-                decoding="async"
-                className="block"
+              <div
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  padding: "24px",
+                  ...tileImageFrameStyle(product.size),
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
                 }}
-              />
+              >
+                <TileZoomSource alt={product.name} />
+              </div>
             )
           ) : (
             <div
               className="flex items-center justify-center"
               style={{
-                width: "80%",
-                height: "60%",
-                borderRadius: "8px",
+                ...tileImageFrameStyle(product.size),
                 background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
               }}
             >
@@ -350,12 +343,13 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                   style={{ objectFit: "contain", borderRadius: "4px", maxHeight: "400px" }}
                 />
               ) : (
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full"
-                style={{ objectFit: "contain", borderRadius: "4px", maxHeight: "400px" }}
-              />
+              <div style={{ ...tileImageFrameStyle(product.size), borderRadius: "4px", overflow: "hidden" }}>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  style={tileImageCropStyle}
+                />
+              </div>
               )
             ) : (
               <div
