@@ -14,7 +14,9 @@ import ProductDetailPanel from "@/components/sections/ProductDetailPanel";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const productBySlug = new Map(allProducts.map((p) => [p.slug, p]));
+// Exclude Spirit of Nepal tiles from this section (they have their own page)
+const gridProducts = allProducts.filter((p) => p.catalog !== "spirit-of-nepal");
+const productBySlug = new Map(gridProducts.map((p) => [p.slug, p]));
 
 const ALL = "All";
 
@@ -31,7 +33,7 @@ const STANDARD_SIZES = [
   "600×600 mm",
   "600×1200 mm",
 ];
-const catalogSizes = new Set(allProducts.map((p) => p.size));
+const catalogSizes = new Set(gridProducts.map((p) => p.size));
 const collectionSizes = new Set(collections.flatMap((c) => c.sizes));
 const allSizes = STANDARD_SIZES.filter((s) => collectionSizes.has(s) || catalogSizes.has(s));
 
@@ -131,7 +133,7 @@ export default function CollectionsGrid() {
       const additions: StripItem[] = [];
       for (const size of SIZE_ORDER) {
         if (presentSizes.has(size)) continue;
-        const fill = allProducts
+        const fill = gridProducts
           .filter((p) => p.size === size && !usedSlugs.has(p.slug))
           .slice(0, 2);
         for (const p of fill) {
@@ -196,7 +198,7 @@ export default function CollectionsGrid() {
       // so even sizes the curated list misses (e.g. 300×300, 300×450) show real tiles.
       if (activeOption !== ALL && collectionItems.length < 12) {
         const need = 12 - collectionItems.length;
-        const catalogFill = allProducts
+        const catalogFill = gridProducts
           .filter((p) => p.size === activeOption && !usedSlugs.has(p.slug))
           .slice(0, need)
           .map<StripItem>((p) => ({
