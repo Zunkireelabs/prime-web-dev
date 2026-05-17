@@ -3,6 +3,20 @@
 import { memo, useCallback, useRef } from "react";
 import type { CatalogProduct } from "@/data/catalog";
 import { parseTileDims, tileAspectRatio } from "@/lib/utils";
+
+/** Extract aspect ratio from Sanity CDN image URL (contains -WxH. in the path).
+ *  Falls back to the physical tile ratio if not detectable. */
+function imageAspectRatio(imageUrl: string | undefined, tileSize: string): string {
+  if (imageUrl) {
+    const m = imageUrl.match(/-(\d+)x(\d+)\./);
+    if (m) {
+      const w = parseInt(m[1], 10);
+      const h = parseInt(m[2], 10);
+      if (w > 0 && h > 0) return `${w} / ${h}`;
+    }
+  }
+  return tileAspectRatio(tileSize);
+}
 import { prewarmTileZoomImage } from "@/components/ui/TileZoom";
 
 const HOVER_PREWARM_DELAY_MS = 100;
@@ -60,11 +74,11 @@ function TileCard({ product, onClick }: TileCardProps) {
       }}
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
-      {/* Tile image — aspect ratio matches physical tile proportions */}
+      {/* Tile image — aspect ratio from actual image dimensions */}
       <div
         className="relative overflow-hidden bg-surface-card"
         style={{
-          aspectRatio: tileAspectRatio(product.size),
+          aspectRatio: imageAspectRatio(product.image, product.size),
           marginBottom: "16px",
           borderRadius: "4px",
           boxShadow: "var(--shadow-sm)",
