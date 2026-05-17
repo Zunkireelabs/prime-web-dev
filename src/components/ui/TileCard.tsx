@@ -4,10 +4,15 @@ import { memo, useCallback, useRef } from "react";
 import type { CatalogProduct } from "@/data/catalog";
 import { parseTileDims, tileAspectRatio } from "@/lib/utils";
 
-/** Fixed aspect ratio per tile size — matches physical proportions exactly.
- *  Grid columns handle width: 300mm=6cols, 400mm=4cols, 600mm=3cols. */
-function cardAspectRatio(_imageUrl: string | undefined, tileSize: string): string {
-  return tileAspectRatio(tileSize);
+/** Landscape aspect ratio keeping physical proportions.
+ *  Square tiles stay square. Rectangular tiles display landscape (w/h swapped). */
+function cardAspectRatio(tileSize: string): string {
+  const { w, h } = parseTileDims(tileSize);
+  if (w === h) return "1 / 1";
+  // Rectangular: use the longer side as width → landscape
+  const long = Math.max(w, h);
+  const short = Math.min(w, h);
+  return `${long} / ${short}`;
 }
 import { prewarmTileZoomImage } from "@/components/ui/TileZoom";
 
@@ -70,7 +75,7 @@ function TileCard({ product, onClick }: TileCardProps) {
       <div
         className="relative overflow-hidden bg-surface-card"
         style={{
-          aspectRatio: cardAspectRatio(product.image, product.size),
+          aspectRatio: cardAspectRatio(product.size),
           marginBottom: "16px",
           borderRadius: "4px",
           boxShadow: "var(--shadow-sm)",
