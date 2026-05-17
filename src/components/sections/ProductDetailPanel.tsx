@@ -280,7 +280,9 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             <div
               className="flex items-center justify-center"
               style={{
-                ...tileImageFrameStyle(product.size),
+                width: "80%",
+                height: "60%",
+                borderRadius: "8px",
                 background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
               }}
             >
@@ -348,13 +350,12 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                   style={{ objectFit: "contain", borderRadius: "4px", maxHeight: "400px" }}
                 />
               ) : (
-              <div style={{ ...tileImageFrameStyle(product.size), borderRadius: "4px", overflow: "hidden" }}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  style={tileImageCropStyle}
-                />
-              </div>
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full"
+                style={{ objectFit: "contain", borderRadius: "4px", maxHeight: "400px" }}
+              />
               )
             ) : (
               <div
