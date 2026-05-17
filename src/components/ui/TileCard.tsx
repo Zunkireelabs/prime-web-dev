@@ -4,15 +4,11 @@ import { memo, useCallback, useRef } from "react";
 import type { CatalogProduct } from "@/data/catalog";
 import { parseTileDims, tileAspectRatio } from "@/lib/utils";
 
-/** Landscape aspect ratio keeping physical proportions.
- *  Square tiles stay square. Rectangular tiles display landscape (w/h swapped). */
+/** Physical tile aspect ratio — portrait for rectangular tiles.
+ *  300×300→1:1, 300×450→2:3, 300×600→1:2, 600×1200→1:2.
+ *  Grid columns handle width: 300mm=6cols, 400mm=4cols, 600mm=3cols. */
 function cardAspectRatio(tileSize: string): string {
-  const { w, h } = parseTileDims(tileSize);
-  if (w === h) return "1 / 1";
-  // Rectangular: use the longer side as width → landscape
-  const long = Math.max(w, h);
-  const short = Math.min(w, h);
-  return `${long} / ${short}`;
+  return tileAspectRatio(tileSize);
 }
 import { prewarmTileZoomImage } from "@/components/ui/TileZoom";
 
@@ -88,7 +84,7 @@ function TileCard({ product, onClick }: TileCardProps) {
               alt={product.name}
               loading="lazy"
               decoding="async"
-              className="block w-full h-full object-cover group-hover:scale-[1.03]"
+              className="block w-full h-full object-contain group-hover:scale-[1.03]"
               style={{
                 transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
               }}
