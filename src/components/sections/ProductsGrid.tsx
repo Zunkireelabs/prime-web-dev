@@ -7,7 +7,6 @@ import TileCard from "@/components/ui/TileCard";
 import Pagination from "@/components/ui/Pagination";
 import ProductDetailPanel from "./ProductDetailPanel";
 import type { CatalogProduct } from "@/data/catalog";
-import { tileGridColSpan } from "@/lib/utils";
 import type { FilterKey, ProductFilters, SortKey } from "./ProductsBrowser";
 
 const BATCH = 24;
@@ -87,16 +86,41 @@ export default function ProductsGrid({
   const chips = useMemo(() => {
     const out: { key: FilterKey; value: string; label: string }[] = [];
     CHIP_GROUPS.forEach(({ key, label }) => {
+      // Size is sidebar-controlled (single-select, always active) — no chips
+      if (key === "size") return;
       filters[key].forEach((v) => {
         out.push({
           key,
           value: v,
-          label: `${label}: ${key === "size" ? v.replace(" mm", "") : v}`,
+          label: `${label}: ${v}`,
         });
       });
     });
     return out;
   }, [filters]);
+
+  // Grid columns based on physical tile WIDTH so proportions are exact:
+  // 300mm-wide tiles → 6 cols, 600mm-wide → 3 cols (cards are exactly 2× wider)
+  // 400mm-wide → 4 cols (close to 4/3 ratio vs 300mm)
+  // Aspect ratio on the card handles the height proportions.
+  const gridCols = useMemo(() => {
+    const size = filters.size[0] || "600\u00d71200 mm";
+    switch (size) {
+      // 300mm width tiles — 6 cols (smallest cards)
+      case "300\u00d7300 mm":
+      case "300\u00d7450 mm":
+      case "300\u00d7600 mm":
+        return "grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6";
+      // 400mm width tiles — 4 cols
+      case "400\u00d7400 mm":
+        return "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4";
+      // 600mm width tiles — 3 cols (largest cards, exactly 2× the 300mm cards)
+      case "600\u00d7600 mm":
+      case "600\u00d71200 mm":
+      default:
+        return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+    }
+  }, [filters.size]);
 
   const handleCardClick = useCallback((product: CatalogProduct) => {
     setSelectedProduct(product);
@@ -235,14 +259,14 @@ export default function ProductsGrid({
           <StaggerGrid
             key={staggerKey}
             keys={visible.map((p) => p.slug)}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            className={`grid items-start ${gridCols}`}
             style={{
-              columnGap: "clamp(24px, 3vw, 32px)",
-              rowGap: "clamp(40px, 5vw, 56px)",
+              columnGap: "clamp(20px, 2.5vw, 28px)",
+              rowGap: "clamp(32px, 4vw, 48px)",
             }}
           >
             {visible.map((p) => (
-              <div key={p.slug} style={tileGridColSpan(p.size) === 2 ? { gridColumn: "span 2" } : undefined}>
+              <div key={p.slug}>
                 <TileCard product={p} onClick={handleCardClick} />
               </div>
             ))}

@@ -22,10 +22,12 @@ export interface ProductFilters {
 
 export type FilterKey = Exclude<keyof ProductFilters, "search" | "sort" | "page">;
 
+const DEFAULT_SIZE = "600×1200 mm";
+
 const EMPTY_FILTERS: ProductFilters = {
   category: [],
   collection: [],
-  size: [],
+  size: [DEFAULT_SIZE],
   finish: [],
   application: [],
   series: [],
@@ -63,10 +65,12 @@ export default function ProductsBrowser() {
   // ── Hydrate filters from URL on mount / URL change ──
   const initial = useMemo<ProductFilters>(() => {
     const sort = searchParams.get("sort");
+    const sizeParam = parseMulti(searchParams.get("size"));
     return {
       category: parseMulti(searchParams.get("category")),
       collection: parseMulti(searchParams.get("collection")),
-      size: parseMulti(searchParams.get("size")),
+      // Default to 600×1200 mm if no size specified
+      size: sizeParam.length > 0 ? sizeParam : ["600×1200 mm"],
       finish: parseMulti(searchParams.get("finish")),
       application: parseMulti(searchParams.get("application")),
       series: parseMulti(searchParams.get("series")),
@@ -151,6 +155,10 @@ export default function ProductsBrowser() {
   // ── Handlers ──
   const toggleMulti = useCallback((key: FilterKey, value: string) => {
     setFilters((f) => {
+      // Size is single-select: clicking selects that size, can't deselect to "all"
+      if (key === "size") {
+        return { ...f, size: [value], page: 1 };
+      }
       const current = f[key];
       const next = current.includes(value)
         ? current.filter((v) => v !== value)
@@ -160,6 +168,11 @@ export default function ProductsBrowser() {
   }, []);
 
   const clearGroup = useCallback((key: FilterKey) => {
+    // Size always falls back to default, never empty
+    if (key === "size") {
+      setFilters((f) => ({ ...f, size: [DEFAULT_SIZE], page: 1 }));
+      return;
+    }
     setFilters((f) => ({ ...f, [key]: [], page: 1 }));
   }, []);
 
@@ -179,7 +192,12 @@ export default function ProductsBrowser() {
     setFilters((f) => ({ ...f, page }));
   }, []);
 
-  const activeCount = MULTI_KEYS.reduce((sum, k) => sum + filters[k].length, 0) + (filters.search ? 1 : 0);
+  // Don't count default size as an active filter
+  const isDefaultSize = filters.size.length === 1 && filters.size[0] === DEFAULT_SIZE;
+  const activeCount = MULTI_KEYS.reduce((sum, k) => {
+    if (k === "size" && isDefaultSize) return sum;
+    return sum + filters[k].length;
+  }, 0) + (filters.search ? 1 : 0);
 
   return (
     <section

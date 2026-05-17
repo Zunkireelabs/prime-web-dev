@@ -7,7 +7,6 @@ import FadeIn from "@/components/animations/FadeIn";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import TiltCard from "@/components/ui/TiltCard";
 import { ArrowUpRight, ArrowRight, ArrowLeft } from "lucide-react";
-import { tileCardCSSVars, tileCardHeight, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
 import { collections, browseData } from "@/data/collections";
 import { allProducts } from "@/data/catalog";
 import type { CatalogProduct } from "@/data/catalog";
@@ -56,8 +55,8 @@ type StripItem = {
 };
 
 export default function CollectionsGrid() {
-  const [activeTab, setActiveTab] = useState<Tab>("Finishes");
-  const [activeOption, setActiveOption] = useState<string>(ALL);
+  const [activeTab, setActiveTab] = useState<Tab>("Sizes");
+  const [activeOption, setActiveOption] = useState<string>("600\u00d71200 mm");
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
 
@@ -553,12 +552,21 @@ export default function CollectionsGrid() {
                   return (
                     <div
                       key={`${activeTab}-${activeOption}-${item.slug}-${i}`}
-                      className="tile-card flex-shrink-0 sm:!w-[clamp(180px,25vw,280px)]"
-                      style={{ width: "clamp(150px, 42vw, 280px)" }}
+                      className="tile-card flex-shrink-0"
+                      style={{
+                        // Width proportional to physical tile width:
+                        // 300mm = base, 400mm = 1.33×, 600mm = 2×
+                        width: (() => {
+                          const w = parseInt(item.size.match(/(\d+)/)?.[1] ?? "600", 10);
+                          if (w <= 300) return "clamp(120px, 18vw, 160px)";
+                          if (w <= 400) return "clamp(160px, 24vw, 220px)";
+                          return "clamp(200px, 30vw, 320px)"; // 600mm
+                        })(),
+                      }}
                       onMouseEnter={() => setHoveredIdx(realIdx)}
                       onMouseLeave={() => setHoveredIdx(null)}
                     >
-                      <TiltCard intensity={6} className="h-full">
+                      <TiltCard intensity={0} className="h-full">
                         <button
                           type="button"
                           onClick={(e) => {
@@ -568,23 +576,27 @@ export default function CollectionsGrid() {
                           className="group block h-full w-full text-left cursor-pointer"
                           style={{ background: "none", border: "none", padding: 0 }}
                         >
-                          <div className="relative overflow-hidden bg-surface-card flex items-center justify-center" style={{ ...tileCardCSSVars(), height: tileCardHeight(), marginBottom: "16px" }}>
-                            <div style={tileImageFrameStyle(item.size)}>
+                          <div className="relative overflow-hidden" style={{
+                            aspectRatio: (() => {
+                              const m = item.size.match(/(\d+)\s*[×x]\s*(\d+)/);
+                              return m ? `${m[1]} / ${m[2]}` : "1 / 1";
+                            })(),
+                            marginBottom: "16px",
+                            borderRadius: "4px",
+                          }}>
                               <img
                                 src={item.image}
                                 alt={item.name}
                                 loading="lazy"
                                 draggable={false}
-                                className={`block transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                className={`block w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                                   hoveredIdx === realIdx
                                     ? "scale-[1.06]"
                                     : hoveredIdx !== null
                                       ? "scale-[0.98] brightness-[0.85]"
                                       : ""
                                 }`}
-                                style={tileImageCropStyle}
                               />
-                            </div>
 
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

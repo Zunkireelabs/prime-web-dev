@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useRef } from "react";
 import type { CatalogProduct } from "@/data/catalog";
-import { parseTileDims, tileCardCSSVars, tileCardHeight, tileImageCropStyle, tileImageFrameStyle } from "@/lib/utils";
+import { parseTileDims, tileAspectRatio } from "@/lib/utils";
 import { prewarmTileZoomImage } from "@/components/ui/TileZoom";
 
 const HOVER_PREWARM_DELAY_MS = 100;
@@ -60,56 +60,43 @@ function TileCard({ product, onClick }: TileCardProps) {
       }}
       style={{ cursor: onClick ? "pointer" : "default" }}
     >
-      {/* Outer frame: cream-white stage. */}
+      {/* Tile image — aspect ratio matches physical tile proportions */}
       <div
-        className="relative overflow-hidden flex items-center justify-center bg-surface-card"
+        className="relative overflow-hidden bg-surface-card"
         style={{
-          ...tileCardCSSVars(),
-          height: tileCardHeight(),
+          aspectRatio: tileAspectRatio(product.size),
           marginBottom: "16px",
+          borderRadius: "4px",
           boxShadow: "var(--shadow-sm)",
-          transition: "box-shadow 0.3s cubic-bezier(0.22,1,0.36,1), transform 0.3s cubic-bezier(0.22,1,0.36,1)",
+          transition: "box-shadow 0.3s cubic-bezier(0.22,1,0.36,1)",
         }}
       >
-        <div style={tileImageFrameStyle(product.size)}>
           {hasImage ? (
             <img
               src={product.image}
               alt={product.name}
               loading="lazy"
               decoding="async"
-              className="block group-hover:scale-[1.03]"
+              className="block w-full h-full object-cover group-hover:scale-[1.03]"
               style={{
-                ...tileImageCropStyle,
                 transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
               }}
             />
           ) : (
-            <>
-              <div
-                className="absolute inset-0"
-                style={{ background: `linear-gradient(155deg, hsl(${hue}, 12%, 89%), hsl(${hue}, 8%, 83%), hsl(${hue}, 5%, 79%))` }}
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ background: `linear-gradient(155deg, hsl(${hue}, 12%, 89%), hsl(${hue}, 8%, 83%), hsl(${hue}, 5%, 79%))` }}
+            >
+              <p
+                className="font-serif font-light text-center leading-tight select-none px-4"
+                style={{ fontSize: "clamp(0.7rem, 1.1vw, 0.9rem)", color: `hsl(${hue}, 6%, 62%)` }}
               >
-                <div
-                  className="absolute inset-0 opacity-[0.12] mix-blend-multiply"
-                  style={{
-                    backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-                  }}
-                />
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center px-4">
-                <p
-                  className="font-serif font-light text-center leading-tight select-none"
-                  style={{ fontSize: "clamp(0.7rem, 1.1vw, 0.9rem)", color: `hsl(${hue}, 6%, 62%)` }}
-                >
-                  {product.name}
-                </p>
-              </div>
-            </>
+                {product.name}
+              </p>
+            </div>
           )}
-        </div>
 
-        {/* Finish badge — pinned to outer frame */}
+        {/* Finish badge */}
         <span
           className="absolute text-[0.45rem] font-medium tracking-[0.12em] uppercase"
           style={{
@@ -156,7 +143,7 @@ function TileCard({ product, onClick }: TileCardProps) {
       </p>
 
       {/* Name */}
-      <h3 className="font-serif font-light text-ink group-hover:text-accent text-[0.95rem] leading-snug" style={{ transition: "color 0.3s cubic-bezier(0.22,1,0.36,1)" }}>
+      <h3 className="font-serif font-light text-ink group-hover:text-accent text-[0.95rem] leading-snug truncate" style={{ transition: "color 0.3s cubic-bezier(0.22,1,0.36,1)" }}>
         {product.name}
       </h3>
 

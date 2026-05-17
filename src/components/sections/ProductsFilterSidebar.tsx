@@ -124,6 +124,7 @@ function FilterGroup({
             <ul className="max-h-[240px] overflow-y-auto" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {filteredValues.map((v) => {
                 const isOn = selected.includes(v);
+                const isRadio = group.key === "size";
                 return (
                   <li key={v}>
                     <label className="flex items-center cursor-pointer group/row" style={{ gap: "10px" }}>
@@ -132,19 +133,23 @@ function FilterGroup({
                         style={{
                           width: "16px",
                           height: "16px",
-                          borderRadius: "3px",
+                          borderRadius: isRadio ? "50%" : "3px",
                           border: `1px solid ${isOn ? "var(--color-accent)" : "rgba(43,36,28,0.25)"}`,
-                          background: isOn ? "var(--color-accent)" : "transparent",
+                          background: isOn && !isRadio ? "var(--color-accent)" : "transparent",
                           transition: "background 0.3s, border-color 0.3s",
                         }}
                       >
-                        {isOn && <Check size={10} strokeWidth={3} className="text-white" />}
+                        {isOn && isRadio && (
+                          <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--color-accent)" }} />
+                        )}
+                        {isOn && !isRadio && <Check size={10} strokeWidth={3} className="text-white" />}
                       </span>
                       <input
-                        type="checkbox"
+                        type={isRadio ? "radio" : "checkbox"}
                         checked={isOn}
                         onChange={() => onToggle(group.key, v)}
                         className="sr-only"
+                        name={isRadio ? "size-filter" : undefined}
                       />
                       <span
                         className={`text-[0.8rem] ${isOn ? "text-ink" : "text-ink-light group-hover/row:text-ink"}`}
@@ -158,7 +163,7 @@ function FilterGroup({
               })}
             </ul>
 
-            {selected.length > 0 && (
+            {selected.length > 0 && !(group.key === "size" && selected.length === 1 && selected[0] === "600\u00d71200 mm") && (
               <button
                 type="button"
                 onClick={() => onClear(group.key)}
