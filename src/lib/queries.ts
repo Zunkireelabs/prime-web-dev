@@ -17,6 +17,7 @@ export const allProductsQuery = `
     hasMatchingFloor,
     variants,
     image,
+    imageRotation,
     sortOrder
   }
 `;
@@ -37,6 +38,7 @@ export const productsByCatalogQuery = `
     hasMatchingFloor,
     variants,
     image,
+    imageRotation,
     sortOrder
   }
 `;

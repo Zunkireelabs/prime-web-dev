@@ -266,6 +266,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 style={{
                   ...tileImageFrameStyle(product.size),
                   boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+                  ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg) scale(1.5)` } : {}),
                 }}
               >
                 <TileZoomSource alt={product.name} />

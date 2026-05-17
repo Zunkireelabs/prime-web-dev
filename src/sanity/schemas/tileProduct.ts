@@ -174,6 +174,21 @@ export const tileProduct = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "imageRotation",
+      title: "Image Rotation",
+      type: "number",
+      options: {
+        list: [
+          { title: "0\u00b0 (No rotation)", value: 0 },
+          { title: "90\u00b0 Clockwise", value: 90 },
+          { title: "180\u00b0", value: 180 },
+          { title: "270\u00b0 Clockwise", value: 270 },
+        ],
+      },
+      initialValue: 0,
+      description: "Rotate the product image if it was uploaded in the wrong orientation.",
+    }),
+    defineField({
       name: "sortOrder",
       title: "Sort Order",
       type: "number",

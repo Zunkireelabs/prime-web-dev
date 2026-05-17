@@ -56,4 +56,5 @@ export interface CatalogProduct {
   hasMatchingFloor?: string;
   variants?: string[];
   image: string;
+  imageRotation?: number;
 }
