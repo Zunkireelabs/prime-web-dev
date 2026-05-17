@@ -50,6 +50,7 @@ const allProductsQuery = `
     hasMatchingFloor,
     variants,
     image,
+    imageRotation,
     sortOrder
   }
 `;
@@ -67,6 +68,7 @@ interface SanityProduct {
   hasMatchingFloor?: string;
   variants?: string[];
   image: any;
+  imageRotation?: number;
   sortOrder: number;
 }
 
@@ -123,6 +125,7 @@ async function generate() {
       hasMatchingFloor: p.hasMatchingFloor || undefined,
       variants: p.variants || undefined,
       image: imageUrl,
+      imageRotation: p.imageRotation || undefined,
     };
   });
 
