@@ -79,17 +79,23 @@ function TileCard({ product, onClick }: TileCardProps) {
         }}
       >
           {hasImage ? (
-            <img
-              src={product.image}
-              alt={product.name}
-              loading="lazy"
-              decoding="async"
-              className="block w-full h-full object-cover group-hover:scale-[1.03]"
-              style={{
-                transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
-                ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg) scale(1.5)` } : {}),
-              }}
-            />
+            <div
+              className="w-full h-full"
+              style={product.imageRotation ? {
+                transform: `rotate(${product.imageRotation}deg) scale(1.5)`,
+              } : undefined}
+            >
+              <img
+                src={product.image}
+                alt={product.name}
+                loading="lazy"
+                decoding="async"
+                className="block w-full h-full object-cover group-hover:scale-[1.03]"
+                style={{
+                  transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
+                }}
+              />
+            </div>
           ) : (
             <div
               className="absolute inset-0 flex items-center justify-center"

@@ -344,7 +344,12 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                   style={{ objectFit: "contain", borderRadius: "4px", maxHeight: "400px" }}
                 />
               ) : (
-              <div style={{ ...tileImageFrameStyle(product.size), borderRadius: "4px", overflow: "hidden" }}>
+              <div style={{
+                ...tileImageFrameStyle(product.size),
+                borderRadius: "4px",
+                overflow: "hidden",
+                ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg) scale(1.5)` } : {}),
+              }}>
                 <img
                   src={product.image}
                   alt={product.name}
