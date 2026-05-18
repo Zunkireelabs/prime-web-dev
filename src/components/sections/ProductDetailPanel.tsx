@@ -262,20 +262,32 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 }}
               />
             ) : (
-              product.imageRotation ? (
-                <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
-                  <img
-                    src={product.image!}
-                    alt={product.name}
-                    loading="eager"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{
-                      transform: `rotate(${product.imageRotation}deg) scale(2)`,
-                      transformOrigin: "center center",
-                    }}
-                  />
-                </div>
-              ) : (
+              product.imageRotation ? (() => {
+                const dims = parseTileDims(product.size);
+                const imgAR = `${dims.h} / ${dims.w}`;
+                const imgWPct = (dims.h / dims.w) * 100;
+                return (
+                  <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
+                    <div
+                      className="absolute overflow-hidden"
+                      style={{
+                        top: "50%",
+                        left: "50%",
+                        width: `${imgWPct}%`,
+                        aspectRatio: imgAR,
+                        transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
+                      }}
+                    >
+                      <img
+                        src={product.image!}
+                        alt={product.name}
+                        loading="eager"
+                        className="block w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                );
+              })() : (
                 <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
                   <TileZoomSource alt={product.name} />
                 </div>
@@ -358,17 +370,29 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 borderRadius: "4px",
                 overflow: "hidden",
               }}>
-                {product.imageRotation ? (
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{
-                      transform: `rotate(${product.imageRotation}deg) scale(2)`,
-                      transformOrigin: "center center",
-                    }}
-                  />
-                ) : (
+                {product.imageRotation ? (() => {
+                  const dims = parseTileDims(product.size);
+                  const imgAR = `${dims.h} / ${dims.w}`;
+                  const imgWPct = (dims.h / dims.w) * 100;
+                  return (
+                    <div
+                      className="absolute overflow-hidden"
+                      style={{
+                        top: "50%",
+                        left: "50%",
+                        width: `${imgWPct}%`,
+                        aspectRatio: imgAR,
+                        transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
+                      }}
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="block w-full h-full object-cover"
+                      />
+                    </div>
+                  );
+                })() : (
                   <img
                     src={product.image}
                     alt={product.name}

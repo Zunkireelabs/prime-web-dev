@@ -79,19 +79,33 @@ function TileCard({ product, onClick }: TileCardProps) {
         }}
       >
           {hasImage ? (
-            product.imageRotation ? (
-              <img
-                src={product.image}
-                alt={product.name}
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{
-                  transform: `rotate(${product.imageRotation}deg) scale(2)`,
-                  transformOrigin: "center center",
-                }}
-              />
-            ) : (
+            product.imageRotation ? (() => {
+              // Inner div is landscape (2:1) so object-cover fits the landscape
+              // source WITHOUT cropping. Then we rotate the whole div to portrait.
+              const dims = parseTileDims(product.size);
+              const imgAR = `${dims.h} / ${dims.w}`; // landscape: e.g. "1200 / 600" = 2:1
+              const imgWPct = (dims.h / dims.w) * 100; // 200% for 1:2 tiles
+              return (
+                <div
+                  className="absolute overflow-hidden"
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    width: `${imgWPct}%`,
+                    aspectRatio: imgAR,
+                    transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
+                  }}
+                >
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="block w-full h-full object-cover"
+                  />
+                </div>
+              );
+            })() : (
               <img
                 src={product.image}
                 alt={product.name}
