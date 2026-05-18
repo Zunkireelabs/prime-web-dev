@@ -264,8 +264,9 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             ) : (
               product.imageRotation ? (() => {
                 const dims = parseTileDims(product.size);
-                const wPct = (dims.h / dims.w) * 100;
-                const hPct = (dims.w / dims.h) * 100;
+                const imgW = (dims.h / dims.w) * 100;
+                const imgH = (dims.w / dims.h) * 100;
+                const mlPct = -(dims.h / (2 * dims.w)) * 100;
                 return (
                   <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
                     <img
@@ -276,9 +277,11 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                       style={{
                         top: "50%",
                         left: "50%",
-                        width: `${wPct}%`,
-                        height: `${hPct}%`,
-                        transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
+                        width: `${imgW}%`,
+                        height: `${imgH}%`,
+                        marginLeft: `${mlPct}%`,
+                        marginTop: "-50%",
+                        transform: `rotate(${product.imageRotation}deg)`,
                       }}
                     />
                   </div>
@@ -368,8 +371,9 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
               }}>
                 {product.imageRotation ? (() => {
                   const dims = parseTileDims(product.size);
-                  const wPct = (dims.h / dims.w) * 100;
-                  const hPct = (dims.w / dims.h) * 100;
+                  const imgW = (dims.h / dims.w) * 100;
+                  const imgH = (dims.w / dims.h) * 100;
+                  const mlPct = -(dims.h / (2 * dims.w)) * 100;
                   return (
                     <img
                       src={product.image}
@@ -378,9 +382,11 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                       style={{
                         top: "50%",
                         left: "50%",
-                        width: `${wPct}%`,
-                        height: `${hPct}%`,
-                        transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
+                        width: `${imgW}%`,
+                        height: `${imgH}%`,
+                        marginLeft: `${mlPct}%`,
+                        marginTop: "-50%",
+                        transform: `rotate(${product.imageRotation}deg)`,
                       }}
                     />
                   );
