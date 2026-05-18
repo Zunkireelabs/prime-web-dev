@@ -27,7 +27,7 @@ export default function BrandIntro() {
 
           <FadeIn delay={0.06}>
             <h2
-              className="font-serif font-light text-ink mx-auto"
+              className="font-serif font-light text-ink mx-auto text-center"
               style={{
                 fontSize: "clamp(2rem, 4.5vw, 3rem)",
                 lineHeight: 1.1,
