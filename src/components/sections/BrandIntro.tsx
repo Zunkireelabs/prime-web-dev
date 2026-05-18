@@ -33,6 +33,7 @@ export default function BrandIntro() {
                 lineHeight: 1.1,
                 marginBottom: "24px",
                 maxWidth: "700px",
+                textAlign: "center",
               }}
             >
               Nepal&apos;s First Manufacturer of Both Wall &amp; Floor Tiles
