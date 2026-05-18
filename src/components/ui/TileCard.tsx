@@ -96,7 +96,7 @@ function TileCard({ product, onClick }: TileCardProps) {
                     left: "50%",
                     width: `${wPct}%`,
                     height: `${hPct}%`,
-                    transform: `translate(-50%, -50%) rotate(${product.imageRotation}deg)`,
+                    transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
                     transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
                   }}
                 />

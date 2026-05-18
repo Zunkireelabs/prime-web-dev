@@ -278,7 +278,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                         left: "50%",
                         width: `${wPct}%`,
                         height: `${hPct}%`,
-                        transform: `translate(-50%, -50%) rotate(${product.imageRotation}deg)`,
+                        transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
                       }}
                     />
                   </div>
@@ -380,7 +380,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                         left: "50%",
                         width: `${wPct}%`,
                         height: `${hPct}%`,
-                        transform: `translate(-50%, -50%) rotate(${product.imageRotation}deg)`,
+                        transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
                       }}
                     />
                   );
