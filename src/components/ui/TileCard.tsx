@@ -82,7 +82,7 @@ function TileCard({ product, onClick }: TileCardProps) {
             <div
               className="w-full h-full"
               style={product.imageRotation ? {
-                transform: `rotate(${product.imageRotation}deg) scale(1.5)`,
+                transform: `rotate(${product.imageRotation}deg)`,
               } : undefined}
             >
               <img
@@ -90,7 +90,7 @@ function TileCard({ product, onClick }: TileCardProps) {
                 alt={product.name}
                 loading="lazy"
                 decoding="async"
-                className="block w-full h-full object-cover group-hover:scale-[1.03]"
+                className={`block w-full h-full group-hover:scale-[1.03] ${product.imageRotation ? "object-contain" : "object-cover"}`}
                 style={{
                   transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
                 }}

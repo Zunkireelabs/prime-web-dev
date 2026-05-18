@@ -266,7 +266,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 style={{
                   ...tileImageFrameStyle(product.size),
                   boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                  ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg) scale(1.5)` } : {}),
+                  ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg)` } : {}),
                 }}
               >
                 <TileZoomSource alt={product.name} />
@@ -348,12 +348,15 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 ...tileImageFrameStyle(product.size),
                 borderRadius: "4px",
                 overflow: "hidden",
-                ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg) scale(1.5)` } : {}),
+                ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg)` } : {}),
               }}>
                 <img
                   src={product.image}
                   alt={product.name}
-                  style={tileImageCropStyle}
+                  style={{
+                    ...tileImageCropStyle,
+                    objectFit: product.imageRotation ? "contain" : "cover",
+                  }}
                 />
               </div>
               )
