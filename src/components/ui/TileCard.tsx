@@ -90,14 +90,13 @@ function TileCard({ product, onClick }: TileCardProps) {
                   alt={product.name}
                   loading="lazy"
                   decoding="async"
-                  className="absolute object-cover group-hover:scale-[1.03]"
+                  className="absolute object-cover"
                   style={{
                     top: "50%",
                     left: "50%",
                     width: `${wPct}%`,
                     height: `${hPct}%`,
                     transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
-                    transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
                   }}
                 />
               );
