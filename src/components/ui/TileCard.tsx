@@ -79,32 +79,19 @@ function TileCard({ product, onClick }: TileCardProps) {
         }}
       >
           {hasImage ? (
-            product.imageRotation ? (() => {
-              // Lay out image as landscape (swapped dims), center with margins, then rotate.
-              // After rotation, the landscape rectangle becomes portrait — filling the container.
-              const dims = parseTileDims(product.size);
-              const imgW = (dims.h / dims.w) * 100;         // e.g., 200% for 1:2 tile
-              const imgH = (dims.w / dims.h) * 100;         // e.g., 50% for 1:2 tile
-              const mlPct = -(dims.h / (2 * dims.w)) * 100; // center horizontally (% of parent width)
-              return (
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute object-cover"
-                  style={{
-                    top: "50%",
-                    left: "50%",
-                    width: `${imgW}%`,
-                    height: `${imgH}%`,
-                    marginLeft: `${mlPct}%`,
-                    marginTop: "-50%",
-                    transform: `rotate(${product.imageRotation}deg)`,
-                  }}
-                />
-              );
-            })() : (
+            product.imageRotation ? (
+              <img
+                src={product.image}
+                alt={product.name}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  transform: `rotate(${product.imageRotation}deg) scale(2)`,
+                  transformOrigin: "center center",
+                }}
+              />
+            ) : (
               <img
                 src={product.image}
                 alt={product.name}
