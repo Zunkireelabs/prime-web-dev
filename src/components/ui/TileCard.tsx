@@ -79,23 +79,40 @@ function TileCard({ product, onClick }: TileCardProps) {
         }}
       >
           {hasImage ? (
-            <div
-              className="w-full h-full"
-              style={product.imageRotation ? {
-                transform: `rotate(${product.imageRotation}deg)`,
-              } : undefined}
-            >
+            product.imageRotation ? (() => {
+              // Swap dimensions so after rotation the image fills the portrait container
+              const dims = parseTileDims(product.size);
+              const wPct = (dims.h / dims.w) * 100; // container height → image width
+              const hPct = (dims.w / dims.h) * 100; // container width → image height
+              return (
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute object-cover group-hover:scale-[1.03]"
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    width: `${wPct}%`,
+                    height: `${hPct}%`,
+                    transform: `translate(-50%, -50%) rotate(${product.imageRotation}deg)`,
+                    transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
+                  }}
+                />
+              );
+            })() : (
               <img
                 src={product.image}
                 alt={product.name}
                 loading="lazy"
                 decoding="async"
-                className={`block w-full h-full group-hover:scale-[1.03] ${product.imageRotation ? "object-contain" : "object-cover"}`}
+                className="block w-full h-full object-cover group-hover:scale-[1.03]"
                 style={{
                   transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
                 }}
               />
-            </div>
+            )
           ) : (
             <div
               className="absolute inset-0 flex items-center justify-center"

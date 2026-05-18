@@ -262,15 +262,32 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 }}
               />
             ) : (
-              <div
-                style={{
-                  ...tileImageFrameStyle(product.size),
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                  ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg)` } : {}),
-                }}
-              >
-                <TileZoomSource alt={product.name} />
-              </div>
+              product.imageRotation ? (() => {
+                const dims = parseTileDims(product.size);
+                const wPct = (dims.h / dims.w) * 100;
+                const hPct = (dims.w / dims.h) * 100;
+                return (
+                  <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
+                    <img
+                      src={product.image!}
+                      alt={product.name}
+                      loading="eager"
+                      className="absolute object-cover"
+                      style={{
+                        top: "50%",
+                        left: "50%",
+                        width: `${wPct}%`,
+                        height: `${hPct}%`,
+                        transform: `translate(-50%, -50%) rotate(${product.imageRotation}deg)`,
+                      }}
+                    />
+                  </div>
+                );
+              })() : (
+                <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
+                  <TileZoomSource alt={product.name} />
+                </div>
+              )
             )
           ) : (
             <div
@@ -348,16 +365,32 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                 ...tileImageFrameStyle(product.size),
                 borderRadius: "4px",
                 overflow: "hidden",
-                ...(product.imageRotation ? { transform: `rotate(${product.imageRotation}deg)` } : {}),
               }}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  style={{
-                    ...tileImageCropStyle,
-                    objectFit: product.imageRotation ? "contain" : "cover",
-                  }}
-                />
+                {product.imageRotation ? (() => {
+                  const dims = parseTileDims(product.size);
+                  const wPct = (dims.h / dims.w) * 100;
+                  const hPct = (dims.w / dims.h) * 100;
+                  return (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="absolute object-cover"
+                      style={{
+                        top: "50%",
+                        left: "50%",
+                        width: `${wPct}%`,
+                        height: `${hPct}%`,
+                        transform: `translate(-50%, -50%) rotate(${product.imageRotation}deg)`,
+                      }}
+                    />
+                  );
+                })() : (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    style={tileImageCropStyle}
+                  />
+                )}
               </div>
               )
             ) : (
