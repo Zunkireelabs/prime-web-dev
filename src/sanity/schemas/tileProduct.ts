@@ -189,25 +189,43 @@ export const tileProduct = defineType({
       description: "Rotate the product image if it was uploaded in the wrong orientation.",
     }),
     defineField({
-      name: "hasMockup",
-      title: "Has Mockup",
+      name: "hasGallery",
+      title: "Additional Images",
       type: "boolean",
       initialValue: false,
-      description: "Enable to upload room mockup images showing this tile in a real setting.",
+      description: "Enable to add mockups, room scenes, and other images.",
     }),
     defineField({
-      name: "mockupImages",
-      title: "Mockup Images",
+      name: "gallery",
+      title: "Image Gallery",
       type: "array",
       of: [
         {
-          type: "image",
-          options: { hotspot: true },
+          type: "object",
+          name: "galleryImage",
+          title: "Gallery Image",
           fields: [
             {
-              name: "alt",
+              name: "image",
+              type: "image",
+              title: "Image",
+              options: { hotspot: true },
+              validation: (rule: any) => rule.required(),
+            },
+            {
+              name: "label",
               type: "string",
-              title: "Alt Text",
+              title: "Image Type",
+              options: {
+                list: [
+                  { title: "Room Mockup", value: "mockup" },
+                  { title: "Room Scene", value: "room-scene" },
+                  { title: "Close-up / Detail", value: "detail" },
+                  { title: "Application / Installed", value: "application" },
+                  { title: "Lifestyle", value: "lifestyle" },
+                ],
+              },
+              initialValue: "mockup",
             },
             {
               name: "caption",
@@ -216,10 +234,45 @@ export const tileProduct = defineType({
               description: "e.g., Living Room, Bathroom, Kitchen",
             },
           ],
+          preview: {
+            select: {
+              media: "image",
+              label: "label",
+              caption: "caption",
+            },
+            prepare({ media, label, caption }: Record<string, any>) {
+              const labels: Record<string, string> = {
+                mockup: "Room Mockup",
+                "room-scene": "Room Scene",
+                detail: "Close-up / Detail",
+                application: "Application",
+                lifestyle: "Lifestyle",
+              };
+              return {
+                title: labels[label] || label || "Image",
+                subtitle: caption || "",
+                media,
+              };
+            },
+          },
         },
       ],
-      hidden: ({ parent }) => !parent?.hasMockup,
-      description: "Upload room mockup images (visible only when Has Mockup is enabled).",
+      hidden: ({ parent }) => !parent?.hasGallery,
+      description: "Drag to reorder. Choose 'Show First' below to control which image appears in the product grid.",
+    }),
+    defineField({
+      name: "showFirst",
+      title: "Show First in Grid",
+      type: "string",
+      options: {
+        list: [
+          { title: "Product Image", value: "product" },
+          { title: "First Gallery Image", value: "gallery" },
+        ],
+      },
+      initialValue: "product",
+      hidden: ({ parent }) => !parent?.hasGallery,
+      description: "Which image to display in the product grid and as the first slide in the detail panel.",
     }),
     defineField({
       name: "sortOrder",

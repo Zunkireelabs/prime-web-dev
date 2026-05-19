@@ -253,18 +253,27 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
           }}
         >
           {(() => {
-            const hasMockup = product.hasMockup && product.mockupImages && product.mockupImages.length > 0;
-            const slides: { type: "mockup" | "product"; src: string }[] = [];
+            const hasGal = product.hasGallery && product.gallery && product.gallery.length > 0;
+            const slides: { type: string; src: string; caption?: string }[] = [];
 
-            // Mockup images first
-            if (hasMockup) {
-              product.mockupImages!.forEach((m) => {
-                if (m.url) slides.push({ type: "mockup", src: m.url });
+            if (product.showFirst === "gallery" && hasGal) {
+              // Gallery images first, product image last
+              product.gallery!.forEach((g) => {
+                if (g.url) slides.push({ type: g.label || "mockup", src: g.url, caption: g.caption });
               });
-            }
-            // Product image last
-            if (hasImage && product.image) {
-              slides.push({ type: "product", src: product.image });
+              if (hasImage && product.image) {
+                slides.push({ type: "product", src: product.image });
+              }
+            } else {
+              // Product image first, gallery images after
+              if (hasImage && product.image) {
+                slides.push({ type: "product", src: product.image });
+              }
+              if (hasGal) {
+                product.gallery!.forEach((g) => {
+                  if (g.url) slides.push({ type: g.label || "mockup", src: g.url, caption: g.caption });
+                });
+              }
             }
 
             if (slides.length === 0) {
@@ -364,7 +373,13 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                         backdropFilter: "blur(4px)",
                       }}
                     >
-                      {isProductSlide ? "Product" : "Mockup"}
+                      {isProductSlide ? "Product" : current.caption || ({
+                        mockup: "Mockup",
+                        "room-scene": "Room Scene",
+                        detail: "Detail",
+                        application: "Application",
+                        lifestyle: "Lifestyle",
+                      } as Record<string, string>)[current.type] || "Gallery"}
                     </span>
                   </>
                 )}

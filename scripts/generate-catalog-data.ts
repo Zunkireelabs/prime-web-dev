@@ -51,8 +51,9 @@ const allProductsQuery = `
     variants,
     image,
     imageRotation,
-    hasMockup,
-    "mockupImages": mockupImages[]{ "url": asset->url, alt, caption },
+    hasGallery,
+    "gallery": gallery[]{ "url": image.asset->url, label, caption },
+    showFirst,
     sortOrder
   }
 `;
@@ -71,8 +72,9 @@ interface SanityProduct {
   variants?: string[];
   image: any;
   imageRotation?: number;
-  hasMockup?: boolean;
-  mockupImages?: { url: string; alt?: string; caption?: string }[];
+  hasGallery?: boolean;
+  gallery?: { url: string; label?: string; caption?: string }[];
+  showFirst?: string;
   sortOrder: number;
 }
 
@@ -130,8 +132,9 @@ async function generate() {
       variants: p.variants || undefined,
       image: imageUrl,
       imageRotation: p.imageRotation || undefined,
-      hasMockup: p.hasMockup || undefined,
-      mockupImages: p.mockupImages?.length ? p.mockupImages : undefined,
+      hasGallery: p.hasGallery || undefined,
+      gallery: p.gallery?.length ? p.gallery : undefined,
+      showFirst: p.showFirst || undefined,
     };
   });
 

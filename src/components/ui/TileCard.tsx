@@ -28,9 +28,11 @@ function tileHue(name: string): number {
 function TileCard({ product, onClick }: TileCardProps) {
   const hue = tileHue(product.name);
   const hasImage = product.image && product.image.startsWith("http");
-  // Show mockup image in grid if available, otherwise product image
-  const hasMockup = product.hasMockup && product.mockupImages && product.mockupImages.length > 0;
-  const gridImage = hasMockup ? product.mockupImages![0].url : product.image;
+  const hasGallery = product.hasGallery && product.gallery && product.gallery.length > 0;
+  // Show first gallery image or product image based on editor's choice
+  const gridImage = (hasGallery && product.showFirst === "gallery" && product.gallery![0].url)
+    ? product.gallery![0].url
+    : product.image;
   const dwellTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handlePointerEnter = useCallback((e: React.PointerEvent) => {
@@ -81,9 +83,9 @@ function TileCard({ product, onClick }: TileCardProps) {
           transition: "box-shadow 0.3s cubic-bezier(0.22,1,0.36,1)",
         }}
       >
-          {(hasImage || hasMockup) ? (
-            hasMockup ? (
-              /* Show mockup image — always displayed as-is, no rotation */
+          {(hasImage || hasGallery) ? (
+            (hasGallery && product.showFirst === "gallery") ? (
+              /* Show gallery image — displayed as-is, no rotation */
               <img
                 src={gridImage}
                 alt={product.name}

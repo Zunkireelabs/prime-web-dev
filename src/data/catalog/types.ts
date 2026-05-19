@@ -57,6 +57,7 @@ export interface CatalogProduct {
   variants?: string[];
   image: string;
   imageRotation?: number;
-  hasMockup?: boolean;
-  mockupImages?: { url: string; alt?: string; caption?: string }[];
+  hasGallery?: boolean;
+  gallery?: { url: string; label?: string; caption?: string }[];
+  showFirst?: "product" | "gallery";
 }

@@ -18,8 +18,9 @@ export const allProductsQuery = `
     variants,
     image,
     imageRotation,
-    hasMockup,
-    mockupImages,
+    hasGallery,
+    "gallery": gallery[]{ "url": image.asset->url, label, caption },
+    showFirst,
     sortOrder
   }
 `;
@@ -41,8 +42,9 @@ export const productsByCatalogQuery = `
     variants,
     image,
     imageRotation,
-    hasMockup,
-    mockupImages,
+    hasGallery,
+    "gallery": gallery[]{ "url": image.asset->url, label, caption },
+    showFirst,
     sortOrder
   }
 `;
