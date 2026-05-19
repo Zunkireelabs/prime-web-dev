@@ -69,21 +69,6 @@ export const deskStructure = (S: StructureBuilder) =>
           S.list()
             .title("Products")
             .items([
-              S.listItem()
-                .title("Products by Catalog")
-                .child(
-                  S.list()
-                    .title("Catalogs")
-                    .items([
-                      catalogFilter(S, "Wall 300×450", "wall-300x450"),
-                      catalogFilter(S, "Wall 300×600", "wall-300x600"),
-                      catalogFilter(S, "Floor 300×300", "floor-300x300"),
-                      catalogFilter(S, "Vitrified 400×400", "vitrified-400x400"),
-                      catalogFilter(S, "Vitrified 600×600", "vitrified-600x600"),
-                      catalogFilter(S, "Eleganz 600×1200", "eleganz-600x1200"),
-                      catalogFilter(S, "Spirit of Nepal", "spirit-of-nepal"),
-                    ])
-                ),
               allProductsBySize(S),
               S.documentTypeListItem("tileCatalog").title("Catalogs"),
             ])
