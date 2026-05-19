@@ -18,6 +18,8 @@ export const allProductsQuery = `
     variants,
     image,
     imageRotation,
+    hasMockup,
+    mockupImages,
     sortOrder
   }
 `;
@@ -39,6 +41,8 @@ export const productsByCatalogQuery = `
     variants,
     image,
     imageRotation,
+    hasMockup,
+    mockupImages,
     sortOrder
   }
 `;

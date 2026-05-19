@@ -189,6 +189,39 @@ export const tileProduct = defineType({
       description: "Rotate the product image if it was uploaded in the wrong orientation.",
     }),
     defineField({
+      name: "hasMockup",
+      title: "Has Mockup",
+      type: "boolean",
+      initialValue: false,
+      description: "Enable to upload room mockup images showing this tile in a real setting.",
+    }),
+    defineField({
+      name: "mockupImages",
+      title: "Mockup Images",
+      type: "array",
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            {
+              name: "alt",
+              type: "string",
+              title: "Alt Text",
+            },
+            {
+              name: "caption",
+              type: "string",
+              title: "Caption",
+              description: "e.g., Living Room, Bathroom, Kitchen",
+            },
+          ],
+        },
+      ],
+      hidden: ({ parent }) => !parent?.hasMockup,
+      description: "Upload room mockup images (visible only when Has Mockup is enabled).",
+    }),
+    defineField({
       name: "sortOrder",
       title: "Sort Order",
       type: "number",

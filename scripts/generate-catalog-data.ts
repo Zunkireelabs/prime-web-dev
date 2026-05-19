@@ -51,6 +51,8 @@ const allProductsQuery = `
     variants,
     image,
     imageRotation,
+    hasMockup,
+    "mockupImages": mockupImages[]{ "url": asset->url, alt, caption },
     sortOrder
   }
 `;
@@ -69,6 +71,8 @@ interface SanityProduct {
   variants?: string[];
   image: any;
   imageRotation?: number;
+  hasMockup?: boolean;
+  mockupImages?: { url: string; alt?: string; caption?: string }[];
   sortOrder: number;
 }
 
@@ -126,6 +130,8 @@ async function generate() {
       variants: p.variants || undefined,
       image: imageUrl,
       imageRotation: p.imageRotation || undefined,
+      hasMockup: p.hasMockup || undefined,
+      mockupImages: p.mockupImages?.length ? p.mockupImages : undefined,
     };
   });
 
