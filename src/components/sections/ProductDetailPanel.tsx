@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { X, ArrowRight, Calculator, BookOpen } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { X, ArrowRight, Calculator, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import type { CatalogProduct } from "@/data/catalog";
 import { allProducts } from "@/data/catalog";
 import { tileVisualRatio, tileImageCropStyle, tileImageFrameStyle, tilePickerSize, parseTileDims, ALL_TILE_SIZES } from "@/lib/utils";
@@ -50,6 +50,13 @@ function TileShape({ size, active }: { size: string; active: boolean }) {
 }
 
 export default function ProductDetailPanel({ product, onClose, onProductChange }: Props) {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  // Reset slide when product changes
+  useEffect(() => {
+    setActiveSlide(0);
+  }, [product]);
+
   useEffect(() => {
     if (!product) return;
     document.body.style.overflow = "hidden";
@@ -245,67 +252,125 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             ["--tile-base" as never]: "clamp(440px, 50vw, 580px)",
           }}
         >
-          {hasImage && product.image ? (
-            product.application === "Art Panel" ? (
-              /* Art Panel — show the full artwork large, not as a tiny tile */
-              <img
-                src={product.image}
-                alt={product.name}
-                loading="eager"
-                decoding="async"
-                className="block"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  padding: "24px",
-                }}
-              />
-            ) : (
-              product.imageRotation ? (() => {
-                const dims = parseTileDims(product.size);
-                const imgAR = `${dims.h} / ${dims.w}`;
-                const imgWPct = (dims.h / dims.w) * 100;
-                return (
-                  <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
-                    <div
-                      className="absolute overflow-hidden"
+          {(() => {
+            const hasMockup = product.hasMockup && product.mockupImages && product.mockupImages.length > 0;
+            const slides: { type: "mockup" | "product"; src: string }[] = [];
+
+            // Mockup images first
+            if (hasMockup) {
+              product.mockupImages!.forEach((m) => {
+                if (m.url) slides.push({ type: "mockup", src: m.url });
+              });
+            }
+            // Product image last
+            if (hasImage && product.image) {
+              slides.push({ type: "product", src: product.image });
+            }
+
+            if (slides.length === 0) {
+              return (
+                <div
+                  className="flex items-center justify-center"
+                  style={{
+                    ...tileImageFrameStyle(product.size),
+                    background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
+                  }}
+                >
+                  <p className="font-serif font-light text-ink-muted text-2xl text-center" style={{ padding: "0 32px" }}>
+                    {product.name}
+                  </p>
+                </div>
+              );
+            }
+
+            const current = slides[Math.min(activeSlide, slides.length - 1)];
+            const isProductSlide = current.type === "product";
+
+            return (
+              <>
+                {/* Image display */}
+                {isProductSlide ? (
+                  product.application === "Art Panel" ? (
+                    <img
+                      src={current.src}
+                      alt={product.name}
+                      loading="eager"
+                      className="block"
+                      style={{ width: "100%", height: "100%", objectFit: "contain", padding: "24px" }}
+                    />
+                  ) : (
+                    <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
+                      <TileZoomSource alt={product.name} />
+                    </div>
+                  )
+                ) : (
+                  /* Mockup image — full panel, object-contain */
+                  <img
+                    src={current.src}
+                    alt={`${product.name} — Room Mockup`}
+                    loading="eager"
+                    className="block"
+                    style={{ width: "100%", height: "100%", objectFit: "contain", padding: "16px" }}
+                  />
+                )}
+
+                {/* Slide navigation — only show if multiple slides */}
+                {slides.length > 1 && (
+                  <>
+                    {/* Prev/Next arrows */}
+                    <button
+                      type="button"
+                      onClick={() => setActiveSlide((s) => (s - 1 + slides.length) % slides.length)}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-ink-muted hover:text-ink hover:bg-white transition-all duration-300"
+                      style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSlide((s) => (s + 1) % slides.length)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-ink-muted hover:text-ink hover:bg-white transition-all duration-300"
+                      style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+
+                    {/* Dot indicators */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center" style={{ gap: "8px" }}>
+                      {slides.map((s, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => setActiveSlide(i)}
+                          className="transition-all duration-300"
+                          style={{
+                            width: i === activeSlide ? "24px" : "8px",
+                            height: "8px",
+                            borderRadius: "4px",
+                            background: i === activeSlide ? "var(--color-accent)" : "rgba(61,58,54,0.2)",
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Label */}
+                    <span
+                      className="absolute top-4 left-4 z-10 text-[0.5rem] font-semibold tracking-[0.14em] uppercase"
                       style={{
-                        top: "50%",
-                        left: "50%",
-                        width: `${imgWPct}%`,
-                        aspectRatio: imgAR,
-                        transform: `rotate(${product.imageRotation}deg) translate(-50%, -50%)`,
+                        padding: "5px 12px",
+                        borderRadius: "4px",
+                        background: isProductSlide ? "var(--color-surface-elevated)" : "rgba(0,0,0,0.5)",
+                        color: isProductSlide ? "var(--color-ink-muted)" : "#fff",
+                        backdropFilter: "blur(4px)",
                       }}
                     >
-                      <img
-                        src={product.image!}
-                        alt={product.name}
-                        loading="eager"
-                        className="block w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
-                );
-              })() : (
-                <div style={{ ...tileImageFrameStyle(product.size), boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
-                  <TileZoomSource alt={product.name} />
-                </div>
-              )
-            )
-          ) : (
-            <div
-              className="flex items-center justify-center"
-              style={{
-                ...tileImageFrameStyle(product.size),
-                background: "linear-gradient(155deg, hsl(35,12%,89%), hsl(35,8%,83%), hsl(35,5%,79%))",
-              }}
-            >
-              <p className="font-serif font-light text-ink-muted text-2xl text-center" style={{ padding: "0 32px" }}>
-                {product.name}
-              </p>
-            </div>
-          )}
+                      {isProductSlide ? "Product" : "Mockup"}
+                    </span>
+                  </>
+                )}
+              </>
+            );
+          })()}
 
           {/* Finish badge */}
           <span

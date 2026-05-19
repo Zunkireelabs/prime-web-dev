@@ -67,3 +67,4 @@ temp-ss/
 
 # Local Claude skills (machine-specific)
 .claude/skills/tile-image-crop/
+studio-build.zip

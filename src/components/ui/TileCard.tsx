@@ -28,6 +28,9 @@ function tileHue(name: string): number {
 function TileCard({ product, onClick }: TileCardProps) {
   const hue = tileHue(product.name);
   const hasImage = product.image && product.image.startsWith("http");
+  // Show mockup image in grid if available, otherwise product image
+  const hasMockup = product.hasMockup && product.mockupImages && product.mockupImages.length > 0;
+  const gridImage = hasMockup ? product.mockupImages![0].url : product.image;
   const dwellTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handlePointerEnter = useCallback((e: React.PointerEvent) => {
@@ -78,13 +81,23 @@ function TileCard({ product, onClick }: TileCardProps) {
           transition: "box-shadow 0.3s cubic-bezier(0.22,1,0.36,1)",
         }}
       >
-          {hasImage ? (
-            product.imageRotation ? (() => {
-              // Inner div is landscape (2:1) so object-cover fits the landscape
-              // source WITHOUT cropping. Then we rotate the whole div to portrait.
+          {(hasImage || hasMockup) ? (
+            hasMockup ? (
+              /* Show mockup image — always displayed as-is, no rotation */
+              <img
+                src={gridImage}
+                alt={product.name}
+                loading="lazy"
+                decoding="async"
+                className="block w-full h-full object-cover group-hover:scale-[1.03]"
+                style={{
+                  transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1)",
+                }}
+              />
+            ) : product.imageRotation ? (() => {
               const dims = parseTileDims(product.size);
-              const imgAR = `${dims.h} / ${dims.w}`; // landscape: e.g. "1200 / 600" = 2:1
-              const imgWPct = (dims.h / dims.w) * 100; // 200% for 1:2 tiles
+              const imgAR = `${dims.h} / ${dims.w}`;
+              const imgWPct = (dims.h / dims.w) * 100;
               return (
                 <div
                   className="absolute overflow-hidden"
