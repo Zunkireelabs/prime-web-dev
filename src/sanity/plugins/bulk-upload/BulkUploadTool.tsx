@@ -404,20 +404,80 @@ export function BulkUploadTool() {
         {step === 2 && (
           <Stack space={4}>
             <Card padding={4} radius={2} shadow={1} tone="transparent">
-              <Stack space={3}>
+              <Stack space={4}>
                 <Heading size={1}>Upload CSV File</Heading>
                 <Text size={1} muted>
-                  Required columns: image_name, product_name, size, series, finish, tile_type, category, spaces
+                  Your CSV must have the column headers shown below. See the example row for reference.
                 </Text>
-                <Box>
-                  <Card padding={3} radius={2} tone="caution">
+
+                {/* Sample CSV table */}
+                <Card padding={0} radius={2} shadow={1} style={{ overflow: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
+                    <thead>
+                      <tr style={{ background: "var(--card-bg2-color)" }}>
+                        {["image_name", "product_name", "size", "series", "finish", "tile_type", "category", "spaces"].map((col) => (
+                          <th key={col} style={{ padding: "10px 12px", textAlign: "left", fontWeight: 700, fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em", whiteSpace: "nowrap", borderBottom: "2px solid var(--card-border-color)" }}>
+                            {col}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: "1px solid var(--card-border-color)" }}>
+                        <td style={exTd}>ALCAZAR LIGHT.jpg</td>
+                        <td style={exTd}>Alcazar Light</td>
+                        <td style={exTd}>300{"\u00d7"}450 mm</td>
+                        <td style={exTd}>Alcazar</td>
+                        <td style={exTd}>Glossy</td>
+                        <td style={exTd}>Wall</td>
+                        <td style={exTd}>Ceramic</td>
+                        <td style={exTd}>Living Room, Bathroom</td>
+                      </tr>
+                      <tr style={{ borderBottom: "1px solid var(--card-border-color)", background: "var(--card-bg2-color)" }}>
+                        <td style={exTd}>BEDROCK BROWN.jpg</td>
+                        <td style={exTd}>Bedrock Brown</td>
+                        <td style={exTd}>600{"\u00d7"}1200 mm</td>
+                        <td style={exTd}>Bedrock</td>
+                        <td style={exTd}>Matt</td>
+                        <td style={exTd}>Floor</td>
+                        <td style={exTd}>Glazed Vitrified</td>
+                        <td style={exTd}>Living Room, Office, Hotel</td>
+                      </tr>
+                      <tr>
+                        <td style={exTd}>ANTIQUITY GREY.jpg</td>
+                        <td style={exTd}>Antiquity Grey</td>
+                        <td style={exTd}>600{"\u00d7"}600 mm</td>
+                        <td style={exTd}>Stone</td>
+                        <td style={exTd}>Matt</td>
+                        <td style={exTd}>Both</td>
+                        <td style={exTd}>Vitrified</td>
+                        <td style={exTd}>Kitchen, Restaurant</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Card>
+
+                {/* Allowed values */}
+                <Card padding={3} radius={2} tone="caution">
+                  <Stack space={2}>
                     <Text size={1}>
-                      <strong>tile_type</strong>: Wall | Floor | Both &nbsp;&nbsp;
-                      <strong>finish</strong>: Glossy | Matt | High Gloss | Carving | Satin | Polished &nbsp;&nbsp;
-                      <strong>size</strong>: 300×300 mm | 300×450 mm | 300×600 mm | 400×400 mm | 600×600 mm | 600×1200 mm
+                      <strong>tile_type:</strong> Wall | Floor | Both
                     </Text>
-                  </Card>
-                </Box>
+                    <Text size={1}>
+                      <strong>finish:</strong> Glossy | Matt | High Gloss | Carving | Satin | Polished
+                    </Text>
+                    <Text size={1}>
+                      <strong>size:</strong> 300{"\u00d7"}300 mm | 300{"\u00d7"}450 mm | 300{"\u00d7"}600 mm | 400{"\u00d7"}400 mm | 600{"\u00d7"}600 mm | 600{"\u00d7"}1200 mm
+                    </Text>
+                    <Text size={1}>
+                      <strong>category:</strong> Ceramic | Vitrified | Glazed Vitrified | Porcelain | Wood Look | Stone Look | Marble Look
+                    </Text>
+                    <Text size={1}>
+                      <strong>spaces:</strong> Living Room, Bedroom, Kitchen, Bathroom, Dining Room, Office, Balcony, Outdoor, Commercial, Restaurant, Hotel, Hospital, Apartment, Showroom, Staircase, Parking
+                    </Text>
+                  </Stack>
+                </Card>
+
                 <Button
                   icon={DocumentIcon}
                   text="Select CSV File"
@@ -590,4 +650,11 @@ const thStyle: React.CSSProperties = {
 const tdStyle: React.CSSProperties = {
   padding: "8px 12px",
   verticalAlign: "middle",
+};
+
+const exTd: React.CSSProperties = {
+  padding: "8px 12px",
+  whiteSpace: "nowrap",
+  color: "var(--card-fg-color)",
+  fontSize: "12px",
 };
