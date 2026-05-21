@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { useClient } from "sanity";
+import * as XLSX from "xlsx";
 import {
   Card,
   Stack,
@@ -113,11 +114,33 @@ export function BulkUploadTool() {
 
   // ── Step 2: CSV Upload ──
 
-  const handleCsvUpload = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+  // Parse rows from either CSV or Excel file
+  const parseFileToRows = useCallback((file: File): Promise<CsvRow[]> => {
+    const isExcel = /\.(xlsx?|xls)$/i.test(file.name);
 
+    if (isExcel) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const data = new Uint8Array(ev.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json<Record<string, string>>(sheet, { defval: "" });
+          // Normalize headers
+          const normalized = rows.map((row) => {
+            const out: Record<string, string> = {};
+            for (const [key, val] of Object.entries(row)) {
+              out[key.trim().toLowerCase().replace(/\s+/g, "_")] = String(val ?? "");
+            }
+            return out as unknown as CsvRow;
+          });
+          resolve(normalized);
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
         const text = ev.target?.result as string;
@@ -126,6 +149,18 @@ export function BulkUploadTool() {
           skipEmptyLines: true,
           transformHeader: (h: string) => h.trim().toLowerCase().replace(/\s+/g, "_"),
         });
+        resolve(data);
+      };
+      reader.readAsText(file);
+    });
+  }, []);
+
+  const handleCsvUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const data = await parseFileToRows(file);
 
         const products: ProductEntry[] = data.map((row) => {
           const errors: string[] = [];
@@ -157,10 +192,8 @@ export function BulkUploadTool() {
 
         setEntries(products);
         setStep(3);
-      };
-      reader.readAsText(file);
     },
-    [images]
+    [images, parseFileToRows]
   );
 
   // ── Step 3: Execute Upload ──
@@ -480,7 +513,7 @@ export function BulkUploadTool() {
 
                 <Button
                   icon={DocumentIcon}
-                  text="Select CSV File"
+                  text="Select CSV or Excel File"
                   tone="primary"
                   onClick={() => csvInputRef.current?.click()}
                   fontSize={1}
@@ -488,7 +521,7 @@ export function BulkUploadTool() {
                 <input
                   ref={csvInputRef}
                   type="file"
-                  accept=".csv"
+                  accept=".csv,.xlsx,.xls"
                   style={{ display: "none" }}
                   onChange={handleCsvUpload}
                 />
