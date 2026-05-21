@@ -163,6 +163,10 @@ export function BulkUploadTool() {
       const data = await parseFileToRows(file);
 
         const products: ProductEntry[] = data.map((row) => {
+          // Auto-fix: replace letter 'x' with '×' in size (common mistake)
+          if (row.size) {
+            row.size = row.size.trim().replace(/(\d)\s*[xX]\s*(\d)/g, "$1\u00d7$2");
+          }
           const errors: string[] = [];
           if (!row.product_name?.trim()) errors.push("Missing product_name");
           if (!row.size?.trim()) errors.push("Missing size");
