@@ -254,7 +254,19 @@ export default function ProductsGrid({
                 cursor: isDisabled ? "default" : "pointer",
               }}
             >
-              {size.replace(" mm", "")}
+              <span>{size.replace(" mm", "")}</span>
+              <span style={{
+                fontSize: "0.4rem",
+                fontWeight: 600,
+                letterSpacing: "0.08em",
+                opacity: isActive ? 0.7 : 0.5,
+                marginLeft: "4px",
+              }}>
+                {size === "300\u00d7300 mm" ? "FLOOR" :
+                 size === "300\u00d7450 mm" || size === "300\u00d7600 mm" ? "WALL" :
+                 size === "400\u00d7400 mm" ? "FLOOR" :
+                 "WALL & FLOOR"}
+              </span>
             </button>
           );
         })}
