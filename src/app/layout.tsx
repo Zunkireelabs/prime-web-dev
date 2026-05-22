@@ -44,6 +44,10 @@ export const metadata: Metadata = {
     siteName: "Prime Tiles Industries",
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: "/images/prime-favicon.png",
+    apple: "/images/prime-favicon.png",
+  },
 };
 
 export default function RootLayout({
