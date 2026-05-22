@@ -88,8 +88,8 @@ export default function FactoryBanner() {
         <FadeIn delay={0.3}>
           <a
             href="/about"
-            className="link-arrow text-white hover:text-accent-light"
-            style={{ textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}
+            className="link-arrow hover:text-accent-light"
+            style={{ color: "#fff", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}
           >
             Learn About Our Process <ArrowRight size={12} />
           </a>
