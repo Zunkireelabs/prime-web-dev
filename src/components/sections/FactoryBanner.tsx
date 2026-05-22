@@ -78,7 +78,7 @@ export default function FactoryBanner() {
         </FadeIn>
 
         <FadeIn delay={0.2}>
-          <p className="body-lg text-white/80 max-w-lg" style={{ marginBottom: "40px" }}>
+          <p className="body-lg text-white max-w-lg" style={{ marginBottom: "40px", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
             Spread across 50 bigha in Rautahat, our state-of-the-art facility is
             powered by Italian SACMI technology — producing premium ceramic, vitrified,
             and porcelain tiles that meet international quality standards.
