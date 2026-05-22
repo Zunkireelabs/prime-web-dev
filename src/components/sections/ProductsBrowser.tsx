@@ -97,10 +97,14 @@ export default function ProductsBrowser() {
     router.replace(next, { scroll: false });
   }, [filters, router]);
 
-  // ── All available sizes (static, never filtered) ──
+  // ── All available sizes (static, largest first) ──
+  const SIZE_ORDER = [
+    "600\u00d71200 mm", "600\u00d7600 mm", "400\u00d7400 mm",
+    "300\u00d7600 mm", "300\u00d7450 mm", "300\u00d7300 mm",
+  ];
   const allSizes = useMemo(() => {
-    const base = allProducts.filter((p) => p.application !== "Art Panel");
-    return [...new Set(base.map((p) => p.size))].sort();
+    const base = new Set(allProducts.filter((p) => p.application !== "Art Panel").map((p) => p.size));
+    return SIZE_ORDER.filter((s) => base.has(s));
   }, []);
 
   // ── Products in current size (for computing available filter options) ──
