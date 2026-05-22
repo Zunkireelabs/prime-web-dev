@@ -228,19 +228,22 @@ function FilterBody({
         )}
       </div>
 
-      {GROUPS.map((g) => (
-        <FilterGroup
-          key={g.key}
-          group={g}
-          values={options[g.key]}
-          selected={filters[g.key]}
-          onToggle={onToggle}
-          onClear={onClearGroup}
-          isOpen={openKey === g.key}
-          onToggleOpen={() => setOpenKey(openKey === g.key ? null : g.key)}
-          sizeCountMap={sizeCountMap}
-        />
-      ))}
+      {GROUPS.map((g) => {
+        if (options[g.key].length === 0) return null;
+        return (
+          <FilterGroup
+            key={g.key}
+            group={g}
+            values={options[g.key]}
+            selected={filters[g.key]}
+            onToggle={onToggle}
+            onClear={onClearGroup}
+            isOpen={openKey === g.key}
+            onToggleOpen={() => setOpenKey(openKey === g.key ? null : g.key)}
+            sizeCountMap={sizeCountMap}
+          />
+        );
+      })}
 
       <div className="gold-divider-full" style={{ marginTop: "20px" }} />
       <div
