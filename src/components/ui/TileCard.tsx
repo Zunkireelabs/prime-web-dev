@@ -159,18 +159,17 @@ function TileCard({ product, onClick }: TileCardProps) {
           {product.finish}
         </span>
 
-        {/* Prime icon */}
+        {/* Prime favicon */}
         <img
-          src="/images/prime-logo.png"
+          src="/images/prime-favicon.png"
           alt=""
           className="absolute pointer-events-none"
           style={{
             bottom: "6px",
             right: "6px",
-            width: "36px",
-            height: "auto",
-            opacity: 0.5,
-            filter: "grayscale(1) brightness(0.3)",
+            width: "22px",
+            height: "22px",
+            opacity: 0.4,
           }}
         />
 
