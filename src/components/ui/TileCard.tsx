@@ -159,19 +159,6 @@ function TileCard({ product, onClick }: TileCardProps) {
           {product.finish}
         </span>
 
-        {/* Prime favicon */}
-        <img
-          src="/images/prime-favicon.png"
-          alt=""
-          className="absolute pointer-events-none"
-          style={{
-            bottom: "6px",
-            right: "6px",
-            width: "22px",
-            height: "22px",
-            opacity: 0.4,
-          }}
-        />
 
         {/* "View Details" hover overlay */}
         <div
