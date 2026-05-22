@@ -32,6 +32,8 @@ interface Props {
   products: CatalogProduct[];
   filters: ProductFilters;
   activeCount: number;
+  sizeCountMap: Record<string, number>;
+  allSizes: string[];
   onToggle: (key: FilterKey, value: string) => void;
   onClearAll: () => void;
   onSearchChange: (q: string) => void;
@@ -43,6 +45,8 @@ export default function ProductsGrid({
   products,
   filters,
   activeCount,
+  sizeCountMap,
+  allSizes,
   onToggle,
   onClearAll,
   onSearchChange,
@@ -221,6 +225,39 @@ export default function ProductsGrid({
             <ChevronDown size={11} className="absolute right-4 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
           </div>
         </div>
+      </div>
+
+      {/* Size pills */}
+      <div className="flex flex-wrap items-center" style={{ gap: "8px", marginBottom: "20px" }}>
+        {allSizes.map((size) => {
+          const isActive = filters.size.includes(size);
+          const count = sizeCountMap[size] ?? 0;
+          const isDisabled = count === 0 && !isActive;
+          return (
+            <button
+              key={size}
+              type="button"
+              disabled={isDisabled}
+              onClick={() => onToggle("size", size)}
+              className="transition-all duration-300"
+              style={{
+                padding: "8px 18px",
+                fontSize: "0.6rem",
+                fontWeight: 500,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                borderRadius: "24px",
+                border: `1px solid ${isActive ? "var(--color-ink)" : "rgba(43,36,28,0.12)"}`,
+                background: isActive ? "var(--color-ink)" : "transparent",
+                color: isActive ? "#fff" : isDisabled ? "var(--color-ink-muted)" : "var(--color-ink-light)",
+                opacity: isDisabled ? 0.4 : 1,
+                cursor: isDisabled ? "default" : "pointer",
+              }}
+            >
+              {size.replace(" mm", "")}
+            </button>
+          );
+        })}
       </div>
 
       {/* Active filter chips */}

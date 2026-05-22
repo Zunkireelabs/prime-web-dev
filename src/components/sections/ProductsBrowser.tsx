@@ -259,6 +259,8 @@ export default function ProductsBrowser() {
             products={filtered}
             filters={filters}
             activeCount={activeCount}
+            sizeCountMap={sizeCountMap}
+            allSizes={allSizes}
             onToggle={toggleMulti}
             onClearAll={clearAll}
             onSearchChange={setSearch}

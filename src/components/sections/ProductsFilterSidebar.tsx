@@ -33,7 +33,6 @@ interface Group {
 const GROUPS: Group[] = [
   { key: "category", label: "Category" },
   { key: "collection", label: "Collection" },
-  { key: "size", label: "Size", displayTransform: (v) => v.replace(" mm", "") },
   { key: "finish", label: "Finish" },
   { key: "application", label: "Application" },
   { key: "series", label: "Series" },
