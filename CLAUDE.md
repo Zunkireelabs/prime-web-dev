@@ -60,8 +60,8 @@ Sanity CMS → (prebuild scripts) → src/data/sanity-*.json → Next.js static 
 - **Catalog sizes:** 300×300, 300×450, 300×600, 400×400, 600×600, 600×1200 mm
 - **Catalog IDs:** wall-300x450, wall-300x600, floor-300x300, vitrified-400x400, vitrified-600x600, eleganz-600x1200, spirit-of-nepal
 - **Product grid:** Size is single-select (radio buttons), defaults to 600×1200mm
-- **Grid columns scale with tile width:** 300mm→6cols, 400mm→4cols, 600mm→3cols
-- **Card aspect ratio:** Physical tile proportions (300×300→1:1, 300×450→2:3, 600×1200→1:2)
+- **Grid columns:** 300×300/300×600→6cols, 300×450→4cols (landscape), 400×400→4cols, 600×600/600×1200→3cols
+- **Card aspect ratio:** 300×450mm is LANDSCAPE (450:300), all others are portrait/square using physical w:h ratio. This is applied everywhere via `tileAspectRatio()` and `tileImageFrameStyle()` in `src/lib/utils.ts`
 - **Image rotation:** `imageRotation` field (0/90/180/270°) for landscape→portrait conversion
 - **Gallery:** `hasGallery` toggle enables multiple images with labels (Mockup, Room Scene, Detail, etc.) and `showFirst` control
 - **HL tiles** (highlighters) are visible in product grid and also shown in detail panel's Series Variants section
