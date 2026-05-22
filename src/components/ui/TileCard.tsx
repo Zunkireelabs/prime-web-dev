@@ -6,7 +6,7 @@ import { parseTileDims, tileAspectRatio } from "@/lib/utils";
 
 /** Card aspect ratio — 300×450 is landscape, others use physical ratio. */
 function cardAspectRatio(tileSize: string): string {
-  if (tileSize === "300\u00d7450 mm") return "3 / 2";
+  if (tileSize === "300\u00d7450 mm") return "450 / 300";
   return tileAspectRatio(tileSize);
 }
 import { prewarmTileZoomImage } from "@/components/ui/TileZoom";

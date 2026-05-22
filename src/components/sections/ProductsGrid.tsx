@@ -106,11 +106,13 @@ export default function ProductsGrid({
   const gridCols = useMemo(() => {
     const size = filters.size[0] || "600\u00d71200 mm";
     switch (size) {
-      // 300mm width tiles — 6 cols (smallest cards)
+      // 300×300 — 6 cols (small square)
       case "300\u00d7300 mm":
-      case "300\u00d7450 mm":
       case "300\u00d7600 mm":
         return "grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6";
+      // 300×450 — 4 cols (landscape 3:2, needs wider cards)
+      case "300\u00d7450 mm":
+        return "grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4";
       // 400mm width tiles — 4 cols
       case "400\u00d7400 mm":
         return "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4";
