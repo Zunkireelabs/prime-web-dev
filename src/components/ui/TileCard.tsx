@@ -159,6 +159,20 @@ function TileCard({ product, onClick }: TileCardProps) {
           {product.finish}
         </span>
 
+        {/* Prime logo */}
+        <img
+          src="/images/prime-logo.png"
+          alt=""
+          className="absolute pointer-events-none"
+          style={{
+            bottom: "8px",
+            right: "8px",
+            width: "28px",
+            height: "auto",
+            opacity: 0.4,
+          }}
+        />
+
         {/* "View Details" hover overlay */}
         <div
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100"
