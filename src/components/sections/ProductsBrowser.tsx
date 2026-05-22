@@ -110,29 +110,50 @@ export default function ProductsBrowser() {
     };
   }, []);
 
-  // ── Filter + sort ──
-  const filtered = useMemo(() => {
-    // Hide Art Panel tiles (Thangka/Mithila Art) — they have their own page
-    let r = allProducts.filter(
-      (p) => p.application !== "Art Panel"
-    );
-
+  // ── Filter WITHOUT size (for counting products per size) ──
+  const filteredWithoutSize = useMemo(() => {
+    let r = allProducts.filter((p) => p.application !== "Art Panel");
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));
-    if (filters.size.length) r = r.filter((p) => filters.size.includes(p.size));
     if (filters.finish.length) r = r.filter((p) => filters.finish.includes(p.finish));
     if (filters.application.length) r = r.filter((p) => filters.application.includes(p.application));
     if (filters.series.length) r = r.filter((p) => filters.series.includes(p.series));
-
     if (filters.search.trim()) {
       const q = filters.search.toLowerCase();
-      r = r.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.series.toLowerCase().includes(q) ||
-          (p.collection?.toLowerCase().includes(q) ?? false)
+      r = r.filter((p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.series.toLowerCase().includes(q) ||
+        (p.collection?.toLowerCase().includes(q) ?? false)
       );
     }
+    return r;
+  }, [filters]);
+
+  // ── Count products per size (for smart filter) ──
+  const sizeCountMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    options.size.forEach((s) => {
+      map[s] = filteredWithoutSize.filter((p) => p.size === s).length;
+    });
+    return map;
+  }, [filteredWithoutSize, options.size]);
+
+  // ── Auto-switch size when current has zero results ──
+  useEffect(() => {
+    const currentSize = filters.size[0];
+    if (currentSize && sizeCountMap[currentSize] === 0) {
+      const SIZE_ORDER = ["600×1200 mm", "600×600 mm", "400×400 mm", "300×600 mm", "300×450 mm", "300×300 mm"];
+      const firstAvailable = SIZE_ORDER.find((s) => (sizeCountMap[s] || 0) > 0);
+      if (firstAvailable) {
+        setFilters((f) => ({ ...f, size: [firstAvailable], page: 1 }));
+      }
+    }
+  }, [sizeCountMap, filters.size]);
+
+  // ── Filter + sort ──
+  const filtered = useMemo(() => {
+    let r = filteredWithoutSize;
+    if (filters.size.length) r = r.filter((p) => filters.size.includes(p.size));
 
     const sorted = [...r];
     switch (filters.sort) {
@@ -150,7 +171,7 @@ export default function ProductsBrowser() {
         break;
     }
     return sorted;
-  }, [filters]);
+  }, [filteredWithoutSize, filters.size, filters.sort]);
 
   // ── Handlers ──
   const toggleMulti = useCallback((key: FilterKey, value: string) => {
@@ -210,6 +231,7 @@ export default function ProductsBrowser() {
             filters={filters}
             options={options}
             activeCount={activeCount}
+            sizeCountMap={sizeCountMap}
             onToggle={toggleMulti}
             onClearGroup={clearGroup}
             onClearAll={clearAll}

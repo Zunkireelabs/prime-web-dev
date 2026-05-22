@@ -17,6 +17,7 @@ interface Props {
   filters: ProductFilters;
   options: Options;
   activeCount: number;
+  sizeCountMap: Record<string, number>;
   totalResults: number;
   onToggle: (key: FilterKey, value: string) => void;
   onClearGroup: (key: FilterKey) => void;
@@ -46,6 +47,7 @@ function FilterGroup({
   onClear,
   isOpen,
   onToggleOpen,
+  sizeCountMap,
 }: {
   group: Group;
   values: string[];
@@ -53,6 +55,7 @@ function FilterGroup({
   onToggle: (key: FilterKey, value: string) => void;
   onClear: (key: FilterKey) => void;
   isOpen: boolean;
+  sizeCountMap: Record<string, number>;
   onToggleOpen: () => void;
 }) {
   const [query, setQuery] = useState("");
@@ -125,9 +128,14 @@ function FilterGroup({
               {filteredValues.map((v) => {
                 const isOn = selected.includes(v);
                 const isRadio = group.key === "size";
+                const sizeCount = isRadio ? (sizeCountMap[v] ?? 0) : -1;
+                const isDisabled = isRadio && sizeCount === 0 && !isOn;
                 return (
                   <li key={v}>
-                    <label className="flex items-center cursor-pointer group/row" style={{ gap: "10px" }}>
+                    <label
+                      className={`flex items-center group/row ${isDisabled ? "pointer-events-none" : "cursor-pointer"}`}
+                      style={{ gap: "10px", opacity: isDisabled ? 0.3 : 1, transition: "opacity 0.3s" }}
+                    >
                       <span
                         className="relative flex items-center justify-center shrink-0"
                         style={{
@@ -147,16 +155,22 @@ function FilterGroup({
                       <input
                         type={isRadio ? "radio" : "checkbox"}
                         checked={isOn}
-                        onChange={() => onToggle(group.key, v)}
+                        onChange={() => !isDisabled && onToggle(group.key, v)}
                         className="sr-only"
                         name={isRadio ? "size-filter" : undefined}
+                        disabled={isDisabled}
                       />
                       <span
-                        className={`text-[0.8rem] ${isOn ? "text-ink" : "text-ink-light group-hover/row:text-ink"}`}
+                        className={`text-[0.8rem] flex-1 ${isDisabled ? "text-ink-muted line-through" : isOn ? "text-ink" : "text-ink-light group-hover/row:text-ink"}`}
                         style={{ transition: "color 0.3s" }}
                       >
                         {group.displayTransform ? group.displayTransform(v) : v}
                       </span>
+                      {isRadio && (
+                        <span className="text-[0.55rem] font-medium" style={{ color: sizeCount > 0 ? "var(--color-accent)" : "var(--color-ink-muted)" }}>
+                          {sizeCount}
+                        </span>
+                      )}
                     </label>
                   </li>
                 );
@@ -184,11 +198,12 @@ function FilterBody({
   filters,
   options,
   activeCount,
+  sizeCountMap,
   totalResults,
   onToggle,
   onClearGroup,
   onClearAll,
-}: Omit<Props, never>) {
+}: Props) {
   const [openKey, setOpenKey] = useState<FilterKey | null>("category");
 
   return (
@@ -223,6 +238,7 @@ function FilterBody({
           onClear={onClearGroup}
           isOpen={openKey === g.key}
           onToggleOpen={() => setOpenKey(openKey === g.key ? null : g.key)}
+          sizeCountMap={sizeCountMap}
         />
       ))}
 
