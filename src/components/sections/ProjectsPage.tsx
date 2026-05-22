@@ -137,7 +137,7 @@ export default function ProjectsPage() {
                 }
               >
                 <div
-                  className="group relative overflow-hidden bg-surface-dark h-full"
+                  className="group relative overflow-hidden bg-surface-dark"
                   style={{ borderRadius: "6px" }}
                 >
                   {/* Image */}
