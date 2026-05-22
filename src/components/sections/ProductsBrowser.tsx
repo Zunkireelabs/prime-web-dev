@@ -97,18 +97,32 @@ export default function ProductsBrowser() {
     router.replace(next, { scroll: false });
   }, [filters, router]);
 
-  // ── Available options (from full catalog, not filtered pool) ──
+  // ── All available sizes (static, never filtered) ──
+  const allSizes = useMemo(() => {
+    const base = allProducts.filter((p) => p.application !== "Art Panel");
+    return [...new Set(base.map((p) => p.size))].sort();
+  }, []);
+
+  // ── Products in current size (for computing available filter options) ──
+  const productsInCurrentSize = useMemo(() => {
+    const currentSize = filters.size[0] || DEFAULT_SIZE;
+    return allProducts.filter(
+      (p) => p.application !== "Art Panel" && p.size === currentSize
+    );
+  }, [filters.size]);
+
+  // ── Available options (scoped to current size so irrelevant options are hidden) ──
   const options = useMemo(() => {
     const sorted = <T extends string>(arr: T[]): T[] => [...new Set(arr)].sort();
     return {
-      category: sorted(allProducts.map((p) => p.category)),
-      collection: sorted(allProducts.map((p) => p.collection).filter((c): c is string => !!c)),
-      size: sorted(allProducts.map((p) => p.size)),
-      finish: sorted(allProducts.map((p) => p.finish)),
-      application: sorted(allProducts.map((p) => p.application)),
-      series: sorted(allProducts.map((p) => p.series)),
+      category: sorted(productsInCurrentSize.map((p) => p.category)),
+      collection: sorted(productsInCurrentSize.map((p) => p.collection).filter((c): c is string => !!c)),
+      size: allSizes,
+      finish: sorted(productsInCurrentSize.map((p) => p.finish)),
+      application: sorted(productsInCurrentSize.map((p) => p.application)),
+      series: sorted(productsInCurrentSize.map((p) => p.series)),
     };
-  }, []);
+  }, [productsInCurrentSize, allSizes]);
 
   // ── Filter WITHOUT size (for counting products per size) ──
   const filteredWithoutSize = useMemo(() => {
