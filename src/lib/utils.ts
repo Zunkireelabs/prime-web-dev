@@ -48,10 +48,7 @@ export function parseTileDims(size: string): { w: number; h: number } {
  * CSS aspect-ratio string ("w / h") — kept for callers that still need a raw ratio.
  */
 export function tileAspectRatio(size: string): string {
-  const { w, h } = parseTileDims(size);
-  // Non-square tiles display landscape (swap w/h)
-  if (w !== h) return `${Math.max(w, h)} / ${Math.min(w, h)}`;
-  return `${w} / ${h}`;
+  return "1 / 1";
 }
 
 export function tileVisualRatio(size: string): string {
@@ -116,12 +113,10 @@ export function tileCardCSSVars(): CSSProperties {
  * so the image sits centered with proportional negative space around it.
  */
 export function tileImageFrameStyle(size: string): CSSProperties {
-  const { w, h } = parseTileDims(size);
-  const isRect = w !== h;
+  const side = tileContainerWidth(size);
   return {
-    // Non-square tiles display landscape (swap w/h)
-    width: isRect ? tileContainerHeight(size) : tileContainerWidth(size),
-    height: isRect ? tileContainerWidth(size) : tileContainerHeight(size),
+    width: side,
+    height: side,
     position: "relative",
     overflow: "hidden",
   };
