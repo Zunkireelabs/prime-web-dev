@@ -108,10 +108,10 @@ export default function ProductsGrid({
     switch (size) {
       // 300×300 — 6 cols (small square)
       case "300\u00d7300 mm":
-      case "300\u00d7600 mm":
         return "grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6";
-      // 300×450 — 4 cols (landscape 3:2, needs wider cards)
+      // 300mm wide rectangular — 4 cols (same width, landscape cards)
       case "300\u00d7450 mm":
+      case "300\u00d7600 mm":
         return "grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4";
       // 400mm width tiles — 4 cols
       case "400\u00d7400 mm":
