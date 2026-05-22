@@ -62,8 +62,8 @@ export default function AboutLeadership() {
                   <div
                     className="shrink-0 overflow-hidden"
                     style={{
-                      width: "80px",
-                      height: "80px",
+                      width: "120px",
+                      height: "120px",
                       borderRadius: "50%",
                       border: "2px solid rgba(150,112,76,0.2)",
                     }}

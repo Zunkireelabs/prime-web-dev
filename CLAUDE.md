@@ -64,8 +64,10 @@ Sanity CMS → (prebuild scripts) → src/data/sanity-*.json → Next.js static 
 - **Card aspect ratio:** Physical tile proportions (300×300→1:1, 300×450→2:3, 600×1200→1:2)
 - **Image rotation:** `imageRotation` field (0/90/180/270°) for landscape→portrait conversion
 - **Gallery:** `hasGallery` toggle enables multiple images with labels (Mockup, Room Scene, Detail, etc.) and `showFirst` control
-- **HL tiles** (highlighters) are hidden from product grid, shown in detail panel's Series Variants section
+- **HL tiles** (highlighters) are visible in product grid and also shown in detail panel's Series Variants section
 - **Art Panel tiles** (Thangka/Mithila Art) are hidden from product grid and CollectionsGrid
+- **Smart size filter:** shows product count per size, greys out empty sizes, auto-switches when current size has zero results
+- **Scoped filter options:** Category, Collection, Finish, Series options only show values that exist in the selected size; empty filter groups are hidden entirely
 - **Spirit of Nepal** has a dedicated `/spirit-of-nepal` page
 
 ### Bulk Upload Scripts
@@ -114,7 +116,7 @@ src/data/
 - NEVER hardcode colors — always use CSS variables
 - Transitions: 0.3s linear only
 - Sanity data fallback: always filter out entries with empty images before using Sanity data
-- Product grid: size is single-select, defaults to 600×1200mm, HL tiles and Art Panels hidden
+- Product grid: size is single-select, defaults to 600×1200mm, Art Panels hidden
 - When rebuilding Sanity Studio: `npx sanity build` then SCP `dist/` contents to `studio.primeceramics.com.np`
 
 ## URLs
