@@ -47,9 +47,9 @@ export default function FactoryBanner() {
         style={{ transform: `translateY(${offset}px) scale(${scale})` }}
       />
 
-      {/* Gradient overlays — cinematic depth */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+      {/* Gradient overlays — dark enough for white text */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/40" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,101,66,0.1)_0%,transparent_60%)]" />
 
       {/* Content */}
@@ -78,7 +78,7 @@ export default function FactoryBanner() {
         </FadeIn>
 
         <FadeIn delay={0.2}>
-          <p className="body-lg text-white max-w-lg" style={{ marginBottom: "40px", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+          <p className="body-lg text-white max-w-lg" style={{ marginBottom: "40px", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
             Spread across 50 bigha in Rautahat, our state-of-the-art facility is
             powered by Italian SACMI technology — producing premium ceramic, vitrified,
             and porcelain tiles that meet international quality standards.
