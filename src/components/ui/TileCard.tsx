@@ -4,14 +4,10 @@ import { memo, useCallback, useRef } from "react";
 import type { CatalogProduct } from "@/data/catalog";
 import { parseTileDims, tileAspectRatio } from "@/lib/utils";
 
-/** Card aspect ratio — landscape for rectangular tiles, square for square.
- *  300×300→1:1, 300×450→3:2, 300×600→2:1, 400×400→1:1, 600×600→1:1, 600×1200→2:1 */
+/** Card aspect ratio — 300×450 is landscape, others use physical ratio. */
 function cardAspectRatio(tileSize: string): string {
-  const { w, h } = parseTileDims(tileSize);
-  if (w === h) return "1 / 1";
-  const long = Math.max(w, h);
-  const short = Math.min(w, h);
-  return `${long} / ${short}`;
+  if (tileSize === "300\u00d7450 mm") return "3 / 2";
+  return tileAspectRatio(tileSize);
 }
 import { prewarmTileZoomImage } from "@/components/ui/TileZoom";
 
