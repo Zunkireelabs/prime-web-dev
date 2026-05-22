@@ -149,7 +149,11 @@ const localProjectTestimonials: ProjectTestimonial[] = [
   },
 ];
 
+const validSanityProjectTestimonials = sanityProjectTestimonials?.filter(
+  (t) => t.image && t.image.startsWith("http")
+);
+
 export const projectTestimonials: ProjectTestimonial[] =
-  sanityProjectTestimonials && sanityProjectTestimonials.length > 0
-    ? sanityProjectTestimonials
+  validSanityProjectTestimonials && validSanityProjectTestimonials.length > 0
+    ? validSanityProjectTestimonials
     : localProjectTestimonials;
