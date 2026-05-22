@@ -124,7 +124,7 @@ export default function ProjectsPage() {
 
           {/* Masonry-style grid */}
           <div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start"
             style={{ gap: "clamp(16px, 2vw, 24px)" }}
           >
             {filtered.map((project, i) => (
