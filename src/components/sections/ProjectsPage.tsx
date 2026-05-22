@@ -138,12 +138,11 @@ export default function ProjectsPage() {
               >
                 <div
                   className="group relative overflow-hidden bg-surface-dark"
-                  style={{ borderRadius: "6px" }}
+                  style={{ borderRadius: "6px", aspectRatio: i === 0 || i === 5 ? "16 / 9" : "4 / 3" }}
                 >
                   {/* Image */}
                   <div
-                    className="relative overflow-hidden"
-                    style={{ aspectRatio: i === 0 || i === 5 ? "16 / 9" : "4 / 3" }}
+                    className="absolute inset-0 overflow-hidden"
                   >
                     <img
                       src={project.image}
