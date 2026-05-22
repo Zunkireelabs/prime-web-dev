@@ -60,11 +60,6 @@ export default function AboutCinematic() {
       {/* Certifications */}
       <AboutCertifications />
 
-      <SectionTransition from="light" to="light" variant="mosaic" />
-
-      {/* Client trust marquee */}
-      <AboutClients />
-
       <SectionTransition from="light" to="red" variant="diagonal" />
 
       {/* CTA */}
