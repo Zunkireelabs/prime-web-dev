@@ -49,8 +49,8 @@ export function parseTileDims(size: string): { w: number; h: number } {
  */
 export function tileAspectRatio(size: string): string {
   const { w, h } = parseTileDims(size);
-  // 300×450mm displays landscape (swapped)
-  if (size === "300\u00d7450 mm") return `${h} / ${w}`;
+  // Non-square tiles display landscape (swap w/h)
+  if (w !== h) return `${Math.max(w, h)} / ${Math.min(w, h)}`;
   return `${w} / ${h}`;
 }
 
@@ -116,11 +116,12 @@ export function tileCardCSSVars(): CSSProperties {
  * so the image sits centered with proportional negative space around it.
  */
 export function tileImageFrameStyle(size: string): CSSProperties {
-  // 300×450mm displays landscape (swapped w/h)
-  const is300x450 = size === "300\u00d7450 mm";
+  const { w, h } = parseTileDims(size);
+  const isRect = w !== h;
   return {
-    width: is300x450 ? tileContainerHeight(size) : tileContainerWidth(size),
-    height: is300x450 ? tileContainerWidth(size) : tileContainerHeight(size),
+    // Non-square tiles display landscape (swap w/h)
+    width: isRect ? tileContainerHeight(size) : tileContainerWidth(size),
+    height: isRect ? tileContainerWidth(size) : tileContainerHeight(size),
     position: "relative",
     overflow: "hidden",
   };
