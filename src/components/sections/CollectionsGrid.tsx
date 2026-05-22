@@ -453,9 +453,11 @@ export default function CollectionsGrid() {
                       key={`${activeTab}-${activeOption}-${item.slug}-${i}`}
                       className="tile-card flex-shrink-0"
                       style={{
-                        // Width proportional to physical tile width:
-                        // 300mm = base, 400mm = 1.33×, 600mm = 2×
+                        // Width proportional to physical tile size:
+                        // 300×450 landscape needs wider card to appear bigger than 300×300
                         width: (() => {
+                          const is300x450 = item.size === "300\u00d7450 mm";
+                          if (is300x450) return "clamp(160px, 24vw, 220px)";
                           const w = parseInt(item.size.match(/(\d+)/)?.[1] ?? "600", 10);
                           if (w <= 300) return "clamp(120px, 18vw, 160px)";
                           if (w <= 400) return "clamp(160px, 24vw, 220px)";
