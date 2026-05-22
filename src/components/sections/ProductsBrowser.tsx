@@ -112,9 +112,9 @@ export default function ProductsBrowser() {
 
   // ── Filter + sort ──
   const filtered = useMemo(() => {
-    // Hide HL (highlighter) tiles and Art Panel tiles (Thangka/Mithila Art)
+    // Hide Art Panel tiles (Thangka/Mithila Art) — they have their own page
     let r = allProducts.filter(
-      (p) => !/\bHL\b/i.test(p.name) && p.application !== "Art Panel"
+      (p) => p.application !== "Art Panel"
     );
 
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
