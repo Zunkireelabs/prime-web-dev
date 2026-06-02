@@ -22,7 +22,7 @@ if (!projectId || projectId === "your-project-id") {
   process.exit(0);
 }
 
-const client = createClient({ projectId, dataset, apiVersion, useCdn: true });
+const client = createClient({ projectId, dataset, apiVersion, useCdn: false });
 const builder = createImageUrlBuilder(client);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
