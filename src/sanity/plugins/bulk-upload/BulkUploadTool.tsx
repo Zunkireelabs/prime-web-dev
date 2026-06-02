@@ -28,17 +28,12 @@ const ALLOWED_SIZES: Record<string, string> = {
 };
 
 const ALLOWED_FINISH = ["Glossy", "Matt", "High Gloss", "Carving", "Satin", "Polished", "Rustic"];
+const FINISH_ALIASES: Record<string, string> = { gloss: "Glossy", matte: "Matt", highgloss: "High Gloss" };
 const ALLOWED_TILE_TYPE = ["Wall", "Floor", "Both"];
 const ALLOWED_CATEGORY = [
-  "Ceramic", "Vitrified", "Glazed Vitrified", "Porcelain",
+  "Ceramic", "Vitrified", "Glazed Vitrified", "Fully Vitrified", "Porcelain",
   "Wood Look", "Stone Look", "Marble Look", "Monochrome",
   "Patio", "Driveway", "Special Edition", "Art", "Cultural Heritage",
-];
-const ALLOWED_SPACES = [
-  "Living Room", "Bedroom", "Kitchen", "Bathroom", "Dining Room",
-  "Office", "Balcony", "Outdoor", "Commercial", "Restaurant",
-  "Hotel", "Hospital", "Apartment", "Showroom", "Staircase",
-  "Elevation", "Parking",
 ];
 
 const TILE_TYPE_MAP: Record<string, string> = {
@@ -49,6 +44,36 @@ const TILE_TYPE_MAP: Record<string, string> = {
 
 function slugify(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function compressImage(file: File, maxDim = 1600, quality = 0.85): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        const scale = maxDim / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error("Compression failed"))),
+        "image/jpeg",
+        quality
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load image"));
+    };
+    img.src = url;
+  });
 }
 
 interface CsvRow {
@@ -167,6 +192,29 @@ export function BulkUploadTool() {
           if (row.size) {
             row.size = row.size.trim().replace(/(\d)\s*[xX]\s*(\d)/g, "$1\u00d7$2");
           }
+          // Auto-normalize finish (e.g. "Gloss" → "Glossy")
+          if (row.finish?.trim()) {
+            const key = row.finish.trim().toLowerCase().replace(/\s+/g, "");
+            const alias = FINISH_ALIASES[key];
+            if (alias) row.finish = alias;
+            else {
+              const match = ALLOWED_FINISH.find((f) => f.toLowerCase() === row.finish.trim().toLowerCase());
+              if (match) row.finish = match;
+            }
+          }
+
+          // Auto-normalize tile_type (case-insensitive)
+          if (row.tile_type?.trim()) {
+            const match = ALLOWED_TILE_TYPE.find((t) => t.toLowerCase() === row.tile_type.trim().toLowerCase());
+            if (match) row.tile_type = match;
+          }
+
+          // Auto-normalize category (case-insensitive)
+          if (row.category?.trim()) {
+            const match = ALLOWED_CATEGORY.find((c) => c.toLowerCase() === row.category.trim().toLowerCase());
+            if (match) row.category = match;
+          }
+
           const errors: string[] = [];
           if (!row.product_name?.trim()) errors.push("Missing product_name");
           if (!row.size?.trim()) errors.push("Missing size");
@@ -177,13 +225,7 @@ export function BulkUploadTool() {
           if (!row.tile_type?.trim()) errors.push("Missing tile_type");
           else if (!ALLOWED_TILE_TYPE.includes(row.tile_type.trim())) errors.push(`Invalid tile_type "${row.tile_type}"`);
           if (!row.category?.trim()) errors.push("Missing category");
-          else if (!ALLOWED_CATEGORY.includes(row.category.trim())) errors.push(`Invalid category "${row.category}"`);
-
-          if (row.spaces?.trim()) {
-            row.spaces.split(",").map((s) => s.trim()).filter(Boolean).forEach((s) => {
-              if (!ALLOWED_SPACES.includes(s)) errors.push(`Invalid space "${s}"`);
-            });
-          }
+          else if (!ALLOWED_CATEGORY.includes(row.category.trim())) errors.push(`Invalid category "${row.category}"`)
 
           const imageKey = (row.image_name || "").trim().toLowerCase();
           const imageFile = images.get(imageKey) || null;
@@ -209,19 +251,32 @@ export function BulkUploadTool() {
       return;
     }
 
+    const CONCURRENCY = 3;
     setUploading(true);
     setProgress({ done: 0, total: valid.length });
+    let doneCount = 0;
 
-    for (let i = 0; i < valid.length; i++) {
-      const entry = valid[i];
-      const row = entry.row;
+    // Mark all valid entries as uploading
+    setEntries((prev) =>
+      prev.map((e) =>
+        e.errors.length === 0 ? { ...e, status: "uploading" } : e
+      )
+    );
 
-      setEntries((prev) =>
-        prev.map((e) =>
-          e === entry ? { ...e, status: "uploading" } : e
-        )
+    // ── Batch existence check (single query) ──
+    const slugs = valid.map((e) => slugify(e.row.product_name.trim()));
+    let existingMap = new Map<string, string>();
+    try {
+      const existing = await client.fetch<{ _id: string; slug: string }[]>(
+        `*[_type == "tileProduct" && slug.current in $slugs]{ _id, "slug": slug.current }`,
+        { slugs }
       );
+      existingMap = new Map(existing.map((e) => [e.slug, e._id]));
+    } catch { /* proceed without — will create all as new */ }
 
+    // ── Process each product end-to-end (compress → upload → create) ──
+    const processProduct = async (entry: ProductEntry) => {
+      const row = entry.row;
       try {
         const slug = slugify(row.product_name.trim());
         const catalogId = ALLOWED_SIZES[row.size.trim()];
@@ -229,23 +284,18 @@ export function BulkUploadTool() {
           ? row.spaces.split(",").map((s) => s.trim()).filter(Boolean)
           : [];
 
-        // Upload image if available
         let imageRef: Record<string, unknown> | undefined;
         if (entry.imageFile) {
-          const asset = await client.assets.upload("image", entry.imageFile, {
-            filename: entry.imageFile.name,
+          const compressed = await compressImage(entry.imageFile);
+          const asset = await client.assets.upload("image", compressed, {
+            filename: entry.imageFile.name.replace(/\.\w+$/, ".jpg"),
+            contentType: "image/jpeg",
           });
           imageRef = {
             _type: "image",
             asset: { _type: "reference", _ref: asset._id },
           };
         }
-
-        // Check if product exists
-        const existing = await client.fetch(
-          `*[_type == "tileProduct" && slug.current == $slug][0]{ _id }`,
-          { slug }
-        );
 
         const doc: { _type: string; [key: string]: unknown } = {
           _type: "tileProduct",
@@ -265,8 +315,9 @@ export function BulkUploadTool() {
         if (row.collection?.trim()) doc.collection = row.collection.trim();
         if (row.has_matching_floor?.trim()) doc.hasMatchingFloor = row.has_matching_floor.trim();
 
-        if (existing) {
-          const patch = client.patch(existing._id).set(doc);
+        const existingId = existingMap.get(slug);
+        if (existingId) {
+          const patch = client.patch(existingId).set(doc);
           if (imageRef) patch.set({ image: imageRef });
           await patch.commit();
         } else {
@@ -285,8 +336,13 @@ export function BulkUploadTool() {
           )
         );
       }
+      doneCount++;
+      setProgress({ done: doneCount, total: valid.length });
+    };
 
-      setProgress((p) => ({ ...p, done: i + 1 }));
+    for (let i = 0; i < valid.length; i += CONCURRENCY) {
+      const batch = valid.slice(i, i + CONCURRENCY);
+      await Promise.allSettled(batch.map(processProduct));
     }
 
     setUploading(false);
@@ -390,42 +446,20 @@ export function BulkUploadTool() {
                     onClick={() => setImages(new Map())}
                   />
                 </Flex>
-                <Flex wrap="wrap" gap={2}>
-                  {Array.from(images.entries())
-                    .slice(0, 20)
-                    .map(([name, file]) => (
-                      <Card
-                        key={name}
-                        padding={2}
-                        radius={2}
-                        shadow={1}
-                        style={{ width: "120px" }}
-                      >
-                        <Stack space={2}>
-                          <img
-                            src={URL.createObjectURL(file)}
-                            alt={name}
-                            style={{
-                              width: "100%",
-                              height: "80px",
-                              objectFit: "cover",
-                              borderRadius: "4px",
-                            }}
-                          />
-                          <Text size={0} muted style={{ wordBreak: "break-all" }}>
-                            {name}
-                          </Text>
-                        </Stack>
-                      </Card>
-                    ))}
-                  {images.size > 20 && (
-                    <Card padding={3} radius={2} tone="transparent">
-                      <Text size={1} muted>
-                        +{images.size - 20} more
-                      </Text>
-                    </Card>
-                  )}
-                </Flex>
+                <Card padding={3} radius={2} shadow={1} style={{ maxHeight: "200px", overflow: "auto" }}>
+                  <Stack space={1}>
+                    {Array.from(images.keys())
+                      .slice(0, 50)
+                      .map((name) => (
+                        <Text key={name} size={0} muted style={{ wordBreak: "break-all" }}>
+                          {name}
+                        </Text>
+                      ))}
+                    {images.size > 50 && (
+                      <Text size={0} muted>+{images.size - 50} more</Text>
+                    )}
+                  </Stack>
+                </Card>
                 <Button
                   text="Next → Upload CSV"
                   tone="primary"
@@ -501,16 +535,16 @@ export function BulkUploadTool() {
                       <strong>tile_type:</strong> Wall | Floor | Both
                     </Text>
                     <Text size={1}>
-                      <strong>finish:</strong> Glossy | Matt | High Gloss | Carving | Satin | Polished
+                      <strong>finish:</strong> Glossy | Gloss | Matt | High Gloss | Carving | Satin | Polished | Rustic
                     </Text>
                     <Text size={1}>
                       <strong>size:</strong> 300{"\u00d7"}300 mm | 300{"\u00d7"}450 mm | 300{"\u00d7"}600 mm | 400{"\u00d7"}400 mm | 600{"\u00d7"}600 mm | 600{"\u00d7"}1200 mm
                     </Text>
                     <Text size={1}>
-                      <strong>category:</strong> Ceramic | Vitrified | Glazed Vitrified | Porcelain | Wood Look | Stone Look | Marble Look
+                      <strong>category:</strong> Ceramic | Vitrified | Glazed Vitrified | Fully Vitrified | Porcelain | Wood Look | Stone Look | Marble Look
                     </Text>
                     <Text size={1}>
-                      <strong>spaces:</strong> Living Room, Bedroom, Kitchen, Bathroom, Dining Room, Office, Balcony, Outdoor, Commercial, Restaurant, Hotel, Hospital, Apartment, Showroom, Staircase, Parking
+                      <strong>spaces:</strong> Any comma-separated values (e.g. Living Room, Office, Hotel)
                     </Text>
                   </Stack>
                 </Card>
@@ -599,15 +633,7 @@ export function BulkUploadTool() {
                         )}
                       </td>
                       <td style={tdStyle}>
-                        {entry.imageFile ? (
-                          <img
-                            src={URL.createObjectURL(entry.imageFile)}
-                            alt=""
-                            style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "4px" }}
-                          />
-                        ) : (
-                          <Text size={0} muted>—</Text>
-                        )}
+                        <Text size={0} muted>{entry.imageFile ? "✓" : "—"}</Text>
                       </td>
                       <td style={tdStyle}>{entry.row.product_name}</td>
                       <td style={tdStyle}>{entry.row.size}</td>
