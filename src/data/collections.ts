@@ -6,7 +6,7 @@ export const collections: Collection[] = [
   { name: "Botticino", slug: "botticino", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
   { name: "Nero Marquina", slug: "nero-marquina", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
   { name: "Amazonite Blue", slug: "amazonite-blue", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
-  { name: "Canterbury Beige", slug: "canterbury-beige", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
+  { name: "Cantebury Beige", slug: "cantebury-beige", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
   { name: "Driftwood Ash", slug: "driftwood-ash", category: "Wood Look", sizes: ["600×600 mm"], image: "" },
   { name: "Marvel Bright", slug: "marvel-bright", category: "Marble Look", sizes: ["600×600 mm"], image: "" },
   { name: "Antiquity Grey", slug: "antiquity-grey", category: "Stone Look", sizes: ["600×600 mm"], image: "" },
@@ -17,7 +17,7 @@ export const collections: Collection[] = [
   { name: "Mithila Art - Buddha", slug: "mithila-art-buddha", category: "Art", sizes: ["300×600 mm"], image: "" },
   { name: "Aqua Dhaka Dark", slug: "aqua-dhaka-dark", category: "Cultural Heritage", sizes: ["300×600 mm"], image: "" },
   { name: "Kavre Slate", slug: "kavre-slate", category: "Stone Look", sizes: ["300×600 mm"], image: "" },
-  { name: "Bedrock Brown", slug: "bedrock-brown", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
+  { name: "Bedrock Light", slug: "bedrock-light", category: "Glazed Vitrified", sizes: ["600×1200 mm"], image: "" },
 ];
 
 // ── Product Categories (used in ProductShowcase sticky cards) ──
@@ -71,7 +71,7 @@ export const browseData: BrowseData = {
     { name: "Polished", image: "/images/browse/finish-polished.webp", slug: "botticino" },
     { name: "Satin", image: "/images/browse/finish-satin.webp", slug: "silken-gris" },
 
-    { name: "Carving", image: "/images/browse/finish-carving.webp", slug: "canterbury-beige" },
+    { name: "Carving", image: "/images/browse/finish-carving.webp", slug: "cantebury-beige" },
   ],
   Sizes: [
     { name: "300×300 mm", image: "/images/browse/size-300x600.webp", slug: "alcazar-300x300" },
@@ -85,7 +85,7 @@ export const browseData: BrowseData = {
     { name: "White", image: "/images/browse/color-white.webp", slug: "sanibell-white" },
     { name: "Beige", image: "/images/browse/color-beige.webp", slug: "castle-beige" },
     { name: "Grey", image: "/images/browse/color-grey.webp", slug: "antiquity-grey" },
-    { name: "Brown", image: "/images/browse/color-brown.webp", slug: "bedrock-brown" },
+    { name: "Brown", image: "/images/browse/color-brown.webp", slug: "bedrock-light" },
     { name: "Blue", image: "/images/browse/color-blue.webp", slug: "obsidian-blue" },
     { name: "Gold", image: "/images/browse/color-gold.webp", slug: "sigma-gold" },
   ],
