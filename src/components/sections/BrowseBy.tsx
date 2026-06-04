@@ -93,15 +93,15 @@ export default function BrowseBy() {
           <FadeIn>
             <div className="flex items-center" style={{ gap: "16px", marginBottom: "16px" }}>
               <div className="w-10 h-px bg-accent" />
-              <p className="eyebrow text-accent">Our Catalogs</p>
+              <p className="eyebrow text-accent">Our Catalogues</p>
             </div>
           </FadeIn>
           <FadeIn delay={0.06}>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between" style={{ gap: "24px" }}>
               <div>
-                <h2 className="h2" style={{ marginBottom: "16px" }}>Explore Our Catalog</h2>
+                <h2 className="h2" style={{ marginBottom: "16px" }}>Explore Our Catalogue</h2>
                 <p className="body-sm text-ink-light max-w-md">
-                  A curated preview from six complete catalogs — covering everyday
+                  A curated preview from six complete catalogues — covering everyday
                   walls, large-format statements, and our heritage Spirit of Nepal collection.
                 </p>
               </div>
@@ -109,7 +109,7 @@ export default function BrowseBy() {
                 href="/catalog"
                 className="link-arrow text-[0.65rem] hidden md:inline-flex shrink-0"
               >
-                Browse All 6 Catalogs <ArrowUpRight size={12} />
+                Browse All 6 Catalogues <ArrowUpRight size={12} />
               </a>
             </div>
           </FadeIn>
@@ -209,7 +209,7 @@ export default function BrowseBy() {
                     className="inline-flex items-center text-[0.65rem] font-medium tracking-[0.12em] uppercase text-ink group-hover:text-accent transition-colors duration-300"
                     style={{ gap: "8px" }}
                   >
-                    View Catalog
+                    View Catalogue
                     <ArrowRight
                       size={12}
                       className="transition-transform duration-300 group-hover:translate-x-1"
@@ -226,7 +226,7 @@ export default function BrowseBy() {
           <div className="flex items-center justify-between md:justify-center" style={{ marginTop: "clamp(64px, 8vw, 88px)", gap: "24px" }}>
             <div className="h-[1px] flex-1 bg-ink-faint hidden md:block" style={{ maxWidth: "120px" }} />
             <a href="/catalog" className="link-arrow text-[0.65rem]">
-              Browse All 6 Catalogs <ArrowUpRight size={12} />
+              Browse All 6 Catalogues <ArrowUpRight size={12} />
             </a>
             <div className="h-[1px] flex-1 bg-ink-faint hidden md:block" style={{ maxWidth: "120px" }} />
           </div>

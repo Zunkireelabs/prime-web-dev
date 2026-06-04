@@ -415,7 +415,7 @@ export default function Header() {
               <p className="eyebrow text-accent" style={{ marginBottom: "8px" }}>Get in Touch</p>
               <a href="mailto:info@primeceramics.com.np" className="block text-[0.85rem] text-ink hover:text-accent transition-colors">info@primeceramics.com.np</a>
               <a href="tel:+97715978860" className="block text-[0.85rem] text-ink hover:text-accent transition-colors">+977-1-5978860/61/62</a>
-              <p className="text-[0.78rem] text-ink-light" style={{ marginTop: "4px" }}>Bansighat Marg, Teku, Kathmandu</p>
+              <a href="https://maps.app.goo.gl/hfxYW3MdaBCzZZFW7" target="_blank" rel="noopener noreferrer" className="block text-[0.78rem] text-ink-light hover:text-accent transition-colors" style={{ marginTop: "4px" }}>Bansighat Marg, Teku, Kathmandu</a>
             </div>
 
             {/* Social row */}

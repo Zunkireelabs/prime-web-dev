@@ -18,7 +18,7 @@ export default function SpecSheetPage({
     return (
       <div style={{ padding: "120px 24px", textAlign: "center" }}>
         <h1 style={{ fontSize: "1.5rem", marginBottom: "16px" }}>Spec sheet not found</h1>
-        <a href="/catalog" style={{ color: "#b58a52" }}>Back to Catalog</a>
+        <a href="/catalog" style={{ color: "#b58a52" }}>Back to Catalogue</a>
       </div>
     );
   }
@@ -101,7 +101,7 @@ export default function SpecSheetPage({
             textDecoration: "none",
           }}
         >
-          &larr; Back to Catalog
+          &larr; Back to Catalogue
         </a>
       </div>
 
@@ -211,7 +211,7 @@ export default function SpecSheetPage({
               borderBottom: "1px solid rgba(43,36,28,0.08)",
             }}
           >
-            Products in this Catalog ({products.length})
+            Products in this Catalogue ({products.length})
           </h2>
           <div
             style={{
@@ -259,7 +259,7 @@ export default function SpecSheetPage({
           color: "#6f6254",
         }}
       >
-        <p>Prime Ceramics Pvt. Ltd. · Bansighat Marg, Teku, Kathmandu</p>
+        <p>Prime Ceramics Pvt. Ltd. · <a href="https://maps.app.goo.gl/hfxYW3MdaBCzZZFW7" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline" }}>Bansighat Marg, Teku, Kathmandu</a></p>
         <p>ISO 10545 / NS 617:2082 Certified</p>
       </div>
     </div>

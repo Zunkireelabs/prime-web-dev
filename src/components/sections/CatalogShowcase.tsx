@@ -134,7 +134,7 @@ function CatalogCard({
               </>
             ) : (
               <span className="text-[0.65rem] font-medium tracking-[0.12em] uppercase text-ink-muted">
-                Catalog arriving soon
+                Catalogue arriving soon
               </span>
             )}
           </div>
@@ -162,7 +162,7 @@ export default function CatalogShowcase({
           <FadeIn>
             <div className="flex items-center" style={{ gap: "16px", marginBottom: "16px" }}>
               <div className="w-10 h-px bg-accent" />
-              <p className="eyebrow text-accent">Our Catalogs</p>
+              <p className="eyebrow text-accent">Our Catalogues</p>
             </div>
           </FadeIn>
           <FadeIn delay={0.06}>
@@ -170,7 +170,7 @@ export default function CatalogShowcase({
           </FadeIn>
           <FadeIn delay={0.1}>
             <p className="body-lg text-ink-light max-w-lg">
-              Six curated catalogs with room scenes, technical specifications,
+              Six curated catalogues with room scenes, technical specifications,
               and design inspiration for every surface.
             </p>
           </FadeIn>

@@ -60,7 +60,7 @@ const contactItems = [
   { label: "Phone", value: "+977-1-5978860/61/62", href: "tel:+977-1-5978860", icon: "phone" },
   { label: "Toll Free", value: "1810 500 0062", href: "tel:18105000062", icon: "phone" },
   { label: "Factory", value: "Sakhuwa Dhamaura, Brindavan-6, Rautahat", icon: "factory" },
-  { label: "Office", value: "Bansighat Marg, Teku, Kathmandu", icon: "office" },
+  { label: "Office", value: "Bansighat Marg, Teku, Kathmandu", href: "https://maps.app.goo.gl/hfxYW3MdaBCzZZFW7", icon: "office" },
 ];
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -185,6 +185,9 @@ export default function Footer() {
                           href={item.href}
                           className="group flex items-start"
                           style={{ gap: "10px" }}
+                          {...(item.href.startsWith("http")
+                            ? { target: "_blank", rel: "noopener noreferrer" }
+                            : {})}
                         >
                           {inner}
                         </a>

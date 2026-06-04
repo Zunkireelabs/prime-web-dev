@@ -66,7 +66,7 @@ export default function CatalogHero() {
         <FadeIn>
           <div className="flex items-center" style={{ gap: "16px", marginBottom: "16px" }}>
             <div className="w-10 h-px bg-accent-light/50" />
-            <p className="eyebrow text-accent-light">Product Catalogs</p>
+            <p className="eyebrow text-accent-light">Product Catalogues</p>
           </div>
         </FadeIn>
 
@@ -82,7 +82,7 @@ export default function CatalogHero() {
 
         <FadeIn delay={0.16}>
           <p className="body-lg text-white/90 max-w-lg leading-relaxed" style={{ marginBottom: "40px" }}>
-            Six catalogs, 450+ designs. Browse our complete range of ceramic,
+            Six catalogues, 450+ designs. Browse our complete range of ceramic,
             vitrified, and large format tiles — including the exclusive Spirit of Nepal
             heritage collection.
           </p>
@@ -91,12 +91,12 @@ export default function CatalogHero() {
         <FadeIn delay={0.22}>
           <div className="flex items-center" style={{ gap: "24px" }}>
             <a href="#catalog-showcase" className="btn-gold group">
-              Browse Catalogs
+              Browse Catalogues
               <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
             </a>
             <div style={{ height: "16px", width: "1px", background: "rgba(255,255,255,0.25)" }} />
             <span className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-white/60">
-              6 Catalogs · 450+ Designs
+              6 Catalogues · 450+ Designs
             </span>
           </div>
         </FadeIn>

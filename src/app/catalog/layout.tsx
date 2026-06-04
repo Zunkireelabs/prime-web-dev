@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tile Catalog — Prime Tiles Industries",
+  title: "Tile Catalogue — Prime Tiles Industries",
   description:
-    "Browse our complete tile catalog — wall tiles, floor tiles, porcelain, ceramic, vitrified, and large format. 300mm to 1200mm sizes. Download PDF catalogs.",
+    "Browse our complete tile catalogue — wall tiles, floor tiles, porcelain, ceramic, vitrified, and large format. 300mm to 1200mm sizes. Download PDF catalogues.",
   openGraph: {
-    title: "Tile Catalog — Prime Tiles Industries",
+    title: "Tile Catalogue — Prime Tiles Industries",
     description:
-      "Browse our complete tile catalog — wall tiles, floor tiles, porcelain, ceramic, vitrified, and large format.",
+      "Browse our complete tile catalogue — wall tiles, floor tiles, porcelain, ceramic, vitrified, and large format.",
   },
 };
 

@@ -66,7 +66,7 @@ export default function AboutCTA() {
               <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
             </a>
             <a href="/catalog" className="btn-on-red-outline group">
-              Explore Catalog
+              Explore Catalogue
               <ArrowRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
             </a>
           </div>

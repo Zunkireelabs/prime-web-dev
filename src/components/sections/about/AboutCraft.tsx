@@ -311,7 +311,7 @@ export default function AboutCraft() {
               href="/catalog"
               className="link-arrow text-accent-light hover:text-accent"
             >
-              Explore Our Catalog <ArrowRight size={14} />
+              Explore Our Catalogue <ArrowRight size={14} />
             </a>
           </ScrollReveal>
         </div>

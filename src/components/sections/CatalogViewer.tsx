@@ -30,10 +30,10 @@ export default function CatalogViewer({ slug }: { slug: string }) {
               className="font-serif font-light text-ink-on-dark"
               style={{ fontSize: "1.5rem", marginBottom: "16px" }}
             >
-              Catalog not found
+              Catalogue not found
             </p>
             <Link href="/catalog" className="link-arrow text-accent-light">
-              <ArrowLeft size={14} /> Back to Catalog
+              <ArrowLeft size={14} /> Back to Catalogue
             </Link>
           </div>
         </main>
@@ -139,7 +139,7 @@ export default function CatalogViewer({ slug }: { slug: string }) {
               style={{ gap: "10px", padding: "14px 32px", borderRadius: "4px" }}
             >
               <Download size={14} />
-              Download Catalog PDF
+              Download Catalogue PDF
             </a>
           </div>
         </div>
