@@ -203,7 +203,9 @@ function FilterBody({
   onClearGroup,
   onClearAll,
 }: Props) {
-  const [openKey, setOpenKey] = useState<FilterKey | null>("category");
+  // Only show a filter group when it offers a real choice (more than one option).
+  const visibleGroups = GROUPS.filter((g) => options[g.key].length > 1);
+  const [openKey, setOpenKey] = useState<FilterKey | null>(visibleGroups[0]?.key ?? null);
 
   return (
     <div>
@@ -227,8 +229,7 @@ function FilterBody({
         )}
       </div>
 
-      {GROUPS.map((g) => {
-        if (options[g.key].length === 0) return null;
+      {visibleGroups.map((g) => {
         return (
           <FilterGroup
             key={g.key}
