@@ -259,7 +259,7 @@ export default function SpecSheetPage({
           color: "#6f6254",
         }}
       >
-        <p>Prime Ceramics Pvt. Ltd. · Tripureshwor, Kathmandu</p>
+        <p>Prime Ceramics Pvt. Ltd. · Bansighat Marg, Teku, Kathmandu</p>
         <p>ISO 10545 / NS 617:2082 Certified</p>
       </div>
     </div>

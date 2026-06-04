@@ -59,7 +59,7 @@ You can choose to disable cookies through your browser settings. However, disabl
 Prime Tiles Industries Pvt. Ltd.
 Email: info@primeceramics.com.np
 Phone: +977-1-5978860/61/62
-Office: Level 4, Saket Complex, Tripureshwor, Kathmandu, Nepal`,
+Office: Bansighat Marg, Teku, Kathmandu, Nepal`,
   },
 ];
 
