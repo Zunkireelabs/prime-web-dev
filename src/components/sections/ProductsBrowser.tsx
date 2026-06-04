@@ -15,12 +15,13 @@ export interface ProductFilters {
   finish: string[];
   application: string[];
   series: string[];
+  outdoor: boolean;
   search: string;
   sort: SortKey;
   page: number;
 }
 
-export type FilterKey = Exclude<keyof ProductFilters, "search" | "sort" | "page">;
+export type FilterKey = Exclude<keyof ProductFilters, "search" | "sort" | "page" | "outdoor">;
 
 const DEFAULT_SIZE = "600×1200 mm";
 
@@ -31,6 +32,7 @@ const EMPTY_FILTERS: ProductFilters = {
   finish: [],
   application: [],
   series: [],
+  outdoor: false,
   search: "",
   sort: "name-asc",
   page: 1,
@@ -74,6 +76,7 @@ export default function ProductsBrowser() {
       finish: parseMulti(searchParams.get("finish")),
       application: parseMulti(searchParams.get("application")),
       series: parseMulti(searchParams.get("series")),
+      outdoor: searchParams.get("outdoor") === "1",
       search: searchParams.get("search") ?? "",
       sort: isSortKey(sort) ? sort : "name-asc",
       page: parsePage(searchParams.get("page")),
@@ -89,6 +92,7 @@ export default function ProductsBrowser() {
     MULTI_KEYS.forEach((k) => {
       if (filters[k].length > 0) params.set(k, filters[k].join(","));
     });
+    if (filters.outdoor) params.set("outdoor", "1");
     if (filters.search.trim()) params.set("search", filters.search.trim());
     if (filters.sort !== "name-asc") params.set("sort", filters.sort);
     if (filters.page > 1) params.set("page", String(filters.page));
@@ -131,6 +135,7 @@ export default function ProductsBrowser() {
   // ── Filter WITHOUT size (for counting products per size) ──
   const filteredWithoutSize = useMemo(() => {
     let r = allProducts.filter((p) => p.application !== "Art Panel");
+    if (filters.outdoor) r = r.filter((p) => p.outdoor);
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));
     if (filters.finish.length) r = r.filter((p) => filters.finish.includes(p.finish));
@@ -236,7 +241,7 @@ export default function ProductsBrowser() {
   const activeCount = MULTI_KEYS.reduce((sum, k) => {
     if (k === "size" && isDefaultSize) return sum;
     return sum + filters[k].length;
-  }, 0) + (filters.search ? 1 : 0);
+  }, 0) + (filters.search ? 1 : 0) + (filters.outdoor ? 1 : 0);
 
   return (
     <section

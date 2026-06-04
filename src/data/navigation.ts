@@ -50,12 +50,11 @@ export const footerColumns: FooterColumn[] = [
   {
     title: "Collections",
     links: [
-      { label: "Porcelain", href: "/products?category=Porcelain" },
       { label: "Ceramic", href: "/products?category=Ceramic" },
       { label: "Natural Stone", href: "/products?category=Stone+Look" },
-      { label: "Large Format", href: "/products?category=Glazed+Vitrified" },
+      { label: "Large Format", href: "/products?size=600%C3%971200%20mm" },
       { label: "Vitrified", href: "/products?category=Vitrified" },
-      { label: "Outdoor", href: "/products?application=Outdoor" },
+      { label: "Outdoor", href: "/products?size=400%C3%97400%20mm&outdoor=1" },
     ],
   },
   {

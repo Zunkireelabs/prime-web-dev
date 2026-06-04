@@ -12,6 +12,7 @@ export type {
 } from "./types";
 
 import type { CatalogProduct, CatalogName, CatalogFinish } from "./types";
+import { OUTDOOR_SLUGS } from "./outdoor";
 
 // ── Fallback: local TypeScript data ──
 
@@ -43,7 +44,9 @@ try {
 }
 
 const hasSanity = !!(sanityProducts && sanityProducts.length > 0);
-const rawProducts: CatalogProduct[] = hasSanity ? sanityProducts! : localProducts;
+const rawProducts: CatalogProduct[] = (hasSanity ? sanityProducts! : localProducts).map((p) =>
+  OUTDOOR_SLUGS.has(p.slug) ? { ...p, outdoor: true } : p
+);
 
 export const allProducts: CatalogProduct[] = hasSanity
   ? rawProducts.filter((p) => p.image && p.image.startsWith("http"))
