@@ -15,8 +15,6 @@ const SEARCH_DEBOUNCE_MS = 200;
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "name-asc", label: "Name A\u2013Z" },
   { value: "name-desc", label: "Name Z\u2013A" },
-  { value: "size-asc", label: "Size (small\u2192large)" },
-  { value: "size-desc", label: "Size (large\u2192small)" },
 ];
 
 const CHIP_GROUPS: { key: FilterKey; label: string }[] = [
@@ -55,8 +53,28 @@ export default function ProductsGrid({
 }: Props) {
   const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null);
   const [searchInput, setSearchInput] = useState(filters.search);
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
   const isFirstPageRender = useRef(true);
+
+  useEffect(() => {
+    if (!sortOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setSortOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSortOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [sortOpen]);
 
   // Sync external resets (clearAll, chip removal) into the local input
   useEffect(() => {
@@ -201,28 +219,75 @@ export default function ProductsGrid({
               ? "0 of 0"
               : `${rangeStart}\u2013${rangeEnd} of ${products.length}`}
           </span>
-          <div
-            className="relative"
-            style={{
-              background: "var(--color-surface-card)",
-              borderRadius: "20px",
-              padding: "8px 16px",
-            }}
-          >
-            <select
-              value={filters.sort}
-              onChange={(e) => onSortChange(e.target.value as SortKey)}
-              className="appearance-none pr-5 text-[0.65rem] font-medium tracking-[0.1em] uppercase bg-transparent text-ink-light hover:text-ink focus:outline-none cursor-pointer"
-              style={{ transition: "color 0.3s" }}
+          <div className="relative" ref={sortRef}>
+            <button
+              type="button"
+              onClick={() => setSortOpen((o) => !o)}
+              className="flex items-center text-[0.65rem] font-medium tracking-[0.1em] uppercase text-ink-light hover:text-ink focus:outline-none cursor-pointer whitespace-nowrap"
+              style={{
+                background: "var(--color-surface-card)",
+                borderRadius: "20px",
+                padding: "8px 16px",
+                gap: "8px",
+                transition: "color 0.3s",
+              }}
+              aria-haspopup="listbox"
+              aria-expanded={sortOpen}
               aria-label="Sort products"
             >
-              {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  Sort: {o.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDown size={11} className="absolute right-4 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" />
+              Sort: {(SORT_OPTIONS.find((o) => o.value === filters.sort) ?? SORT_OPTIONS[0]).label}
+              <ChevronDown
+                size={11}
+                className="text-ink-muted"
+                style={{ transition: "transform 0.3s", transform: sortOpen ? "rotate(180deg)" : "none" }}
+              />
+            </button>
+            {sortOpen && (
+              <ul
+                role="listbox"
+                className="absolute right-0 z-20 overflow-hidden"
+                style={{
+                  top: "calc(100% + 6px)",
+                  minWidth: "100%",
+                  background: "var(--color-surface-elevated)",
+                  border: "1px solid rgba(43,36,28,0.1)",
+                  borderRadius: "12px",
+                  boxShadow: "var(--shadow-md)",
+                  padding: "4px",
+                }}
+              >
+                {SORT_OPTIONS.map((o) => {
+                  const isSel = o.value === filters.sort;
+                  return (
+                    <li key={o.value} role="option" aria-selected={isSel}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onSortChange(o.value);
+                          setSortOpen(false);
+                        }}
+                        className="w-full text-left text-[0.65rem] font-medium tracking-[0.1em] uppercase whitespace-nowrap"
+                        style={{
+                          padding: "8px 14px",
+                          borderRadius: "8px",
+                          color: isSel ? "var(--color-accent)" : "var(--color-ink-light)",
+                          background: isSel ? "rgba(150,112,76,0.08)" : "transparent",
+                          transition: "all 0.3s",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSel) e.currentTarget.style.background = "var(--color-surface-card)";
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSel) e.currentTarget.style.background = "transparent";
+                        }}
+                      >
+                        {o.label}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
       </div>
