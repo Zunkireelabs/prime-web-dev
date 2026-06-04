@@ -60,4 +60,9 @@ export interface CatalogProduct {
   hasGallery?: boolean;
   gallery?: { url: string; label?: string; caption?: string }[];
   showFirst?: "product" | "gallery";
+  panelLayout?: {
+    cols: number;
+    rows: number;
+    orientation: "horizontal" | "vertical";
+  };
 }

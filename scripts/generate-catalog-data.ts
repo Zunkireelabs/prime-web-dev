@@ -54,6 +54,7 @@ const allProductsQuery = `
     hasGallery,
     "gallery": gallery[]{ "url": image.asset->url, label, caption },
     showFirst,
+    panelLayout,
     sortOrder
   }
 `;
@@ -75,6 +76,11 @@ interface SanityProduct {
   hasGallery?: boolean;
   gallery?: { url: string; label?: string; caption?: string }[];
   showFirst?: string;
+  panelLayout?: {
+    cols?: number;
+    rows?: number;
+    orientation?: string;
+  };
   sortOrder: number;
 }
 
@@ -135,6 +141,17 @@ async function generate() {
       hasGallery: p.hasGallery || undefined,
       gallery: p.gallery?.length ? p.gallery : undefined,
       showFirst: p.showFirst || undefined,
+      panelLayout:
+        p.panelLayout?.cols && p.panelLayout?.rows
+          ? {
+              cols: p.panelLayout.cols,
+              rows: p.panelLayout.rows,
+              orientation:
+                p.panelLayout.orientation === "vertical"
+                  ? "vertical"
+                  : "horizontal",
+            }
+          : undefined,
     };
   });
 

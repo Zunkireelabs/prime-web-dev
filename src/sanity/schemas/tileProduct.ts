@@ -117,6 +117,42 @@ export const tileProduct = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "panelLayout",
+      title: "Art Panel Layout",
+      type: "object",
+      description:
+        "For multi-tile art panels: how many 300×600 pieces make up the full panel.",
+      hidden: ({ parent }) => parent?.application !== "Art Panel",
+      fields: [
+        {
+          name: "cols",
+          title: "Columns",
+          type: "number",
+          description: "Number of tiles across (horizontal).",
+        },
+        {
+          name: "rows",
+          title: "Rows",
+          type: "number",
+          description: "Number of tiles down (vertical).",
+        },
+        {
+          name: "orientation",
+          title: "Tile Orientation",
+          type: "string",
+          options: {
+            list: [
+              { title: "Horizontal (600 × 300)", value: "horizontal" },
+              { title: "Vertical (300 × 600)", value: "vertical" },
+            ],
+            layout: "radio",
+          },
+          initialValue: "horizontal",
+          description: "How each individual 300×600 tile is laid.",
+        },
+      ],
+    }),
+    defineField({
       name: "spaces",
       title: "Suitable Spaces",
       type: "array",

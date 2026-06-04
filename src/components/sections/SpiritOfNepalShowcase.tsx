@@ -128,7 +128,13 @@ function ArtPanelCard({
         }}
       >
         <span className="text-[0.42rem] font-semibold tracking-[0.14em] uppercase" style={{ color: "rgba(255,255,255,0.7)" }}>
-          Art Panel — <span style={{ color: "var(--color-accent)" }}>12 Tiles</span> (4x3)
+          {product.panelLayout ? (
+            <>
+              Art Panel — <span style={{ color: "var(--color-accent)" }}>{product.panelLayout.cols * product.panelLayout.rows} Tiles</span> ({product.panelLayout.cols}x{product.panelLayout.rows})
+            </>
+          ) : (
+            "Art Panel"
+          )}
         </span>
         <span className="text-[0.42rem] font-semibold tracking-[0.14em] uppercase" style={{ color: "rgba(255,255,255,0.5)" }}>
           Each 300x600mm

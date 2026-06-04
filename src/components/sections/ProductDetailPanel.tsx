@@ -641,76 +641,89 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
             </div>
 
           {/* Art Panel composition for Spirit of Nepal art tiles */}
-          {product.application === "Art Panel" && (
-            <div
-              style={{
-                marginBottom: "16px",
-                background: "rgba(150,112,76,0.06)",
-                border: "1px solid rgba(150,112,76,0.15)",
-                borderRadius: "8px",
-                padding: "14px 16px",
-              }}
-            >
-              <p
-                className="text-[0.5rem] font-semibold tracking-[0.14em] uppercase"
-                style={{ color: "var(--color-accent)", marginBottom: "10px" }}
+          {product.application === "Art Panel" && product.panelLayout && (() => {
+            const { cols, rows, orientation } = product.panelLayout;
+            const tileW = orientation === "vertical" ? 300 : 600;
+            const tileH = orientation === "vertical" ? 600 : 300;
+            const total = cols * rows;
+            const panelW = cols * tileW;
+            const panelH = rows * tileH;
+            const coverage = ((panelW / 1000) * (panelH / 1000)).toFixed(2);
+            // Keep the mini diagram within ~132px on its longest side.
+            const cellLong = Math.max(8, Math.min(22, Math.round(132 / Math.max(cols, rows))));
+            const cellW = orientation === "vertical" ? Math.round(cellLong / 2) : cellLong;
+            const cellH = orientation === "vertical" ? cellLong : Math.round(cellLong / 2);
+            return (
+              <div
+                style={{
+                  marginBottom: "16px",
+                  background: "rgba(150,112,76,0.06)",
+                  border: "1px solid rgba(150,112,76,0.15)",
+                  borderRadius: "8px",
+                  padding: "14px 16px",
+                }}
               >
-                Art Panel Composition
-              </p>
-              <div className="flex items-center" style={{ gap: "16px" }}>
-                {/* Mini tile diagram */}
-                <div
-                  style={{
-                    display: "inline-grid",
-                    gridTemplateColumns: "repeat(4, 18px)",
-                    gridTemplateRows: "repeat(3, 27px)",
-                    gap: "2px",
-                    flexShrink: 0,
-                  }}
+                <p
+                  className="text-[0.5rem] font-semibold tracking-[0.14em] uppercase"
+                  style={{ color: "var(--color-accent)", marginBottom: "10px" }}
                 >
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        background: "rgba(150,112,76,0.15)",
-                        border: "1px solid rgba(150,112,76,0.3)",
-                        borderRadius: "1px",
-                      }}
-                    />
-                  ))}
-                </div>
-                <div
-                  className="grid grid-cols-3 flex-1"
-                  style={{ gap: "6px" }}
-                >
-                  <div>
-                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Total Tiles</p>
-                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>12 pcs</p>
+                  Art Panel Composition
+                </p>
+                <div className="flex items-center" style={{ gap: "16px" }}>
+                  {/* Mini tile diagram */}
+                  <div
+                    style={{
+                      display: "inline-grid",
+                      gridTemplateColumns: `repeat(${cols}, ${cellW}px)`,
+                      gridTemplateRows: `repeat(${rows}, ${cellH}px)`,
+                      gap: "2px",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {Array.from({ length: total }).map((_, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          background: "rgba(150,112,76,0.15)",
+                          border: "1px solid rgba(150,112,76,0.3)",
+                          borderRadius: "1px",
+                        }}
+                      />
+                    ))}
                   </div>
-                  <div>
-                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Grid Layout</p>
-                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>4 x 3</p>
-                  </div>
-                  <div>
-                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Each Tile</p>
-                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>300x600mm</p>
-                  </div>
-                  <div>
-                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Width</p>
-                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>1200mm</p>
-                  </div>
-                  <div>
-                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Height</p>
-                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>1800mm</p>
-                  </div>
-                  <div>
-                    <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Coverage</p>
-                    <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>2.16 sq.m</p>
+                  <div
+                    className="grid grid-cols-3 flex-1"
+                    style={{ gap: "6px" }}
+                  >
+                    <div>
+                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Total Tiles</p>
+                      <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{total} pcs</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Grid Layout</p>
+                      <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{cols} x {rows}</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Each Tile</p>
+                      <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{tileW}x{tileH}mm</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Width</p>
+                      <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{panelW}mm</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Height</p>
+                      <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{panelH}mm</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Coverage</p>
+                      <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{coverage} sq.m</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Series variants (HL, Dark, Floor) for 300x450mm tiles */}
           {seriesVariants.length > 0 && (
