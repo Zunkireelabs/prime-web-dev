@@ -265,6 +265,7 @@ export default function ProductsGrid({
                 {size === "300\u00d7300 mm" ? "FLOOR" :
                  size === "300\u00d7450 mm" || size === "300\u00d7600 mm" ? "WALL" :
                  size === "400\u00d7400 mm" ? "FLOOR" :
+                 size === "600\u00d7600 mm" ? "FLOOR" :
                  "WALL & FLOOR"}
               </span>
             </button>
