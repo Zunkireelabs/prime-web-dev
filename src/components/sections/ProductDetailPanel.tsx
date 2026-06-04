@@ -550,7 +550,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                   Technical Specifications
                 </p>
                 <div
-                  className="grid grid-cols-4"
+                  className="grid grid-cols-2 sm:grid-cols-4"
                   style={{
                     gap: "1px",
                     background: "rgba(43,36,28,0.06)",
@@ -567,7 +567,7 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                       }}
                     >
                       <p
-                        className="text-[0.45rem] font-medium tracking-[0.1em] uppercase text-ink-muted"
+                        className="text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted"
                         style={{ marginBottom: "2px" }}
                       >
                         {s.label}
@@ -696,27 +696,27 @@ export default function ProductDetailPanel({ product, onClose, onProductChange }
                     style={{ gap: "6px" }}
                   >
                     <div>
-                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Total Tiles</p>
+                      <p className="text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Total Tiles</p>
                       <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{total} pcs</p>
                     </div>
                     <div>
-                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Grid Layout</p>
+                      <p className="text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Grid Layout</p>
                       <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{cols} x {rows}</p>
                     </div>
                     <div>
-                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Each Tile</p>
+                      <p className="text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Each Tile</p>
                       <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{tileW}x{tileH}mm</p>
                     </div>
                     <div>
-                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Width</p>
+                      <p className="text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Width</p>
                       <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{panelW}mm</p>
                     </div>
                     <div>
-                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Height</p>
+                      <p className="text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Panel Height</p>
                       <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{panelH}mm</p>
                     </div>
                     <div>
-                      <p className="text-[0.4rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Coverage</p>
+                      <p className="text-[0.55rem] font-medium tracking-[0.1em] uppercase text-ink-muted" style={{ marginBottom: "1px" }}>Coverage</p>
                       <p className="text-[0.7rem] text-ink" style={{ fontWeight: 400 }}>{coverage} sq.m</p>
                     </div>
                   </div>

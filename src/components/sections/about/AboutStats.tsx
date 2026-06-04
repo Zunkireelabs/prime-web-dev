@@ -15,7 +15,7 @@ export default function AboutStats() {
             {aboutStats.map((stat, i) => (
               <ScrollReveal key={stat.label} from={{ y: 40, opacity: 0 }} to={{ y: 0, opacity: 1 }} start="top 90%" end="top 50%">
                 <div className={`${i > 0 ? "border-l border-ink-on-red/10" : ""} group`} style={{ textAlign: "center", padding: "clamp(48px, 6vw, 80px) 0" }}>
-                  <p className="font-serif font-light text-ink-on-red leading-none group-hover:text-white transition-colors duration-300" style={{ fontSize: "clamp(2.8rem, 6vw, 4.5rem)", marginBottom: "16px" }}>
+                  <p className="font-serif font-light text-ink-on-red leading-none group-hover:text-white transition-colors duration-300" style={{ fontSize: "clamp(2rem, 6vw, 4.5rem)", marginBottom: "16px" }}>
                     {stat.prefix && <span className="text-white/80" style={{ fontSize: "55%" }}>{stat.prefix}</span>}
                     <CountUp target={stat.value} suffix={stat.suffix} />
                   </p>

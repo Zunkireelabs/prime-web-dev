@@ -40,7 +40,7 @@ export default function AboutCertifications() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-2" style={{ gap: "24px" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: "24px" }}>
               {certifications.map((cert, i) => {
                 const Icon = certIconMap[cert.icon];
                 return (

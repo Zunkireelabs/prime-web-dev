@@ -537,7 +537,7 @@ export default function AwardsPage() {
 
                           <div className="gold-divider" style={{ marginBottom: "24px" }} />
 
-                          <div className="grid grid-cols-2" style={{ columnGap: "32px", rowGap: "16px" }}>
+                          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ columnGap: "32px", rowGap: "16px" }}>
                             <div>
                               <p className="text-[0.55rem] font-medium tracking-[0.2em] uppercase text-ink-muted" style={{ marginBottom: "4px" }}>
                                 Issuing Body
