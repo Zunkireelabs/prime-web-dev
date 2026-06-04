@@ -154,7 +154,7 @@ export default function FindBySpace() {
                       {space.subtitle}
                     </p>
                     <a
-                      href={`/products?search=${encodeURIComponent(space.name)}`}
+                      href={`/products?space=${encodeURIComponent(space.name)}`}
                       className="inline-flex items-center self-start text-[0.65rem] font-semibold tracking-[0.18em] uppercase text-white hover:text-accent-light transition-colors duration-300"
                       style={{
                         gap: "10px",
@@ -245,7 +245,7 @@ export default function FindBySpace() {
           </div>
 
           <a
-            href={`/products?search=${encodeURIComponent(spaces[mobileIndex].name)}`}
+            href={`/products?space=${encodeURIComponent(spaces[mobileIndex].name)}`}
             className="inline-flex items-center self-start text-[0.65rem] font-semibold tracking-[0.18em] uppercase text-white hover:text-accent-light transition-colors duration-300"
             style={{
               gap: "10px",

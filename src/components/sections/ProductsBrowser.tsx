@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { allProducts } from "@/data/catalog";
+import type { CatalogProduct } from "@/data/catalog/types";
 import ProductsFilterSidebar from "./ProductsFilterSidebar";
 import ProductsGrid from "./ProductsGrid";
 
@@ -16,12 +17,27 @@ export interface ProductFilters {
   application: string[];
   series: string[];
   outdoor: boolean;
+  space: string;
   search: string;
   sort: SortKey;
   page: number;
 }
 
-export type FilterKey = Exclude<keyof ProductFilters, "search" | "sort" | "page" | "outdoor">;
+export type FilterKey = Exclude<keyof ProductFilters, "search" | "sort" | "page" | "outdoor" | "space">;
+
+// Maps an "Explore By Room" space to the catalogue tiles that suit it.
+const isFloor = (p: CatalogProduct) => p.application === "Floor" || p.application === "Wall & Floor";
+const isWall = (p: CatalogProduct) => p.application === "Wall" || p.application === "Wall & Floor";
+const isGlossy = (p: CatalogProduct) => p.finish === "Glossy" || p.finish === "High Gloss";
+
+const SPACE_FILTERS: Record<string, (p: CatalogProduct) => boolean> = {
+  "Living Room": (p) => isFloor(p) && isGlossy(p),
+  Bathroom: (p) => isWall(p),
+  Kitchen: (p) => isWall(p) && isGlossy(p),
+  Bedroom: (p) => isFloor(p) && p.finish === "Matt",
+  Outdoor: (p) => !!p.outdoor,
+  Commercial: (p) => p.category === "Vitrified",
+};
 
 const DEFAULT_SIZE = "600×1200 mm";
 
@@ -33,6 +49,7 @@ const EMPTY_FILTERS: ProductFilters = {
   application: [],
   series: [],
   outdoor: false,
+  space: "",
   search: "",
   sort: "name-asc",
   page: 1,
@@ -77,6 +94,7 @@ export default function ProductsBrowser() {
       application: parseMulti(searchParams.get("application")),
       series: parseMulti(searchParams.get("series")),
       outdoor: searchParams.get("outdoor") === "1",
+      space: searchParams.get("space") ?? "",
       search: searchParams.get("search") ?? "",
       sort: isSortKey(sort) ? sort : "name-asc",
       page: parsePage(searchParams.get("page")),
@@ -93,6 +111,7 @@ export default function ProductsBrowser() {
       if (filters[k].length > 0) params.set(k, filters[k].join(","));
     });
     if (filters.outdoor) params.set("outdoor", "1");
+    if (filters.space) params.set("space", filters.space);
     if (filters.search.trim()) params.set("search", filters.search.trim());
     if (filters.sort !== "name-asc") params.set("sort", filters.sort);
     if (filters.page > 1) params.set("page", String(filters.page));
@@ -136,6 +155,7 @@ export default function ProductsBrowser() {
   const filteredWithoutSize = useMemo(() => {
     let r = allProducts.filter((p) => p.application !== "Art Panel");
     if (filters.outdoor) r = r.filter((p) => p.outdoor);
+    if (filters.space && SPACE_FILTERS[filters.space]) r = r.filter(SPACE_FILTERS[filters.space]);
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));
     if (filters.finish.length) r = r.filter((p) => filters.finish.includes(p.finish));
@@ -241,7 +261,7 @@ export default function ProductsBrowser() {
   const activeCount = MULTI_KEYS.reduce((sum, k) => {
     if (k === "size" && isDefaultSize) return sum;
     return sum + filters[k].length;
-  }, 0) + (filters.search ? 1 : 0) + (filters.outdoor ? 1 : 0);
+  }, 0) + (filters.search ? 1 : 0) + (filters.outdoor ? 1 : 0) + (filters.space ? 1 : 0);
 
   return (
     <section
