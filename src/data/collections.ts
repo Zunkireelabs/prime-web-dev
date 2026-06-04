@@ -24,12 +24,6 @@ export const collections: Collection[] = [
 
 export const productCategories: ProductCategory[] = [
   {
-    label: "Premium",
-    name: "Porcelain",
-    description: "Unmatched elegance with near-zero water absorption. Crafted for modern living spaces and commercial environments where beauty meets endurance.",
-    image: "/images/products/porcelain.jpg",
-  },
-  {
     label: "Versatile",
     name: "Ceramic",
     description: "The foundation of timeless design. Available in an extensive palette of colours, patterns, and textures — perfect for walls and creative accents.",
