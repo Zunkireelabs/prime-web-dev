@@ -134,10 +134,10 @@ const ALLOWED_SPACES = new Set([
 ]);
 
 const SIZE_TO_CATALOG: Record<string, string> = {
-  "300\u00d7300 mm": "floor-300x300",
+  "300\u00d7300 mm": "wall-300x450",
   "300\u00d7450 mm": "wall-300x450",
   "300\u00d7600 mm": "wall-300x600",
-  "400\u00d7400 mm": "vitrified-400x400",
+  "400\u00d7400 mm": "vitrified-600x600",
   "600\u00d7600 mm": "vitrified-600x600",
   "600\u00d71200 mm": "eleganz-600x1200",
 };
