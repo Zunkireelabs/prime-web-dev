@@ -1,15 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ArrowLeft, Download } from "lucide-react";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
 import { catalogEntries } from "@/data/catalogs";
+import catalogPages from "@/data/catalog-pages.json";
 
 const catalogBySlug = new Map(catalogEntries.map((c) => [c.slug, c]));
+const pageCounts = catalogPages as Record<string, number>;
+
+const CatalogFlipbook = dynamic(() => import("./CatalogFlipbook"), { ssr: false });
 
 export default function CatalogViewer({ slug }: { slug: string }) {
   const catalog = catalogBySlug.get(slug);
+  const pages = pageCounts[slug] ?? 0;
 
   if (!catalog) {
     return (
@@ -107,42 +113,65 @@ export default function CatalogViewer({ slug }: { slug: string }) {
           />
         </div>
 
-        {/* Download page */}
-        <div
-          className="flex items-center justify-center"
-          style={{ height: "calc(100vh - 130px)" }}
-        >
-          <div className="text-center" style={{ maxWidth: "420px" }}>
-            <div
-              className="mx-auto flex items-center justify-center"
-              style={{
-                width: "64px",
-                height: "64px",
-                borderRadius: "50%",
-                background: "rgba(181,138,82,0.1)",
-                border: "1px solid rgba(181,138,82,0.2)",
-                marginBottom: "24px",
-              }}
+        {/* Flipbook — when pre-rendered pages exist */}
+        {pages > 0 ? (
+          <CatalogFlipbook slug={slug} pages={pages} name={catalog.name} />
+        ) : (
+        /* Inline PDF viewer — when no pre-rendered flipbook pages exist */
+        <div style={{ padding: "clamp(16px, 3vw, 40px) var(--spacing-gutter)" }}>
+          <div
+            className="mx-auto overflow-hidden"
+            style={{
+              maxWidth: "1100px",
+              height: "calc(100vh - 200px)",
+              minHeight: "480px",
+              borderRadius: "6px",
+              border: "1px solid rgba(181,138,82,0.18)",
+              background: "rgba(0,0,0,0.25)",
+            }}
+          >
+            <object
+              data={`${catalog.pdf}#view=FitH`}
+              type="application/pdf"
+              style={{ width: "100%", height: "100%" }}
             >
-              <Download size={24} className="text-accent" />
-            </div>
-            <p className="font-serif font-light text-ink-on-dark" style={{ fontSize: "1.3rem", marginBottom: "12px" }}>
-              {catalog.name}
-            </p>
-            <p className="text-[0.8rem] text-ink-on-dark-muted" style={{ marginBottom: "32px", lineHeight: 1.7 }}>
-              Download the full catalog PDF to browse all designs, room scenes, and technical specifications.
-            </p>
-            <a
-              href={catalog.pdf}
-              download
-              className="inline-flex items-center text-[0.65rem] font-semibold tracking-[0.16em] uppercase bg-accent text-white hover:bg-accent-hover transition-colors duration-300"
-              style={{ gap: "10px", padding: "14px 32px", borderRadius: "4px" }}
-            >
-              <Download size={14} />
-              Download Catalogue PDF
-            </a>
+              {/* Fallback for browsers that can't embed PDFs inline */}
+              <div className="flex items-center justify-center" style={{ height: "100%" }}>
+                <div className="text-center" style={{ maxWidth: "420px" }}>
+                  <div
+                    className="mx-auto flex items-center justify-center"
+                    style={{
+                      width: "64px",
+                      height: "64px",
+                      borderRadius: "50%",
+                      background: "rgba(181,138,82,0.1)",
+                      border: "1px solid rgba(181,138,82,0.2)",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    <Download size={24} className="text-accent" />
+                  </div>
+                  <p className="font-serif font-light text-ink-on-dark" style={{ fontSize: "1.3rem", marginBottom: "12px" }}>
+                    {catalog.name}
+                  </p>
+                  <p className="text-[0.8rem] text-ink-on-dark-muted" style={{ marginBottom: "32px", lineHeight: 1.7 }}>
+                    Your browser can&apos;t display this catalogue inline. Download the full PDF to browse all designs, room scenes, and technical specifications.
+                  </p>
+                  <a
+                    href={catalog.pdf}
+                    download
+                    className="inline-flex items-center text-[0.65rem] font-semibold tracking-[0.16em] uppercase bg-accent text-white hover:bg-accent-hover transition-colors duration-300"
+                    style={{ gap: "10px", padding: "14px 32px", borderRadius: "4px" }}
+                  >
+                    <Download size={14} />
+                    Download Catalogue PDF
+                  </a>
+                </div>
+              </div>
+            </object>
           </div>
         </div>
+        )}
       </main>
     </SmoothScroll>
   );
