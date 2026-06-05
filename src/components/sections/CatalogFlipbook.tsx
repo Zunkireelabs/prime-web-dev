@@ -40,7 +40,25 @@ export default function CatalogFlipbook({ slug, pages, name }: Props) {
       className="flex flex-col items-center w-full"
       style={{ padding: "clamp(16px, 3vw, 40px) var(--spacing-gutter)" }}
     >
-      <div className="w-full" style={{ maxWidth: "1100px" }}>
+      <div className="w-full relative" style={{ maxWidth: "1100px" }}>
+        {/* Spine shadow — reads the center as a magazine binding instead of a gap.
+            Desktop two-page view only; hidden on mobile single-page (usePortrait). */}
+        <div
+          aria-hidden
+          className="hidden md:block"
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: "50%",
+            width: "150px",
+            transform: "translateX(-50%)",
+            pointerEvents: "none",
+            zIndex: 5,
+            background:
+              "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.07) 38%, rgba(0,0,0,0.18) 50%, rgba(0,0,0,0.07) 62%, rgba(0,0,0,0) 100%)",
+          }}
+        />
         <HTMLFlipBook
           ref={bookRef}
           width={BASE_WIDTH}
