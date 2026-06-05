@@ -141,13 +141,19 @@ export default function ProductsBrowser() {
   // ── Available options (scoped to current size so irrelevant options are hidden) ──
   const options = useMemo(() => {
     const sorted = <T extends string>(arr: T[]): T[] => [...new Set(arr)].sort();
+    // Series is hand-typed in Studio, so collapse casing variants ("DRIVEWAY SERIES" vs "Driveway Series").
+    const sortedCI = (arr: string[]): string[] => {
+      const seen = new Map<string, string>();
+      for (const v of arr) if (!seen.has(v.toLowerCase())) seen.set(v.toLowerCase(), v);
+      return [...seen.values()].sort();
+    };
     return {
       category: sorted(productsInCurrentSize.map((p) => p.category)),
       collection: sorted(productsInCurrentSize.map((p) => p.collection).filter((c): c is string => !!c)),
       size: allSizes,
       finish: sorted(productsInCurrentSize.map((p) => p.finish)),
       application: sorted(productsInCurrentSize.map((p) => p.application)),
-      series: sorted(productsInCurrentSize.map((p) => p.series)),
+      series: sortedCI(productsInCurrentSize.map((p) => p.series)),
     };
   }, [productsInCurrentSize, allSizes]);
 
@@ -160,7 +166,10 @@ export default function ProductsBrowser() {
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));
     if (filters.finish.length) r = r.filter((p) => filters.finish.includes(p.finish));
     if (filters.application.length) r = r.filter((p) => filters.application.includes(p.application));
-    if (filters.series.length) r = r.filter((p) => filters.series.includes(p.series));
+    if (filters.series.length) {
+      const sel = new Set(filters.series.map((s) => s.toLowerCase()));
+      r = r.filter((p) => sel.has(p.series.toLowerCase()));
+    }
     if (filters.search.trim()) {
       const q = filters.search.toLowerCase();
       r = r.filter((p) =>
