@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { X, ArrowRight, Loader2 } from "lucide-react";
+import { submitQuoteLead } from "@/lib/leads";
 
 const PROJECT_TYPES = ["Home", "Commercial", "Hotel", "Office", "Other"];
 const TILE_SIZES = ["300×300 mm", "300×450 mm", "300×600 mm", "400×400 mm", "600×600 mm", "600×1200 mm"];
-
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxuRHRiJ9b5IjfbD_lqzAboGQ0Gb1e9LUTuzsauzWVLu_kbRLFaO1M6oC-hGR8GjucZtg/exec";
 
 interface QuoteFormModalProps {
   open: boolean;
@@ -26,6 +25,7 @@ export default function QuoteFormModal({ open, onClose, prefill }: QuoteFormModa
   const [tileSize, setTileSize] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Apply prefill when modal opens
   useEffect(() => {
@@ -50,42 +50,25 @@ export default function QuoteFormModal({ open, onClose, prefill }: QuoteFormModa
   }, [open, onClose]);
 
   const handleSubmit = async () => {
-    if (!name.trim() || !phone.trim() || !projectType) return;
+    if (!name.trim() || !phone.trim() || !email.trim() || !projectType) return;
     setSubmitting(true);
+    setErrorMsg(null);
 
-    // Save to Google Sheets
-    try {
-      await fetch(SHEET_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          name,
-          phone,
-          email,
-          projectType,
-          tileSize,
-          message,
-        }),
-      });
-    } catch {
-      // Don't block WhatsApp if sheet save fails
+    const result = await submitQuoteLead({
+      name,
+      phone,
+      email,
+      projectType,
+      tileSize,
+      message,
+    });
+
+    if (!result.ok) {
+      setSubmitting(false);
+      setErrorMsg("Couldn't send your request. Please try again or call us directly.");
+      return;
     }
 
-    // Open WhatsApp
-    const lines = [
-      `Hi, I'd like to request a quote for tiles.`,
-      ``,
-      `Name: ${name}`,
-      `Phone: ${phone}`,
-      email ? `Email: ${email}` : null,
-      `Project: ${projectType}`,
-      tileSize ? `Tile Size: ${tileSize}` : null,
-      message ? `\nMessage: ${message}` : null,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const waUrl = `https://wa.me/9779802310000?text=${encodeURIComponent(lines)}`;
-    window.open(waUrl, "_blank");
     setSubmitting(false);
     onClose();
     // Reset form
@@ -99,7 +82,7 @@ export default function QuoteFormModal({ open, onClose, prefill }: QuoteFormModa
 
   if (!open) return null;
 
-  const isValid = name.trim() && phone.trim() && projectType && !submitting;
+  const isValid = name.trim() && phone.trim() && email.trim() && projectType && !submitting;
 
   return (
     <div className="fixed inset-0 z-[70]" role="dialog" aria-modal="true" aria-label="Request a Quote">
@@ -170,7 +153,7 @@ export default function QuoteFormModal({ open, onClose, prefill }: QuoteFormModa
             marginBottom: "32px",
           }}
         >
-          Fill in your details and we&apos;ll get back to you shortly via WhatsApp.
+          Share your details and our team will get back to you shortly.
         </p>
 
         {/* Form */}
@@ -235,7 +218,7 @@ export default function QuoteFormModal({ open, onClose, prefill }: QuoteFormModa
               className="text-[0.58rem] font-medium tracking-[0.14em] uppercase text-ink-muted block"
               style={{ marginBottom: "8px" }}
             >
-              Email
+              Email <span className="text-accent">*</span>
             </label>
             <input
               type="email"
@@ -344,6 +327,22 @@ export default function QuoteFormModal({ open, onClose, prefill }: QuoteFormModa
             />
           </div>
 
+          {errorMsg && (
+            <div
+              role="alert"
+              className="text-accent"
+              style={{
+                fontSize: "0.8rem",
+                padding: "10px 14px",
+                background: "rgba(150,112,76,0.08)",
+                border: "1px solid rgba(150,112,76,0.25)",
+                borderRadius: "8px",
+              }}
+            >
+              {errorMsg}
+            </div>
+          )}
+
           {/* Submit */}
           <button
             type="button"
@@ -363,7 +362,7 @@ export default function QuoteFormModal({ open, onClose, prefill }: QuoteFormModa
               </>
             ) : (
               <>
-                Send via WhatsApp
+                Request Quote
                 <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
               </>
             )}
