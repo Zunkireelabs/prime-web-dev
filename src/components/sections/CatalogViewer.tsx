@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowLeft, Download } from "lucide-react";
@@ -7,6 +8,8 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import Header from "@/components/layout/Header";
 import { catalogEntries } from "@/data/catalogs";
 import catalogPages from "@/data/catalog-pages.json";
+import CatalogDownloadModal from "@/components/ui/CatalogDownloadModal";
+import { hasCapturedCatalogLead, downloadFile } from "@/lib/leads";
 
 const catalogBySlug = new Map(catalogEntries.map((c) => [c.slug, c]));
 const pageCounts = catalogPages as Record<string, number>;
@@ -16,6 +19,7 @@ const CatalogFlipbook = dynamic(() => import("./CatalogFlipbook"), { ssr: false 
 export default function CatalogViewer({ slug }: { slug: string }) {
   const catalog = catalogBySlug.get(slug);
   const pages = pageCounts[slug] ?? 0;
+  const [gateOpen, setGateOpen] = useState(false);
 
   if (!catalog) {
     return (
@@ -46,6 +50,16 @@ export default function CatalogViewer({ slug }: { slug: string }) {
       </SmoothScroll>
     );
   }
+
+  const handleDownload = () => {
+    if (!catalog.pdf) return;
+    // Returning visitors who already filled the form skip the gate.
+    if (hasCapturedCatalogLead()) {
+      downloadFile(catalog.pdf);
+      return;
+    }
+    setGateOpen(true);
+  };
 
   return (
     <SmoothScroll>
@@ -88,10 +102,10 @@ export default function CatalogViewer({ slug }: { slug: string }) {
                 {catalog.name}
               </h1>
             </div>
-            <a
-              href={catalog.pdf}
-              download
-              className="flex items-center text-[0.6rem] font-medium tracking-[0.12em] uppercase text-accent-light hover:text-accent"
+            <button
+              type="button"
+              onClick={handleDownload}
+              className="flex items-center text-[0.6rem] font-medium tracking-[0.12em] uppercase text-accent-light hover:text-accent cursor-pointer"
               style={{
                 gap: "8px",
                 padding: "8px 20px",
@@ -102,7 +116,7 @@ export default function CatalogViewer({ slug }: { slug: string }) {
             >
               <Download size={13} />
               Download
-            </a>
+            </button>
           </div>
           <div
             style={{
@@ -157,21 +171,28 @@ export default function CatalogViewer({ slug }: { slug: string }) {
                   <p className="text-[0.8rem] text-ink-on-dark-muted" style={{ marginBottom: "32px", lineHeight: 1.7 }}>
                     Your browser can&apos;t display this catalogue inline. Download the full PDF to browse all designs, room scenes, and technical specifications.
                   </p>
-                  <a
-                    href={catalog.pdf}
-                    download
-                    className="inline-flex items-center text-[0.65rem] font-semibold tracking-[0.16em] uppercase bg-accent text-white hover:bg-accent-hover transition-colors duration-300"
+                  <button
+                    type="button"
+                    onClick={handleDownload}
+                    className="inline-flex items-center text-[0.65rem] font-semibold tracking-[0.16em] uppercase bg-accent text-white hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
                     style={{ gap: "10px", padding: "14px 32px", borderRadius: "4px" }}
                   >
                     <Download size={14} />
                     Download Catalogue PDF
-                  </a>
+                  </button>
                 </div>
               </div>
             </object>
           </div>
         </div>
         )}
+
+        <CatalogDownloadModal
+          open={gateOpen}
+          onClose={() => setGateOpen(false)}
+          catalogName={catalog.name}
+          pdfUrl={catalog.pdf ?? ""}
+        />
       </main>
     </SmoothScroll>
   );

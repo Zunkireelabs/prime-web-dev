@@ -1,19 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import FadeIn from "@/components/animations/FadeIn";
 import { ArrowRight, Download, Layers, Weight, Ruler } from "lucide-react";
 import { catalogEntries } from "@/data/catalogs";
 import type { CatalogEntry } from "@/data/types";
 import { tileSpecsBySize } from "@/data/catalog/tile-specs";
+import CatalogDownloadModal from "@/components/ui/CatalogDownloadModal";
+import { hasCapturedCatalogLead, downloadFile } from "@/lib/leads";
 
 function CatalogCard({
   cat,
   index,
   onView,
+  onDownload,
 }: {
   cat: CatalogEntry;
   index: number;
   onView?: (filterValue: string) => void;
+  onDownload?: (cat: CatalogEntry) => void;
 }) {
   const isComingSoon = !cat.pdf;
 
@@ -123,14 +128,14 @@ function CatalogCard({
                 >
                   View Specs <ArrowRight size={12} />
                 </a>
-                <a
-                  href={cat.pdf}
-                  download
-                  className="link-arrow text-ink-muted"
+                <button
+                  type="button"
+                  onClick={() => onDownload?.(cat)}
+                  className="link-arrow text-ink-muted cursor-pointer"
                 >
                   <Download size={12} />
                   Download PDF
-                </a>
+                </button>
               </>
             ) : (
               <span className="text-[0.65rem] font-medium tracking-[0.12em] uppercase text-ink-muted">
@@ -153,6 +158,20 @@ export default function CatalogShowcase({
   const secondary = catalogEntries[1];
   const middleRow = catalogEntries.slice(2, 5);
   const bottomRow = catalogEntries.slice(5);
+
+  const [gateOpen, setGateOpen] = useState(false);
+  const [pending, setPending] = useState<CatalogEntry | null>(null);
+
+  const handleDownload = (cat: CatalogEntry) => {
+    if (!cat.pdf) return;
+    // Returning visitors who already filled the form skip the gate.
+    if (hasCapturedCatalogLead()) {
+      downloadFile(cat.pdf);
+      return;
+    }
+    setPending(cat);
+    setGateOpen(true);
+  };
 
   return (
     <section id="catalog-showcase" className="bg-surface" style={{ paddingTop: "clamp(56px, 6vw, 80px)", paddingBottom: "clamp(80px, 10vw, 140px)" }}>
@@ -179,17 +198,17 @@ export default function CatalogShowcase({
         {/* Row 1: Featured (2-col span) + Secondary (1-col) */}
         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)", marginBottom: "clamp(24px, 3vw, 32px)" }}>
           <div className="md:col-span-2">
-            <CatalogCard cat={featured} index={0} onView={onViewCollection} />
+            <CatalogCard cat={featured} index={0} onView={onViewCollection} onDownload={handleDownload} />
           </div>
           <div>
-            <CatalogCard cat={secondary} index={1} onView={onViewCollection} />
+            <CatalogCard cat={secondary} index={1} onView={onViewCollection} onDownload={handleDownload} />
           </div>
         </div>
 
         {/* Row 2: 3 cards */}
         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)", marginBottom: bottomRow.length > 0 ? "clamp(24px, 3vw, 32px)" : undefined }}>
           {middleRow.map((cat, i) => (
-            <CatalogCard key={cat.name} cat={cat} index={i + 2} onView={onViewCollection} />
+            <CatalogCard key={cat.name} cat={cat} index={i + 2} onView={onViewCollection} onDownload={handleDownload} />
           ))}
         </div>
 
@@ -197,11 +216,18 @@ export default function CatalogShowcase({
         {bottomRow.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "clamp(24px, 3vw, 32px)" }}>
             {bottomRow.map((cat, i) => (
-              <CatalogCard key={cat.name} cat={cat} index={i + 5} onView={onViewCollection} />
+              <CatalogCard key={cat.name} cat={cat} index={i + 5} onView={onViewCollection} onDownload={handleDownload} />
             ))}
           </div>
         )}
       </div>
+
+      <CatalogDownloadModal
+        open={gateOpen}
+        onClose={() => setGateOpen(false)}
+        catalogName={pending?.name ?? ""}
+        pdfUrl={pending?.pdf ?? ""}
+      />
     </section>
   );
 }
