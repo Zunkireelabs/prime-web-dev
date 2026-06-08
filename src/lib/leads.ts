@@ -80,6 +80,8 @@ export interface CatalogLead {
   email: string;
   /** Which catalogue the visitor requested — hidden from the user, surfaced in the CRM. */
   catalog: string;
+  /** Absolute URL to the catalogue PDF — hidden from the user, surfaced in the CRM. */
+  catalogLink: string;
 }
 
 export async function submitCatalogLead(lead: CatalogLead): Promise<SubmitResult> {
@@ -91,33 +93,10 @@ export async function submitCatalogLead(lead: CatalogLead): Promise<SubmitResult
     phone: lead.phone.trim(),
     custom_fields: {
       catalog: lead.catalog,
+      catalog_link: lead.catalogLink,
       source: "catalog-download",
     },
   });
-}
-
-// --- Catalogue download gate helpers -------------------------------------
-
-const CATALOG_LEAD_KEY = "prime_catalog_lead_captured";
-
-/** True once this browser has submitted the catalogue form, so we don't re-gate. */
-export function hasCapturedCatalogLead(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    return window.localStorage.getItem(CATALOG_LEAD_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
-/** Remember that this browser submitted the catalogue form. */
-export function markCatalogLeadCaptured(): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(CATALOG_LEAD_KEY, "1");
-  } catch {
-    // storage disabled / private mode — non-fatal, user just gets re-gated next time
-  }
 }
 
 /** Trigger a browser download of a same-origin file. */

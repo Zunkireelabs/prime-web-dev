@@ -9,7 +9,6 @@ import Header from "@/components/layout/Header";
 import { catalogEntries } from "@/data/catalogs";
 import catalogPages from "@/data/catalog-pages.json";
 import CatalogDownloadModal from "@/components/ui/CatalogDownloadModal";
-import { hasCapturedCatalogLead, downloadFile } from "@/lib/leads";
 
 const catalogBySlug = new Map(catalogEntries.map((c) => [c.slug, c]));
 const pageCounts = catalogPages as Record<string, number>;
@@ -53,11 +52,7 @@ export default function CatalogViewer({ slug }: { slug: string }) {
 
   const handleDownload = () => {
     if (!catalog.pdf) return;
-    // Returning visitors who already filled the form skip the gate.
-    if (hasCapturedCatalogLead()) {
-      downloadFile(catalog.pdf);
-      return;
-    }
+    // Form is shown on every download — no remembering.
     setGateOpen(true);
   };
 

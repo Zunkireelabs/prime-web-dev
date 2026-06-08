@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, Download, Loader2 } from "lucide-react";
-import { submitCatalogLead, markCatalogLeadCaptured, downloadFile } from "@/lib/leads";
+import { submitCatalogLead, downloadFile } from "@/lib/leads";
 
 interface CatalogDownloadModalProps {
   open: boolean;
@@ -53,7 +53,9 @@ export default function CatalogDownloadModal({
     setSubmitting(true);
     setErrorMsg(null);
 
-    const result = await submitCatalogLead({ name, phone, email, catalog: catalogName });
+    // Absolute URL to the PDF so the CRM lead carries a clickable catalogue link.
+    const catalogLink = pdfUrl ? new URL(pdfUrl, window.location.origin).href : "";
+    const result = await submitCatalogLead({ name, phone, email, catalog: catalogName, catalogLink });
 
     if (!result.ok) {
       setSubmitting(false);
@@ -61,8 +63,7 @@ export default function CatalogDownloadModal({
       return;
     }
 
-    // Remember this visitor so future downloads skip the form, then deliver the PDF.
-    markCatalogLeadCaptured();
+    // Deliver the PDF. The form is shown on every download (no remembering).
     downloadFile(pdfUrl);
 
     setSubmitting(false);

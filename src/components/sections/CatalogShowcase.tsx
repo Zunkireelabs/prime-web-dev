@@ -7,7 +7,6 @@ import { catalogEntries } from "@/data/catalogs";
 import type { CatalogEntry } from "@/data/types";
 import { tileSpecsBySize } from "@/data/catalog/tile-specs";
 import CatalogDownloadModal from "@/components/ui/CatalogDownloadModal";
-import { hasCapturedCatalogLead, downloadFile } from "@/lib/leads";
 
 function CatalogCard({
   cat,
@@ -164,11 +163,7 @@ export default function CatalogShowcase({
 
   const handleDownload = (cat: CatalogEntry) => {
     if (!cat.pdf) return;
-    // Returning visitors who already filled the form skip the gate.
-    if (hasCapturedCatalogLead()) {
-      downloadFile(cat.pdf);
-      return;
-    }
+    // Form is shown on every download — no remembering.
     setPending(cat);
     setGateOpen(true);
   };
