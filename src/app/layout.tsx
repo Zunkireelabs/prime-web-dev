@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import Providers from "@/components/layout/Providers";
 import "./globals.css";
@@ -113,6 +114,12 @@ export default function RootLayout({
           Skip to content
         </a>
         <Providers>{children}</Providers>
+        <Script
+          src="https://zunkiree-search-v1.vercel.app/zunkiree-widget.iife.js"
+          strategy="afterInteractive"
+          data-site-id="primeceramics"
+          data-api-url="https://api.zunkireelabs.com"
+        />
       </body>
     </html>
   );
