@@ -77,7 +77,9 @@ try {
   // JSON not yet generated — use local data
 }
 
+// Sanity's uploaded PDFs are broken git-lfs pointers, so always serve the real
+// PDF bundled in /public/catalogs/<slug>.pdf regardless of the CMS file URL.
 export const catalogEntries: CatalogEntry[] =
   sanityCatalogs && sanityCatalogs.length > 0
-    ? sanityCatalogs
+    ? sanityCatalogs.map((c) => ({ ...c, pdf: `/catalogs/${c.slug}.pdf` }))
     : localCatalogEntries;
