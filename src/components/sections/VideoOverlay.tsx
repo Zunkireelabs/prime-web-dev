@@ -9,18 +9,60 @@ export default function VideoOverlay() {
   const [dismissed, setDismissed] = useState(false);
   const [muted, setMuted] = useState(true);
   const [loaded, setLoaded] = useState(false);
+  // Tracks an explicit user mute so we never auto-unmute against their wish.
+  const userMutedRef = useRef(false);
+
+  // Turn sound on (idempotent). Browsers may block sound-on-load; if so we
+  // cleanly fall back to muted playback and stay silent until allowed.
+  const enableSound = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || userMutedRef.current) return;
+    video.muted = false;
+    video.play()
+      .then(() => setMuted(false))
+      .catch(() => {
+        video.muted = true;
+        setMuted(true);
+        video.play().catch(() => {});
+      });
+  }, []);
+
+  const muteSound = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    setMuted(true);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
       // If the browser already loaded the video before hydration, mark as loaded
       if (video.readyState >= 2) setLoaded(true);
-      video.play().catch(() => {});
+      // Audible by default — attempt unmuted playback right away.
+      enableSound();
     }
+    // Fallback: if sound-on-load was blocked, unmute on the first user gesture
+    // (clicks/taps/keys — NOT scroll, since scrolling away should mute instead).
+    const onInteract = () => {
+      enableSound();
+      cleanupInteract();
+    };
+    const cleanupInteract = () => {
+      window.removeEventListener("pointerdown", onInteract);
+      window.removeEventListener("keydown", onInteract);
+      window.removeEventListener("touchstart", onInteract);
+    };
+    window.addEventListener("pointerdown", onInteract);
+    window.addEventListener("keydown", onInteract);
+    window.addEventListener("touchstart", onInteract);
+
     window.dispatchEvent(new CustomEvent("video-ad", { detail: { visible: true } }));
     return () => {
+      cleanupInteract();
       window.dispatchEvent(new CustomEvent("video-ad", { detail: { visible: false } }));
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -29,14 +71,18 @@ export default function VideoOverlay() {
     if (!video || !section) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) video.play().catch(() => {});
-        else video.pause();
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+          enableSound(); // back in view → restore sound (unless user muted)
+        } else {
+          muteSound(); // another section is showing → mute
+        }
       },
-      { threshold: 0.1 }
+      { threshold: 0.5 }
     );
     observer.observe(section);
     return () => observer.disconnect();
-  }, []);
+  }, [enableSound, muteSound]);
 
   useEffect(() => {
     const handler = () => dismiss();
@@ -70,7 +116,10 @@ export default function VideoOverlay() {
   const toggleSound = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (muted) {
+    // Read the live element state so we stay correct even if the first-gesture
+    // fallback already unmuted on this same interaction.
+    if (video.muted) {
+      userMutedRef.current = false; // user opted back into sound
       video.muted = false;
       video.volume = 0;
       let vol = 0;
@@ -81,6 +130,7 @@ export default function VideoOverlay() {
       }, 30);
       video.play().then(() => setMuted(false)).catch(() => {});
     } else {
+      userMutedRef.current = true; // remember explicit mute → don't auto-unmute
       let vol = video.volume;
       const fade = setInterval(() => {
         vol -= 0.1;
@@ -92,7 +142,7 @@ export default function VideoOverlay() {
         video.volume = Math.max(0, vol);
       }, 30);
     }
-  }, [muted]);
+  }, []);
 
   const scrollDown = () => {
     const heroEl = document.getElementById("hero-main");
