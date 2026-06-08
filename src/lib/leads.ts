@@ -98,14 +98,3 @@ export async function submitCatalogLead(lead: CatalogLead): Promise<SubmitResult
     },
   });
 }
-
-/** Trigger a browser download of a same-origin file. */
-export function downloadFile(url: string): void {
-  if (typeof document === "undefined" || !url) return;
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
