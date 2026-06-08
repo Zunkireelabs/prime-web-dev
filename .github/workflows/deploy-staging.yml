@@ -35,6 +35,9 @@ jobs:
                grep -q 'SANITY_WEBHOOK_SECRET' .env.local \
                  && sed -i 's/SANITY_WEBHOOK_SECRET=.*/SANITY_WEBHOOK_SECRET=${{ secrets.SANITY_WEBHOOK_SECRET }}/' .env.local \
                  || echo 'SANITY_WEBHOOK_SECRET=${{ secrets.SANITY_WEBHOOK_SECRET }}' >> .env.local
+               # Ensure catalogue-download CRM endpoint exists for the build (public URL; key reuses NEXT_PUBLIC_CRM_API_KEY)
+               grep -q 'NEXT_PUBLIC_CATALOG_CRM_ENDPOINT' .env.local \
+                 || echo 'NEXT_PUBLIC_CATALOG_CRM_ENDPOINT=https://lead-crm.zunkireelabs.com/api/public/submit/prime-ceramics/download-catalogue' >> .env.local
                ./deploy-staging.sh"
 
       - name: Health check
