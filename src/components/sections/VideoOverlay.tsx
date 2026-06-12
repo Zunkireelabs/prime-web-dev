@@ -43,7 +43,6 @@ export default function VideoOverlay() {
 
     window.dispatchEvent(new CustomEvent("video-ad", { detail: { visible: true } }));
     return () => {
-      cleanupInteract();
       window.dispatchEvent(new CustomEvent("video-ad", { detail: { visible: false } }));
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
