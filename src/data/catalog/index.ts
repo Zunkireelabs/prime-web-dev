@@ -44,12 +44,15 @@ try {
 }
 
 const hasSanity = !!(sanityProducts && sanityProducts.length > 0);
-const rawProducts: CatalogProduct[] = (hasSanity ? sanityProducts! : localProducts).map((p) =>
+
+const localWoodLook = localProducts.filter((p) => p.category === "Wood Look");
+const baseProducts = hasSanity ? [...sanityProducts!, ...localWoodLook] : localProducts;
+const rawProducts: CatalogProduct[] = baseProducts.map((p) =>
   OUTDOOR_SLUGS.has(p.slug) ? { ...p, outdoor: true } : p
 );
 
 export const allProducts: CatalogProduct[] = hasSanity
-  ? rawProducts.filter((p) => p.image && p.image.startsWith("http"))
+  ? rawProducts.filter((p) => p.image && (p.image.startsWith("http") || p.image.startsWith("/")))
   : rawProducts;
 
 export const allProductsIncludingHidden: CatalogProduct[] = rawProducts;

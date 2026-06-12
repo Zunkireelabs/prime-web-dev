@@ -94,30 +94,8 @@ const monochrome: CatalogProduct[] = [
 // ── WOODEN SERIES (Matt) ──
 
 const wooden: CatalogProduct[] = [
-  tile("Bright Log", "Wooden", "Matt", "Wood Look"),
-  tile("Matrix Pine", "Wooden", "Matt", "Wood Look"),
-  tile("Marble Grey", "Wooden", "Matt", "Wood Look"),
-  tile("Noughts & Crosses", "Wooden", "Matt", "Wood Look"),
-  tile("Magic Mocha", "Wooden", "Matt", "Wood Look"),
-  tile("Wooden Galaicha", "Wooden", "Matt", "Wood Look"),
-  tile("Twizel Blue", "Wooden", "Matt", "Wood Look"),
-  tile("Woody Marble", "Wooden", "Matt", "Wood Look"),
-  tile("White Oak", "Wooden", "Matt", "Wood Look"),
-  tile("Woody Bright", "Wooden", "Matt", "Wood Look"),
-  tile("Toscana Grid", "Wooden", "Matt", "Wood Look"),
-  tile("Marble Grid", "Wooden", "Matt", "Wood Look"),
-  tile("Edged Wood", "Wooden", "Matt", "Wood Look"),
-  tile("Woody Impression", "Wooden", "Matt", "Wood Look"),
-  tile("Rav Brown", "Wooden", "Matt", "Wood Look"),
-  tile("Lavish Log", "Wooden", "Matt", "Wood Look"),
-  tile("Eleganza Teak", "Wooden", "Matt", "Wood Look"),
-  tile("Serendipity Multi", "Wooden", "Matt", "Wood Look"),
-  tile("Woody Foist", "Wooden", "Matt", "Wood Look"),
-  tile("Driftwood Ash", "Wooden", "Matt", "Wood Look"),
-  tile("Serendipity", "Wooden", "Matt", "Wood Look"),
-  tile("Driftwood Classic", "Wooden", "Matt", "Wood Look"),
-  tile("Timbre Bliss", "Wooden", "Matt", "Wood Look"),
-  tile("Driftwood Teak", "Wooden", "Matt", "Wood Look"),
+  { ...tile("Bright Log", "Wooden", "Matt", "Wood Look"), image: "/images/tiles/bright-log.webp" },
+  { ...tile("Driftwood Classic", "Wooden", "Matt", "Wood Look"), image: "/images/tiles/driftwood.webp" },
 ];
 
 // ── STONE SERIES (Matt) ──
