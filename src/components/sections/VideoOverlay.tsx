@@ -39,23 +39,7 @@ export default function VideoOverlay() {
     if (video) {
       // If the browser already loaded the video before hydration, mark as loaded
       if (video.readyState >= 2) setLoaded(true);
-      // Audible by default — attempt unmuted playback right away.
-      enableSound();
     }
-    // Fallback: if sound-on-load was blocked, unmute on the first user gesture
-    // (clicks/taps/keys — NOT scroll, since scrolling away should mute instead).
-    const onInteract = () => {
-      enableSound();
-      cleanupInteract();
-    };
-    const cleanupInteract = () => {
-      window.removeEventListener("pointerdown", onInteract);
-      window.removeEventListener("keydown", onInteract);
-      window.removeEventListener("touchstart", onInteract);
-    };
-    window.addEventListener("pointerdown", onInteract);
-    window.addEventListener("keydown", onInteract);
-    window.addEventListener("touchstart", onInteract);
 
     window.dispatchEvent(new CustomEvent("video-ad", { detail: { visible: true } }));
     return () => {
@@ -73,7 +57,6 @@ export default function VideoOverlay() {
       ([entry]) => {
         if (entry.isIntersecting) {
           video.play().catch(() => {});
-          enableSound(); // back in view → restore sound (unless user muted)
         } else {
           muteSound(); // another section is showing → mute
         }
