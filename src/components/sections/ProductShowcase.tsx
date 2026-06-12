@@ -171,7 +171,7 @@ function StickyCard({
                 transitionDelay: "0.4s",
               }}
             >
-              <a href={`/products?category=${encodeURIComponent(item.name)}${item.name === "Outdoor" ? `&size=${encodeURIComponent("400×400 mm")}` : ""}`} className="link-arrow text-[0.7rem]">
+              <a href={item.seriesFilter ? `/products?series=${encodeURIComponent(item.seriesFilter)}` : `/products?category=${encodeURIComponent(item.name)}`} className="link-arrow text-[0.7rem]">
                 Explore {item.name} <ArrowRight size={13} />
               </a>
             </div>

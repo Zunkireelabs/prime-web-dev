@@ -95,6 +95,7 @@ export interface ProductCategory {
   name: string;
   description: string;
   image: string;
+  seriesFilter?: string;
 }
 
 // ── Browse/Filter ──

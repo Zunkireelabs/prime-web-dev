@@ -46,12 +46,14 @@ export const productCategories: ProductCategory[] = [
     name: "Wood Look",
     description: "The warmth of timber with the resilience of tile. Authentic grain textures in plank formats — no maintenance, no compromise.",
     image: "/images/products/wood-look.jpg",
+    seriesFilter: "Wooden",
   },
   {
     label: "Enduring",
     name: "Outdoor",
     description: "Anti-skid, frost-resistant, and built for Nepal\u2019s diverse climate. From patios to pool decks \u2014 surfaces that perform under every condition.",
     image: "/images/products/outdoor.jpg",
+    seriesFilter: "Patio Series",
   },
 ];
 
