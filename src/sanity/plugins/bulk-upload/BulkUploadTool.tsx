@@ -1,6 +1,5 @@
-import { useState, useCallback, useRef, useMemo } from "react";
-import { useClient, useProjectId, useDataset } from "sanity";
-import { createClient } from "@sanity/client";
+import { useState, useCallback, useRef } from "react";
+import { useClient } from "sanity";
 import * as XLSX from "xlsx";
 import {
   Card,
@@ -118,25 +117,9 @@ interface ProductEntry {
 
 // ── Component ──
 
-const SANITY_WRITE_TOKEN = "skhYPqvRE0Ppu0r3FI6iQQ0qIkRrHWEU0tyPWqMV9cdnVtyMzIFdfGzYP7mnZKJDSIFa8sgtYbpcKmhtVDgYbl4DDdVTnNQVouGv4j7XiVtEMkooc0p5gGzirNFBqjRUXcVcmXhnnT6iyOcVjB1Nxc8dZw5N5H1IyKHfVli7gLi34mqlfGXq";
-
 export function BulkUploadTool() {
-  const readClient = useClient({ apiVersion: "2026-04-01" });
-  const projectId = useProjectId();
-  const dataset = useDataset();
+  const client = useClient({ apiVersion: "2026-04-01" });
   const toast = useToast();
-
-  const client = useMemo(
-    () =>
-      createClient({
-        projectId,
-        dataset,
-        apiVersion: "2026-04-01",
-        token: SANITY_WRITE_TOKEN,
-        useCdn: false,
-      }),
-    [projectId, dataset]
-  );
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [images, setImages] = useState<Map<string, File>>(new Map());
