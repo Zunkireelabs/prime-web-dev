@@ -65,5 +65,6 @@ export interface CatalogProduct {
     rows: number;
     orientation: "horizontal" | "vertical";
   };
+  spaces?: string[];
   outdoor?: boolean;
 }

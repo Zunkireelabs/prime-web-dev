@@ -47,6 +47,7 @@ const allProductsQuery = `
     size,
     finish,
     application,
+    spaces,
     hasMatchingFloor,
     variants,
     image,
@@ -69,6 +70,7 @@ interface SanityProduct {
   size: string;
   finish: string;
   application: string;
+  spaces?: string[];
   hasMatchingFloor?: string;
   variants?: string[];
   image: any;
@@ -134,6 +136,7 @@ async function generate() {
       size: p.size,
       finish: p.finish,
       application: p.application,
+      spaces: p.spaces?.length ? p.spaces : undefined,
       hasMatchingFloor: p.hasMatchingFloor || undefined,
       variants: p.variants || undefined,
       image: imageUrl,

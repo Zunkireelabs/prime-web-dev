@@ -11,6 +11,7 @@ interface Options {
   finish: string[];
   application: string[];
   series: string[];
+  spaces: string[];
 }
 
 interface Props {
@@ -36,6 +37,7 @@ const GROUPS: Group[] = [
   { key: "finish", label: "Finish" },
   { key: "application", label: "Application" },
   { key: "series", label: "Series" },
+  { key: "spaces", label: "Spaces" },
 ];
 
 function FilterGroup({
