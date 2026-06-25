@@ -96,6 +96,7 @@ export interface ProductCategory {
   description: string;
   image: string;
   seriesFilter?: string;
+  sizeFilter?: string;
 }
 
 // ── Browse/Filter ──

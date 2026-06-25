@@ -40,6 +40,7 @@ export const productCategories: ProductCategory[] = [
     name: "Large Format",
     description: "Fewer joints, grander impact. Our large-format slabs up to 1200mm create seamless surfaces that transform any space into a visual masterpiece.",
     image: "/images/products/large-format.jpg",
+    sizeFilter: "600×1200 mm",
   },
   {
     label: "Natural",

@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { AuthenticatedImageInput } from "../components/AuthenticatedImageInput";
 
 export const tileProduct = defineType({
   name: "tileProduct",
@@ -207,6 +208,7 @@ export const tileProduct = defineType({
           title: "Alt Text",
         },
       ],
+      components: { input: AuthenticatedImageInput },
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -246,6 +248,7 @@ export const tileProduct = defineType({
               type: "image",
               title: "Image",
               options: { hotspot: true },
+              components: { input: AuthenticatedImageInput },
               validation: (rule: any) => rule.required(),
             },
             {

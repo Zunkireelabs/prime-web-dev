@@ -103,16 +103,19 @@ export default function FindBySpace() {
 
                   {/* ── Collapsed state: vertical text ── */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-[600ms]"
+                    className="absolute inset-0 transition-opacity duration-[600ms]"
                     style={{ opacity: isActive ? 0 : 1, pointerEvents: isActive ? "none" : "auto" }}
                   >
-                    {/* Number */}
-                    <span className="text-[0.5rem] font-medium tracking-[0.2em] text-accent-light" style={{ marginBottom: "12px", display: "block" }}>
+                    {/* Number pinned to top-center */}
+                    <span
+                      className="absolute left-1/2 -translate-x-1/2 text-[0.5rem] font-medium tracking-[0.2em] text-accent-light"
+                      style={{ top: "20px" }}
+                    >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    {/* Vertical name */}
+                    {/* Vertical name absolutely centered */}
                     <span
-                      className="text-sm font-serif font-light text-white/60 group-hover:text-white/90 tracking-[0.1em] transition-colors duration-300"
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-serif font-light text-white/60 group-hover:text-white/90 tracking-[0.1em] transition-colors duration-300"
                       style={{ writingMode: "vertical-lr", textOrientation: "mixed" }}
                     >
                       {space.short}
@@ -121,10 +124,14 @@ export default function FindBySpace() {
 
                   {/* ── Expanded state: full content ── */}
                   <div
-                    className="absolute inset-0 flex flex-col justify-end p-12 xl:p-16 transition-opacity duration-[600ms]"
+                    className="absolute inset-0 flex flex-col justify-end transition-opacity duration-[600ms]"
                     style={{
                       opacity: isActive ? 1 : 0,
                       pointerEvents: isActive ? "auto" : "none",
+                      paddingTop: "clamp(32px, 4vw, 64px)",
+                      paddingRight: "clamp(24px, 3vw, 48px)",
+                      paddingBottom: "clamp(80px, 11vw, 130px)",
+                      paddingLeft: "clamp(64px, 8vw, 96px)",
                     }}
                   >
                     <p className="text-[0.55rem] font-medium tracking-[0.35em] uppercase text-accent-light" style={{ marginBottom: "12px" }}>
