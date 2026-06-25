@@ -2,16 +2,11 @@ import { useCallback, useRef, useState } from "react";
 import { set, setIfMissing, unset, useClient } from "sanity";
 import type { ObjectInputProps } from "sanity";
 
-type ImageValue = {
-  _type: "image";
-  asset?: { _type: "reference"; _ref: string };
-  alt?: string;
-};
-
 // Custom image input that uses useClient() so it always has the correct auth token.
 // The built-in Sanity image input uses configContext.client (deprecated/cookie-based)
 // which returns 503 from self-hosted studios at custom domains.
-export function AuthenticatedImageInput(props: ObjectInputProps<ImageValue>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function AuthenticatedImageInput(props: ObjectInputProps<any>) {
   const client = useClient({ apiVersion: "2026-04-01" });
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
