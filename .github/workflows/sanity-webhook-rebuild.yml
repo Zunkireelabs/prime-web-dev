@@ -4,6 +4,9 @@ on:
   repository_dispatch:
     types: [sanity-content-updated]
 
+permissions:
+  contents: write
+
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
@@ -80,37 +83,14 @@ jobs:
 
       - name: Package output
         run: |
-          cd out && zip -r ../site.zip . && cd ..
+          cd out && zip -qr ../site.zip . && cd ..
+          echo "Zip size: $(du -sh site.zip | cut -f1)"
 
-      - name: Upload zip via FTP
+      - name: Publish Release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          curl --ftp-ssl --ssl-reqd \
-               -u "${{ secrets.CPANEL_FTP_USER }}:${{ secrets.CPANEL_FTP_PASS }}" \
-               -T site.zip \
-               "ftp://${{ secrets.CPANEL_FTP_HOST }}/public_html/site.zip"
-
-      - name: Extract via cPanel API
-        run: |
-          curl -sk \
-               -u "${{ secrets.CPANEL_FTP_USER }}:${{ secrets.CPANEL_FTP_PASS }}" \
-               "https://${{ secrets.CPANEL_FTP_HOST }}:2083/execute/Fileman/extract" \
-               -d "dir=%2Fpublic_html&files%5B0%5D=site.zip" | tee /tmp/extract.json
-          grep -q '"status":1' /tmp/extract.json || { echo "Extract failed"; cat /tmp/extract.json; exit 1; }
-
-      - name: Delete zip via cPanel API
-        run: |
-          curl -sk \
-               -u "${{ secrets.CPANEL_FTP_USER }}:${{ secrets.CPANEL_FTP_PASS }}" \
-               "https://${{ secrets.CPANEL_FTP_HOST }}:2083/execute/Fileman/delete_files" \
-               -d "dir=%2Fpublic_html&files%5B0%5D=site.zip" > /dev/null
-
-      - name: Health check
-        run: |
-          for i in 1 2 3 4 5; do
-            code=$(curl -sk -o /dev/null -w "%{http_code}" https://primeceramics.com.np/)
-            echo "Attempt $i -> HTTP $code"
-            [ "$code" = "200" ] && exit 0
-            sleep 6
-          done
-          echo "Health check failed"
-          exit 1
+          gh release delete prod-latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create prod-latest site.zip \
+            --title "prod-latest" \
+            --notes "Auto-built from Sanity content update at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
