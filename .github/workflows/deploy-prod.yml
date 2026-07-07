@@ -1,8 +1,7 @@
 name: Deploy Production
 
 # Auto-deploys on push to `main`; also runnable manually via workflow_dispatch.
-# A GitHub Environments gate on `production` (configured in repo settings → Environments)
-# can still require reviewer approval before this job runs.
+# Builds static export in CI, then SCPs out/ to cPanel public_html.
 on:
   push:
     branches: [main]
@@ -15,28 +14,47 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     environment: production
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Create .env.local
+        run: |
+          cat > .env.local <<'EOF'
+          NEXT_PUBLIC_SANITY_PROJECT_ID=3jv6o4t6
+          NEXT_PUBLIC_SANITY_DATASET=production
+          NEXT_PUBLIC_CATALOG_CRM_ENDPOINT=https://lead-crm.zunkireelabs.com/api/public/submit/prime-ceramics/download-catalogue
+          EOF
+          echo "NEXT_PUBLIC_CRM_ENDPOINT=${{ secrets.NEXT_PUBLIC_CRM_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_CRM_API_KEY=${{ secrets.NEXT_PUBLIC_CRM_API_KEY }}" >> .env.local
+
+      - name: Build
+        run: npm run build
+
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan -H 27.111.18.110 >> ~/.ssh/known_hosts
 
-      - name: Deploy
+      - name: Deploy via SCP
         run: |
-          ssh -i ~/.ssh/deploy_key \
+          scp -i ~/.ssh/deploy_key \
               -o StrictHostKeyChecking=yes \
-              "${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_HOST }}" \
-              'set -e
-               git config --global --add safe.directory /home/zunkireelabs/devprojects/websiteprojects/Prime-web-prod
-               cd /home/zunkireelabs/devprojects/websiteprojects/Prime-web-prod
-               git fetch --prune origin main
-               git checkout main
-               git reset --hard origin/main
-               ./deploy-prod.sh'
+              -r out/* \
+              primeceramics@27.111.18.110:/home/primeceramics/public_html/
 
       - name: Health check
         run: |
