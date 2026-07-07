@@ -19,6 +19,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://primeceramics.com.np"),
   title: "Prime Tiles Industries — Nepal's No.1 Tile Manufacturer",
   description:
     "Premium wall and floor tiles powered by Italian SACMI technology. Nepal's first manufacturer of both wall and floor tiles. ISO certified. 300mm to 1200mm formats.",
@@ -36,13 +37,30 @@ export const metadata: Metadata = {
     "Kathmandu tiles",
     "Spirit of Nepal tiles",
   ],
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Prime Tiles Industries — Nepal's No.1 Tile Manufacturer",
     description:
       "Premium wall and floor tiles powered by Italian SACMI technology. Nepal's first manufacturer of both wall and floor tiles.",
+    url: "https://primeceramics.com.np",
     type: "website",
     locale: "en_US",
     siteName: "Prime Tiles Industries",
+    images: [
+      {
+        url: "/images/factory.jpg",
+        width: 1200,
+        height: 635,
+        alt: "Prime Tiles Industries manufacturing facility in Nepal",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Prime Tiles Industries — Nepal's No.1 Tile Manufacturer",
+    description:
+      "Premium wall and floor tiles powered by Italian SACMI technology. Nepal's first manufacturer of both wall and floor tiles.",
+    images: ["/images/factory.jpg"],
   },
   robots: { index: true, follow: true },
   icons: {
@@ -82,6 +100,9 @@ export default function RootLayout({
                 "@type": "Organization",
                 "name": "Prime Tiles Industries",
                 "alternateName": "Prime Ceramics",
+                "url": "https://primeceramics.com.np",
+                "logo": "https://primeceramics.com.np/images/prime-favicon.png",
+                "image": "https://primeceramics.com.np/images/factory.jpg",
                 "description": "Nepal's No.1 tile manufacturer. First to manufacture both wall and floor tiles with Italian SACMI technology.",
                 "foundingDate": "2021",
                 "numberOfEmployees": {
@@ -95,6 +116,8 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
                 "name": "Prime Tiles Industries Pvt. Ltd.",
+                "url": "https://primeceramics.com.np",
+                "image": "https://primeceramics.com.np/images/factory.jpg",
                 "description": "Nepal's largest tile manufacturing facility with 4M sq m annual capacity.",
                 "address": {
                   "@type": "PostalAddress",
