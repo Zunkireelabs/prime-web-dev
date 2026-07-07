@@ -81,16 +81,16 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Package output
-        run: |
-          cd out && zip -qr ../site.zip . && cd ..
-          echo "Zip size: $(du -sh site.zip | cut -f1)"
-
-      - name: Publish Release asset
+      - name: Publish built site to prod-dist branch
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete prod-latest --yes --cleanup-tag 2>/dev/null || true
-          gh release create prod-latest site.zip \
-            --title "prod-latest" \
-            --notes "Auto-built from Sanity content update at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          cd out
+          touch .nojekyll
+          git init -q
+          git checkout -q -b prod-dist
+          git config user.email "ci@zunkireelabs"
+          git config user.name "prime-ci"
+          git add -A
+          git commit -qm "prod build from Sanity update"
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" prod-dist
