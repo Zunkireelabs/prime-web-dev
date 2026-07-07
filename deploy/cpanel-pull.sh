@@ -56,8 +56,10 @@ retry curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.g
   || { echo "$(date -u +%FT%TZ) tarball download failed"; exit 1; }
 
 tar -xzf "$WORK/site.tgz" -C "$WORK"
-SRC="$WORK/$(tar -tzf "$WORK/site.tgz" | head -1 | cut -d/ -f1)"
-[ -d "$SRC" ] || { echo "$(date -u +%FT%TZ) extract failed"; exit 1; }
+# GitHub tarball extracts to a single top dir (owner-repo-<sha>/). Pick it without
+# a pipe that would SIGPIPE under pipefail.
+SRC="$(set +o pipefail; ls -d "$WORK"/*/ 2>/dev/null | head -1)"
+[ -n "$SRC" ] && [ -d "$SRC" ] || { echo "$(date -u +%FT%TZ) extract failed"; exit 1; }
 
 # rsync exit 23/24 (partial/vanished, e.g. a file it may not delete) is benign here.
 set +e
