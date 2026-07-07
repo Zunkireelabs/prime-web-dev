@@ -42,29 +42,16 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Configure SSH
+      - name: Deploy via FTP
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/cpanel_key
-          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/vps_key
-          chmod 600 ~/.ssh/cpanel_key ~/.ssh/vps_key
-          cat > ~/.ssh/config <<EOF
-          Host vps
-            HostName ${{ secrets.VPS_HOST }}
-            User ${{ secrets.VPS_SSH_USER }}
-            IdentityFile ~/.ssh/vps_key
-            StrictHostKeyChecking no
-          Host cpanel
-            HostName 27.111.18.110
-            User primeceramics
-            IdentityFile ~/.ssh/cpanel_key
-            ProxyJump vps
-            StrictHostKeyChecking no
-          EOF
-
-      - name: Deploy via SCP
-        run: |
-          scp -r out/* cpanel:/home/primeceramics/public_html/
+          sudo apt-get install -y lftp
+          lftp -c "
+            set ftp:ssl-allow yes
+            set ssl:verify-certificate no
+            open -u '${{ secrets.CPANEL_FTP_USER }}','${{ secrets.CPANEL_FTP_PASS }}' '${{ secrets.CPANEL_FTP_HOST }}'
+            mirror -R --no-perms out/ /public_html/
+            bye
+          "
 
       - name: Health check
         run: |
