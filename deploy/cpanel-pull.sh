@@ -21,9 +21,25 @@ LOCK="$HOME/.prime_deploy.lock"
 exec 9>"$LOCK"
 flock -n 9 || { echo "$(date -u +%FT%TZ) another run in progress, skip"; exit 0; }
 
+# The LVE cage is chronically near its thread cap (shared with zunkiree-cms), so
+# curl's resolver thread / forks intermittently fail. Retry network steps.
+retry() {
+  local n=0
+  until "$@"; do
+    n=$((n+1))
+    [ "$n" -ge 8 ] && return 1
+    sleep 5
+  done
+}
+
 # Cheap change check: the commit SHA of prod-dist as plain text (tiny response).
-NEW="$(curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github.sha" \
-  "https://api.github.com/repos/$REPO/commits/$BRANCH")"
+NEW=""
+for attempt in 1 2 3 4 5 6 7 8; do
+  NEW="$(curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github.sha" \
+    "https://api.github.com/repos/$REPO/commits/$BRANCH" 2>/dev/null || true)"
+  [ -n "$NEW" ] && break
+  sleep 5
+done
 [ -n "$NEW" ] || { echo "$(date -u +%FT%TZ) could not read $BRANCH sha"; exit 1; }
 
 CUR="$(cat "$STATE" 2>/dev/null || echo none)"
@@ -34,9 +50,10 @@ fi
 echo "$(date -u +%FT%TZ) deploying ${NEW:0:7}"
 rm -rf "$WORK"; mkdir -p "$WORK"
 
-# One curl, one tarball (private repo → needs auth).
-curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
-  "https://api.github.com/repos/$REPO/tarball/$BRANCH" -o "$WORK/site.tgz"
+# One curl, one tarball (private repo → needs auth). Retried against cage flakiness.
+retry curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
+  "https://api.github.com/repos/$REPO/tarball/$BRANCH" -o "$WORK/site.tgz" \
+  || { echo "$(date -u +%FT%TZ) tarball download failed"; exit 1; }
 
 tar -xzf "$WORK/site.tgz" -C "$WORK"
 SRC="$WORK/$(tar -tzf "$WORK/site.tgz" | head -1 | cut -d/ -f1)"
