@@ -78,16 +78,31 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy via FTP
+      - name: Package output
         run: |
-          sudo apt-get install -y lftp
-          lftp -c "
-            set ftp:ssl-allow yes
-            set ssl:verify-certificate no
-            open -u '${{ secrets.CPANEL_FTP_USER }}','${{ secrets.CPANEL_FTP_PASS }}' '${{ secrets.CPANEL_FTP_HOST }}'
-            mirror -R --no-perms out/ /public_html/
-            bye
-          "
+          cd out && zip -r ../site.zip . && cd ..
+
+      - name: Upload zip via FTP
+        run: |
+          curl --ftp-ssl --ssl-reqd \
+               -u "${{ secrets.CPANEL_FTP_USER }}:${{ secrets.CPANEL_FTP_PASS }}" \
+               -T site.zip \
+               "ftp://${{ secrets.CPANEL_FTP_HOST }}/public_html/site.zip"
+
+      - name: Extract via cPanel API
+        run: |
+          curl -sk \
+               -u "${{ secrets.CPANEL_FTP_USER }}:${{ secrets.CPANEL_FTP_PASS }}" \
+               "https://${{ secrets.CPANEL_FTP_HOST }}:2083/execute/Fileman/extract" \
+               -d "dir=%2Fpublic_html&files%5B0%5D=site.zip" | tee /tmp/extract.json
+          grep -q '"status":1' /tmp/extract.json || { echo "Extract failed"; cat /tmp/extract.json; exit 1; }
+
+      - name: Delete zip via cPanel API
+        run: |
+          curl -sk \
+               -u "${{ secrets.CPANEL_FTP_USER }}:${{ secrets.CPANEL_FTP_PASS }}" \
+               "https://${{ secrets.CPANEL_FTP_HOST }}:2083/execute/Fileman/delete_files" \
+               -d "dir=%2Fpublic_html&files%5B0%5D=site.zip" > /dev/null
 
       - name: Health check
         run: |
