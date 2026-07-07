@@ -1,9 +1,11 @@
 name: Deploy Production
 
-# Manual-only. No push trigger — production never deploys without an explicit click.
+# Auto-deploys on push to `main`; also runnable manually via workflow_dispatch.
 # A GitHub Environments gate on `production` (configured in repo settings → Environments)
-# can require reviewer approval before this job runs.
+# can still require reviewer approval before this job runs.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
