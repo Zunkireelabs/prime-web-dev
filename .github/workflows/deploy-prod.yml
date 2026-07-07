@@ -45,6 +45,14 @@ jobs:
           echo "NEXT_PUBLIC_CRM_API_KEY=${{ secrets.NEXT_PUBLIC_CRM_API_KEY }}" >> .env.local
 
       - name: Build
+        env:
+          # Exported so the prebuild tsx scripts (which read process.env, not
+          # .env.local) fetch Sanity products/images — same as deploy-staging.sh.
+          NEXT_PUBLIC_SANITY_PROJECT_ID: 3jv6o4t6
+          NEXT_PUBLIC_SANITY_DATASET: production
+          NEXT_PUBLIC_CATALOG_CRM_ENDPOINT: https://lead-crm.zunkireelabs.com/api/public/submit/prime-ceramics/download-catalogue
+          NEXT_PUBLIC_CRM_ENDPOINT: ${{ secrets.NEXT_PUBLIC_CRM_ENDPOINT }}
+          NEXT_PUBLIC_CRM_API_KEY: ${{ secrets.NEXT_PUBLIC_CRM_API_KEY }}
         run: npm run build
 
       - name: Publish built site to prod-dist branch
