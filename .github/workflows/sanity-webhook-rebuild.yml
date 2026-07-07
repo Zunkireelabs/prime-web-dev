@@ -83,12 +83,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H 27.111.18.110 >> ~/.ssh/known_hosts
 
       - name: Deploy via SCP
         run: |
           scp -i ~/.ssh/deploy_key \
-              -o StrictHostKeyChecking=yes \
+              -o StrictHostKeyChecking=no \
               -r out/* \
               primeceramics@27.111.18.110:/home/primeceramics/public_html/
 
