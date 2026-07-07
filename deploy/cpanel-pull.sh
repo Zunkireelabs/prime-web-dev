@@ -59,9 +59,17 @@ tar -xzf "$WORK/site.tgz" -C "$WORK"
 SRC="$WORK/$(tar -tzf "$WORK/site.tgz" | head -1 | cut -d/ -f1)"
 [ -d "$SRC" ] || { echo "$(date -u +%FT%TZ) extract failed"; exit 1; }
 
+# rsync exit 23/24 (partial/vanished, e.g. a file it may not delete) is benign here.
+set +e
 rsync -a --delete \
   --exclude='.htaccess' --exclude='.well-known/' --exclude='cgi-bin/' --exclude='.nojekyll' \
   "$SRC/" "$DOCROOT/"
+rc=$?
+set -e
+case "$rc" in
+  0|23|24) ;;
+  *) echo "$(date -u +%FT%TZ) rsync failed rc=$rc"; exit 1 ;;
+esac
 
 echo "$NEW" > "$STATE"
 rm -rf "$WORK"
