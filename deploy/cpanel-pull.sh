@@ -61,17 +61,12 @@ tar -xzf "$WORK/site.tgz" -C "$WORK"
 SRC="$(set +o pipefail; ls -d "$WORK"/*/ 2>/dev/null | head -1)"
 [ -n "$SRC" ] && [ -d "$SRC" ] || { echo "$(date -u +%FT%TZ) extract failed"; exit 1; }
 
-# rsync exit 23/24 (partial/vanished, e.g. a file it may not delete) is benign here.
-set +e
-rsync -a --delete \
-  --exclude='.htaccess' --exclude='.well-known/' --exclude='cgi-bin/' --exclude='.nojekyll' \
-  "$SRC/" "$DOCROOT/"
-rc=$?
-set -e
-case "$rc" in
-  0|23|24) ;;
-  *) echo "$(date -u +%FT%TZ) rsync failed rc=$rc"; exit 1 ;;
-esac
+# rsync isn't installed on this host, so publish with cp. _next is fully
+# content-hashed, so wipe it first to avoid stale-chunk buildup. Protected files
+# (.htaccess, .well-known, cgi-bin) aren't in the tarball, so cp never touches them.
+rm -f "$SRC/.nojekyll"
+rm -rf "$DOCROOT/_next"
+cp -a "$SRC/." "$DOCROOT/"
 
 echo "$NEW" > "$STATE"
 rm -rf "$WORK"
