@@ -4,14 +4,16 @@ on:
   repository_dispatch:
     types: [sanity-content-updated]
 
-concurrency:
-  group: deploy-staging
-  cancel-in-progress: true
+permissions:
+  contents: write
 
 jobs:
-  deploy:
+  deploy-staging:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    concurrency:
+      group: deploy-staging
+      cancel-in-progress: true
     steps:
       - name: Configure SSH
         run: |
@@ -45,3 +47,56 @@ jobs:
           done
           echo "Health check failed"
           exit 1
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    concurrency:
+      group: deploy-prod
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Create .env.local
+        run: |
+          cat > .env.local <<'EOF'
+          NEXT_PUBLIC_SANITY_PROJECT_ID=3jv6o4t6
+          NEXT_PUBLIC_SANITY_DATASET=production
+          NEXT_PUBLIC_CATALOG_CRM_ENDPOINT=https://lead-crm.zunkireelabs.com/api/public/submit/prime-ceramics/download-catalogue
+          EOF
+          echo "NEXT_PUBLIC_CRM_ENDPOINT=${{ secrets.NEXT_PUBLIC_CRM_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_CRM_API_KEY=${{ secrets.NEXT_PUBLIC_CRM_API_KEY }}" >> .env.local
+
+      - name: Build
+        env:
+          NEXT_PUBLIC_SANITY_PROJECT_ID: 3jv6o4t6
+          NEXT_PUBLIC_SANITY_DATASET: production
+          NEXT_PUBLIC_CATALOG_CRM_ENDPOINT: https://lead-crm.zunkireelabs.com/api/public/submit/prime-ceramics/download-catalogue
+          NEXT_PUBLIC_CRM_ENDPOINT: ${{ secrets.NEXT_PUBLIC_CRM_ENDPOINT }}
+          NEXT_PUBLIC_CRM_API_KEY: ${{ secrets.NEXT_PUBLIC_CRM_API_KEY }}
+        run: npm run build
+
+      - name: Publish built site to prod-dist branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd out
+          touch .nojekyll
+          git init -q
+          git checkout -q -b prod-dist
+          git config user.email "ci@zunkireelabs"
+          git config user.name "prime-ci"
+          git add -A
+          git commit -qm "prod build from Sanity update"
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" prod-dist

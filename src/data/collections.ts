@@ -40,18 +40,21 @@ export const productCategories: ProductCategory[] = [
     name: "Large Format",
     description: "Fewer joints, grander impact. Our large-format slabs up to 1200mm create seamless surfaces that transform any space into a visual masterpiece.",
     image: "/images/products/large-format.jpg",
+    sizeFilter: "600×1200 mm",
   },
   {
     label: "Natural",
     name: "Wood Look",
     description: "The warmth of timber with the resilience of tile. Authentic grain textures in plank formats — no maintenance, no compromise.",
     image: "/images/products/wood-look.jpg",
+    seriesFilter: "Wooden",
   },
   {
     label: "Enduring",
     name: "Outdoor",
     description: "Anti-skid, frost-resistant, and built for Nepal\u2019s diverse climate. From patios to pool decks \u2014 surfaces that perform under every condition.",
     image: "/images/products/outdoor.jpg",
+    seriesFilter: "Patio Series",
   },
 ];
 

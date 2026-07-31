@@ -16,6 +16,7 @@ export interface ProductFilters {
   finish: string[];
   application: string[];
   series: string[];
+  spaces: string[];
   outdoor: boolean;
   space: string;
   search: string;
@@ -48,6 +49,7 @@ const EMPTY_FILTERS: ProductFilters = {
   finish: [],
   application: [],
   series: [],
+  spaces: [],
   outdoor: false,
   space: "",
   search: "",
@@ -55,7 +57,7 @@ const EMPTY_FILTERS: ProductFilters = {
   page: 1,
 };
 
-const MULTI_KEYS: FilterKey[] = ["category", "collection", "size", "finish", "application", "series"];
+const MULTI_KEYS: FilterKey[] = ["category", "collection", "size", "finish", "application", "series", "spaces"];
 
 function parseMulti(value: string | null): string[] {
   if (!value) return [];
@@ -93,6 +95,7 @@ export default function ProductsBrowser() {
       finish: parseMulti(searchParams.get("finish")),
       application: parseMulti(searchParams.get("application")),
       series: parseMulti(searchParams.get("series")),
+      spaces: parseMulti(searchParams.get("spaces")),
       outdoor: searchParams.get("outdoor") === "1",
       space: searchParams.get("space") ?? "",
       search: searchParams.get("search") ?? "",
@@ -154,6 +157,7 @@ export default function ProductsBrowser() {
       finish: sorted(productsInCurrentSize.map((p) => p.finish)),
       application: sorted(productsInCurrentSize.map((p) => p.application)),
       series: sortedCI(productsInCurrentSize.map((p) => p.series)),
+      spaces: sorted(productsInCurrentSize.flatMap((p) => p.spaces ?? [])),
     };
   }, [productsInCurrentSize, allSizes]);
 
@@ -169,6 +173,9 @@ export default function ProductsBrowser() {
     if (filters.series.length) {
       const sel = new Set(filters.series.map((s) => s.toLowerCase()));
       r = r.filter((p) => sel.has(p.series.toLowerCase()));
+    }
+    if (filters.spaces.length) {
+      r = r.filter((p) => p.spaces?.some((s) => filters.spaces.includes(s)));
     }
     if (filters.search.trim()) {
       const q = filters.search.toLowerCase();

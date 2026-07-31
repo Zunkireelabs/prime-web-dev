@@ -1,47 +1,70 @@
 name: Deploy Production
 
-# Manual-only. No push trigger — production never deploys without an explicit click.
-# A GitHub Environments gate on `production` (configured in repo settings → Environments)
-# can require reviewer approval before this job runs.
+# Auto-deploys on push to `main`; also runnable manually via workflow_dispatch.
+# cPanel blocks inbound datacenter IPs (FTP/SSH) and cannot build (LVE memory cap),
+# so we build here and publish the static export as a GitHub Release asset
+# (`prod-latest`). A cron job on the cPanel box pulls + extracts it (outbound only).
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
   group: deploy-prod
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
-  deploy:
+  build-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     environment: production
     steps:
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Deploy
-        run: |
-          ssh -i ~/.ssh/deploy_key \
-              -o StrictHostKeyChecking=yes \
-              "${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_HOST }}" \
-              'set -e
-               cd /home/zunkireelabs/devprojects/websiteprojects/Prime-web-prod
-               git fetch --prune origin main
-               git checkout main
-               git reset --hard origin/main
-               ./deploy-prod.sh'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-      - name: Health check
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Create .env.local
         run: |
-          for i in 1 2 3 4 5; do
-            code=$(curl -sk -o /dev/null -w "%{http_code}" https://primeceramics.com.np/)
-            echo "Attempt $i -> HTTP $code"
-            [ "$code" = "200" ] && exit 0
-            sleep 6
-          done
-          echo "Health check failed"
-          exit 1
+          cat > .env.local <<'EOF'
+          NEXT_PUBLIC_SANITY_PROJECT_ID=3jv6o4t6
+          NEXT_PUBLIC_SANITY_DATASET=production
+          NEXT_PUBLIC_CATALOG_CRM_ENDPOINT=https://lead-crm.zunkireelabs.com/api/public/submit/prime-ceramics/download-catalogue
+          EOF
+          echo "NEXT_PUBLIC_CRM_ENDPOINT=${{ secrets.NEXT_PUBLIC_CRM_ENDPOINT }}" >> .env.local
+          echo "NEXT_PUBLIC_CRM_API_KEY=${{ secrets.NEXT_PUBLIC_CRM_API_KEY }}" >> .env.local
+
+      - name: Build
+        env:
+          # Exported so the prebuild tsx scripts (which read process.env, not
+          # .env.local) fetch Sanity products/images — same as deploy-staging.sh.
+          NEXT_PUBLIC_SANITY_PROJECT_ID: 3jv6o4t6
+          NEXT_PUBLIC_SANITY_DATASET: production
+          NEXT_PUBLIC_CATALOG_CRM_ENDPOINT: https://lead-crm.zunkireelabs.com/api/public/submit/prime-ceramics/download-catalogue
+          NEXT_PUBLIC_CRM_ENDPOINT: ${{ secrets.NEXT_PUBLIC_CRM_ENDPOINT }}
+          NEXT_PUBLIC_CRM_API_KEY: ${{ secrets.NEXT_PUBLIC_CRM_API_KEY }}
+        run: npm run build
+
+      - name: Publish built site to prod-dist branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd out
+          touch .nojekyll
+          git init -q
+          git checkout -q -b prod-dist
+          git config user.email "ci@zunkireelabs"
+          git config user.name "prime-ci"
+          git add -A
+          git commit -qm "prod build ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" prod-dist

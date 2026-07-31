@@ -160,7 +160,7 @@ export default function Footer() {
                         <span
                           className="text-white/55 block"
                           style={{
-                            fontSize: "0.62rem",
+                            fontSize: "0.72rem",
                             letterSpacing: "0.14em",
                             textTransform: "uppercase",
                             marginBottom: "2px",
@@ -170,7 +170,7 @@ export default function Footer() {
                         </span>
                         <span
                           className="text-white/85 group-hover:text-white transition-colors duration-300"
-                          style={{ fontSize: "0.82rem", lineHeight: "1.5" }}
+                          style={{ fontSize: "0.95rem", lineHeight: "1.5" }}
                         >
                           {item.value}
                         </span>

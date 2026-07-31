@@ -26,6 +26,11 @@ export default defineConfig({
   title: "Prime Ceramics",
   projectId: "3jv6o4t6",
   dataset: "production",
+  auth: {
+    // Use localStorage-based token auth so cross-origin API calls (uploads, WebSocket)
+    // work from self-hosted Studio at studio.primeceramics.com.np
+    loginMethod: "token",
+  },
   plugins: [
     structureTool({ structure: deskStructure }),
     presentationTool({
