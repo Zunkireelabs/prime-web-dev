@@ -387,6 +387,6 @@ src/
 
 ## 12. Deployment
 
-- **Dev**: `./deploy.sh` → https://dev-primetiles.zunkireelabs.com
+- **Production**: push to `main` → GitHub Actions builds and publishes to https://primeceramics.com.np
 - **Build**: `npm run build` → static export to `./out/`
 - Always verify build passes before deploying.

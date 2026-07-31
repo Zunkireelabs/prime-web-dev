@@ -215,16 +215,9 @@ const SectionTransition = dynamic(
 
 ---
 
-## Docker and Deployment
+## Deployment
 
-### Files
-
-| File | Purpose |
-|------|---------|
-| `Dockerfile` | Multi-stage: build Next.js, copy `./out/` into Nginx Alpine |
-| `docker-compose.yml` | Production container config |
-| `docker-compose.dev.yml` | Dev container config |
-| `nginx/static.conf` | Nginx config — serves static files, rewrites `/page` → `/page.html` |
+Production (primeceramics.com.np) is served by a cPanel host, not Docker: GitHub Actions (`deploy-prod.yml`) builds the static export on push to `main` and force-pushes it to the `prod-dist` branch; an on-box cron (`*/10 * * * *`) pulls `prod-dist` and publishes it, since cPanel blocks inbound SSH from datacenter IPs.
 
 ### Build Pipeline
 
@@ -232,15 +225,15 @@ const SectionTransition = dynamic(
 npm run build
   └── next build
         └── Static export → ./out/
-              └── Docker COPY ./out/ /usr/share/nginx/html/
-                    └── Nginx serves on port 80
+              └── GitHub Actions pushes ./out/ to prod-dist branch
+                    └── cPanel cron pulls prod-dist and publishes
 ```
 
 ### Deploy Targets
 
-| Environment | URL | Command |
-|-------------|-----|---------|
-| Dev | https://dev-primetiles.zunkireelabs.com | `./deploy.sh` |
+| Environment | URL |
+|-------------|-----|
+| Production | https://primeceramics.com.np |
 
 ---
 

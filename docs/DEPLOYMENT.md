@@ -3,8 +3,7 @@
 ## Prerequisites
 
 - Node.js 18+
-- Docker and Docker Compose
-- Access to the deployment server
+- Push access to `main`
 
 ---
 
@@ -27,37 +26,19 @@ The build must complete with zero errors before deploying. Do not deploy from a 
 
 ---
 
-## Deploy to Dev
+## Deploy to Production
 
-```bash
-./deploy.sh
-```
+Push to `main` (or run `deploy-prod.yml` via `workflow_dispatch`). GitHub Actions builds the static export and force-pushes it to the `prod-dist` branch. An on-box cron on the cPanel host (`*/10 * * * *`) pulls `prod-dist` and publishes it — cPanel blocks inbound SSH from datacenter IPs, so GitHub Actions can't push directly. Expect up to ~10 min between the workflow finishing and the live site updating.
 
-This will:
-
-1. Run `npm install`
-2. Build the static site (`npm run build`)
-3. Build a Docker image (Nginx Alpine + `./out/`)
-4. Restart the container
-5. Serve the site at: https://dev-primetiles.zunkireelabs.com
-
----
-
-## Docker Architecture
-
-| File | Purpose |
-|------|---------|
-| `Dockerfile` | Copies `./out/` into an Nginx Alpine container |
-| `nginx/static.conf` | Handles SPA routing, caching headers, and gzip compression |
-| `docker-compose.dev.yml` | Dev container configuration |
+Manual force-pull: `ssh primeceramics@27.111.18.110 'bash ~/deploy/cpanel-pull.sh'`
 
 ---
 
 ## URLs
 
-| Environment | URL | Compose File |
-|-------------|-----|--------------|
-| Development | dev-primetiles.zunkireelabs.com | docker-compose.dev.yml |
+| Environment | URL |
+|-------------|-----|
+| Production | https://primeceramics.com.np |
 
 ---
 

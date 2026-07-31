@@ -30,15 +30,11 @@ npm run lint       # ESLint
 
 ## Deployment
 
-Deployments use Docker Compose with Nginx to serve the static `./out/` directory.
-
-```bash
-./deploy.sh    # Deploy to dev-primetiles.zunkireelabs.com
-```
+Push to `main` triggers GitHub Actions (`deploy-prod.yml`), which builds the static export and publishes it to primeceramics.com.np.
 
 | Environment | URL |
 |---|---|
-| Dev | https://dev-primetiles.zunkireelabs.com |
+| Production | https://primeceramics.com.np |
 
 ---
 

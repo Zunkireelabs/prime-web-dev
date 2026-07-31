@@ -7,18 +7,18 @@ import { deskStructure } from "./src/sanity/desk-structure";
 import { bulkUploadPlugin } from "./src/sanity/plugins/bulk-upload";
 
 // Preview URL for different document types
-const STAGING_URL = "https://dev-primetiles.zunkireelabs.com";
+const PREVIEW_URL = "https://primeceramics.com.np";
 
 const documentUrls: Record<string, (doc: any) => string> = {
-  tileProduct: (doc) => `${STAGING_URL}/products?size=${encodeURIComponent(doc?.size || "600×1200 mm")}`,
-  heroBanner: () => `${STAGING_URL}/`,
-  newsArticle: () => `${STAGING_URL}/news`,
-  projectHighlight: () => `${STAGING_URL}/projects`,
-  testimonial: () => `${STAGING_URL}/testimonials`,
-  projectTestimonial: () => `${STAGING_URL}/testimonials`,
-  dealer: () => `${STAGING_URL}/dealers`,
-  jobOpening: () => `${STAGING_URL}/careers`,
-  tileCatalog: () => `${STAGING_URL}/catalog`,
+  tileProduct: (doc) => `${PREVIEW_URL}/products?size=${encodeURIComponent(doc?.size || "600×1200 mm")}`,
+  heroBanner: () => `${PREVIEW_URL}/`,
+  newsArticle: () => `${PREVIEW_URL}/news`,
+  projectHighlight: () => `${PREVIEW_URL}/projects`,
+  testimonial: () => `${PREVIEW_URL}/testimonials`,
+  projectTestimonial: () => `${PREVIEW_URL}/testimonials`,
+  dealer: () => `${PREVIEW_URL}/dealers`,
+  jobOpening: () => `${PREVIEW_URL}/careers`,
+  tileCatalog: () => `${PREVIEW_URL}/catalog`,
 };
 
 export default defineConfig({
@@ -36,7 +36,7 @@ export default defineConfig({
     presentationTool({
       previewUrl: {
         previewMode: {
-          enable: STAGING_URL,
+          enable: PREVIEW_URL,
         },
       },
     }),

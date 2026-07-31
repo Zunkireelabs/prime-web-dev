@@ -29,15 +29,12 @@ npm run deploy-studio # sanity deploy → *.sanity.studio (see Deployment note r
 > `prebuild` is an npm lifecycle hook — `npm run build` runs it automatically. Run it standalone only to refresh `src/data/sanity-*.json` without a full build.
 
 ## Deployment
-GitHub Actions in `.github/workflows/` drive deploys via SSH to a VPS (each runs a `deploy-*.sh` script there, then health-checks the live URL 5×):
-- **Staging** (`deploy-staging.yml`): push to `staging` branch (or manual) → runs `deploy-staging.sh` → dev-primetiles.zunkireelabs.com
-- **Production** (`deploy-prod.yml`): manual `workflow_dispatch` only, gated by `production` environment → runs `deploy-prod.sh` → primeceramics.com.np
-- **Sanity Webhook** (`sanity-webhook-rebuild.yml`): `repository_dispatch` (`sanity-content-updated`) re-runs the staging deploy when content is published
+Staging (dev-primetiles.zunkireelabs.com) was decommissioned 2026-07-31 — no more pre-prod environment, `main` deploys straight to prod.
+- **Production** (`deploy-prod.yml`): push to `main` branch (or manual `workflow_dispatch`), gated by `production` environment → GitHub Actions builds the static export and force-pushes it to the `prod-dist` branch → an on-box cron on the cPanel host (`rara.hosting.nom`, `*/10 * * * *`, `~/deploy/cpanel-pull.sh`) pulls `prod-dist` and publishes it live at primeceramics.com.np. cPanel blocks inbound SSH from datacenter IPs, so GH Actions cannot push directly — deploys land within ~10 min of the workflow finishing, not instantly. Manual force: `ssh primeceramics@27.111.18.110 'bash ~/deploy/cpanel-pull.sh'`.
+- **Sanity Webhook** (`sanity-webhook-rebuild.yml`): `repository_dispatch` (`sanity-content-updated`) re-runs the production build/publish when content is published
 - **Sanity Studio:** the project self-hosts Studio at studio.primeceramics.com.np via `npx sanity build` + SCP of `dist/` (NOT `npm run deploy-studio`, which targets Sanity's hosted `*.sanity.studio`)
 
 ```bash
-git push origin main:staging    # Deploy to staging
-
 # Redeploy self-hosted Studio (cPanel server: rara.hosting.nom, user: primeceramics)
 npx sanity build && scp -r dist/* primeceramics@27.111.18.110:/home/primeceramics/studio.primeceramics.com.np/
 ```
@@ -61,7 +58,7 @@ Sanity CMS → (prebuild scripts) → src/data/sanity-*.json → Next.js static 
 - **Desk structure:** `src/sanity/desk-structure.ts` — Products (by Size), Catalogs, Website Content, Operations
 - **Plugins:** `src/sanity/plugins/bulk-upload/` — BulkUploadTool + BulkDeleteTool in Studio sidebar; uses `useClient()` hook (never hardcode write tokens)
 - **Custom input:** `src/sanity/components/AuthenticatedImageInput.tsx` — compresses images client-side (canvas → JPEG ≤3000px, 88% quality) before calling `client.assets.upload()`. This is required because: (a) the built-in image input uses a cookie-based client that returns 503 from self-hosted studios, and (b) Sanity's image worker times out on large/raw files. Always use `useClient()` for uploads — never hardcode tokens.
-- **Presentation tool:** Live preview showing staging site alongside editor
+- **Presentation tool:** Live preview showing prod site alongside editor
 - **GROQ queries:** `src/lib/queries.ts`
 
 ### Product Data Pipeline
@@ -156,7 +153,6 @@ src/data/
 - When rebuilding Sanity Studio: `npx sanity build` then SCP `dist/` contents to `studio.primeceramics.com.np`
 
 ## URLs
-- **Staging:** https://dev-primetiles.zunkireelabs.com
 - **Production:** https://primeceramics.com.np
 - **Sanity Studio:** https://studio.primeceramics.com.np
 - **Sanity Dashboard:** https://manage.sanity.io (project: 3jv6o4t6)

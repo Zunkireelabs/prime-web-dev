@@ -133,8 +133,6 @@ Defined in `src/app/globals.css`. Always use these — never hardcode colors.
 
 ## Deployment
 
-```bash
-./deploy.sh    # Deploy to dev-primetiles.zunkireelabs.com
-```
+Push to `main` to deploy — GitHub Actions builds and publishes to primeceramics.com.np.
 
 Build must pass with zero errors and zero TypeScript warnings before deploying.

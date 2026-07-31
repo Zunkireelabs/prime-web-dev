@@ -327,7 +327,7 @@ When the client provides a source folder for a new size (e.g. 600×600):
     - `chore(scripts): add sanity-reconcile-<catalog>`
     - `docs: log session X in SESSION_LOG.md`
 
-11. **Deploy** via `./deploy.sh dev` after local verification.
+11. **Deploy** by pushing to `main` after local verification.
 
 ---
 
