@@ -90,7 +90,7 @@ export default function DealersGrid({
 
   const renderDealerCard = (dealer: typeof dealers[0], i: number) => (
     <FadeIn
-      key={dealer.name}
+      key={`${dealer.name}-${dealer.address}`}
       delay={Math.min(i * 0.03, 0.4)}
       direction="up"
       distance={20}
