@@ -53,6 +53,7 @@ interface ExportedRow {
   size: string;
   finish: string;
   application: string;
+  spaces: string;
   collection: string;
   has_matching_floor: string;
   variants: string;
@@ -73,6 +74,7 @@ const COLUMNS: (keyof ExportedRow)[] = [
   "size",
   "finish",
   "application",
+  "spaces",
   "collection",
   "has_matching_floor",
   "variants",
@@ -95,6 +97,7 @@ async function fetchCatalog(catalogId: string): Promise<ExportedRow[]> {
       size,
       finish,
       application,
+      spaces,
       collection,
       "has_matching_floor": hasMatchingFloor,
       variants,
@@ -116,6 +119,7 @@ async function fetchCatalog(catalogId: string): Promise<ExportedRow[]> {
     size: d.size || "",
     finish: d.finish || "",
     application: d.application || "",
+    spaces: Array.isArray(d.spaces) ? d.spaces.join(", ") : "",
     collection: d.collection || "",
     has_matching_floor: d.has_matching_floor || "",
     variants: Array.isArray(d.variants) ? d.variants.join("|") : "",

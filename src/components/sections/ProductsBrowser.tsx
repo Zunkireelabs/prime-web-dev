@@ -167,7 +167,12 @@ export default function ProductsBrowser() {
   const filteredWithoutSize = useMemo(() => {
     let r = allProducts.filter((p) => p.application !== "Art Panel");
     if (filters.outdoor) r = r.filter((p) => p.outdoor);
-    if (filters.space && SPACE_FILTERS[filters.space]) r = r.filter(SPACE_FILTERS[filters.space]);
+    if (filters.space) {
+      // Prefer the real CMS-tagged spaces field; fall back to the heuristic
+      // only for products that haven't been tagged with a space yet.
+      const sel = filters.space;
+      r = r.filter((p) => (p.spaces?.length ? p.spaces.includes(sel) : SPACE_FILTERS[sel]?.(p) ?? false));
+    }
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));
     if (filters.finish.length) r = r.filter((p) => filters.finish.includes(p.finish));

@@ -81,6 +81,7 @@ interface CsvRow {
   size: string;
   finish: string;
   application: string;
+  spaces?: string;
   collection?: string;
   has_matching_floor?: string;
   variants?: string;
@@ -124,6 +125,25 @@ const ALLOWED_APPLICATION = new Set([
   "Driveway",
   "Art Panel",
 ]);
+const ALLOWED_SPACES = new Set([
+  "Living Room",
+  "Bedroom",
+  "Kitchen",
+  "Bathroom",
+  "Dining Room",
+  "Office",
+  "Balcony",
+  "Outdoor",
+  "Commercial",
+  "Restaurant",
+  "Hotel",
+  "Hospital",
+  "Apartment",
+  "Showroom",
+  "Staircase",
+  "Elevation",
+  "Parking",
+]);
 const ALLOWED_CATEGORY = new Set([
   "Ceramic",
   "Vitrified",
@@ -161,8 +181,17 @@ function validateRow(row: CsvRow, lineNum: number): string[] {
     errors.push(`line ${lineNum}: missing application`);
   else if (!ALLOWED_APPLICATION.has(row.application))
     errors.push(`line ${lineNum}: invalid application "${row.application}"`);
+  if (row.spaces?.trim()) {
+    for (const sp of row.spaces.split(",").map((s) => s.trim()).filter(Boolean)) {
+      if (!ALLOWED_SPACES.has(sp))
+        errors.push(`line ${lineNum}: invalid space "${sp}"`);
+    }
+  }
   return errors;
 }
+
+const parseSpaces = (s?: string): string[] =>
+  (s || "").split(",").map((v) => v.trim()).filter(Boolean);
 
 const normalize = (s: string) =>
   (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -318,6 +347,7 @@ async function main() {
     if (row.has_matching_floor) patch.hasMatchingFloor = row.has_matching_floor;
     if (row.variants) patch.variants = row.variants.split("|").filter(Boolean);
     if (row.sort_order) patch.sortOrder = Number(row.sort_order);
+    if (row.spaces?.trim()) patch.spaces = parseSpaces(row.spaces);
     tx.patch(ex._id, { set: patch });
   }
 
@@ -339,6 +369,7 @@ async function main() {
     if (row.collection) doc.collection = row.collection;
     if (row.has_matching_floor) doc.hasMatchingFloor = row.has_matching_floor;
     if (row.variants) doc.variants = row.variants.split("|").filter(Boolean);
+    if (row.spaces?.trim()) doc.spaces = parseSpaces(row.spaces);
     tx.create(doc);
   }
 
