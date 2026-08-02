@@ -38,7 +38,7 @@ const localCatalogEntries: CatalogEntry[] = [
     description:
       "Premium digital ceramic wall tiles with outstanding finish and rich detailing.",
     image: "/images/catalogs/wall-300x600.png",
-    pdf: "/catalogs/300x600.pdf",
+    pdf: "https://cdn.sanity.io/files/3jv6o4t6/production/a606c68c19ee377ed6a424b9cf60064de200af41.pdf",
     sortOrder: 30,
   },
   {
@@ -79,7 +79,17 @@ try {
 
 // Sanity's uploaded PDFs are broken git-lfs pointers, so always serve the real
 // PDF bundled in /public/catalogs/<slug>.pdf regardless of the CMS file URL.
+// Exception: 300x600's real file is 135MB, over GitHub's 100MB blob limit, so
+// it can't be bundled — it's served straight from the Sanity CDN instead.
+const EXTERNAL_PDF_OVERRIDES: Record<string, string> = {
+  "300x600":
+    "https://cdn.sanity.io/files/3jv6o4t6/production/a606c68c19ee377ed6a424b9cf60064de200af41.pdf",
+};
+
 export const catalogEntries: CatalogEntry[] =
   sanityCatalogs && sanityCatalogs.length > 0
-    ? sanityCatalogs.map((c) => ({ ...c, pdf: `/catalogs/${c.slug}.pdf` }))
+    ? sanityCatalogs.map((c) => ({
+        ...c,
+        pdf: EXTERNAL_PDF_OVERRIDES[c.slug] ?? `/catalogs/${c.slug}.pdf`,
+      }))
     : localCatalogEntries;
