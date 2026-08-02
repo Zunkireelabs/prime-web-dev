@@ -31,12 +31,12 @@ export const megaSpaces = [
 ];
 
 export const megaCollections = [
-  "Carrara White", "Bottichino", "Onyx",
+  "Carrara", "Botticino", "Onyx",
   "Spirit of Nepal", "Breccia", "Driftwood",
 ];
 
 export const megaFinishes = [
-  "Matt", "Glossy", "Polished", "Satin", "Carving",
+  "Matt", "Glossy", "High Gloss", "Carving",
 ];
 
 export const megaSizes = [
