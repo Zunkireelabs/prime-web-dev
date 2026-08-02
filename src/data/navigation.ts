@@ -27,7 +27,7 @@ export const navItems: NavItem[] = [
 
 export const megaSpaces = [
   "Living Room", "Bathroom", "Kitchen", "Bedroom",
-  "Outdoor", "Commercial", "Staircase", "Elevation",
+  "Outdoor", "Commercial", "Elevation",
 ];
 
 export const megaCollections = [
