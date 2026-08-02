@@ -168,10 +168,16 @@ export default function ProductsBrowser() {
     let r = allProducts.filter((p) => p.application !== "Art Panel");
     if (filters.outdoor) r = r.filter((p) => p.outdoor);
     if (filters.space) {
-      // Prefer the real CMS-tagged spaces field; fall back to the heuristic
-      // only for products that haven't been tagged with a space yet.
-      const sel = filters.space;
-      r = r.filter((p) => (p.spaces?.length ? p.spaces.includes(sel) : SPACE_FILTERS[sel]?.(p) ?? false));
+      // Bulk Upload's "spaces" column is freeform text (e.g. "Family Living Rooms",
+      // "luxury bathrooms"), not a fixed vocabulary, so match case-insensitively
+      // as a substring rather than requiring an exact value. Fall back to the
+      // heuristic only for products that haven't been tagged with any space.
+      const sel = filters.space.toLowerCase();
+      r = r.filter((p) =>
+        p.spaces?.length
+          ? p.spaces.some((s) => s.toLowerCase().includes(sel))
+          : SPACE_FILTERS[filters.space]?.(p) ?? false
+      );
     }
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));
