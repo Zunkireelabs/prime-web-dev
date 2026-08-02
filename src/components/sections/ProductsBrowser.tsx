@@ -38,6 +38,8 @@ const SPACE_FILTERS: Record<string, (p: CatalogProduct) => boolean> = {
   Bedroom: (p) => isFloor(p) && p.finish === "Matt",
   Outdoor: (p) => !!p.outdoor,
   Commercial: (p) => p.category === "Vitrified",
+  Staircase: (p) => p.finish === "Carving",
+  Elevation: (p) => p.application === "Elevation",
 };
 
 const DEFAULT_SIZE = "600×1200 mm";
