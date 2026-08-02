@@ -170,14 +170,16 @@ export default function ProductsBrowser() {
     if (filters.space) {
       // Bulk Upload's "spaces" column is freeform text (e.g. "Family Living Rooms",
       // "luxury bathrooms"), not a fixed vocabulary, so match case-insensitively
-      // as a substring rather than requiring an exact value. Fall back to the
-      // heuristic only for products that haven't been tagged with any space.
+      // as a substring rather than requiring an exact value. Union with the
+      // heuristic rather than gating on it -- a product can have unrelated
+      // freeform tags AND still fit the heuristic (e.g. a Carving-finish tile
+      // tagged "hotel lobbies" should still count for Staircase).
       const sel = filters.space.toLowerCase();
-      r = r.filter((p) =>
-        p.spaces?.length
-          ? p.spaces.some((s) => s.toLowerCase().includes(sel))
-          : SPACE_FILTERS[filters.space]?.(p) ?? false
-      );
+      r = r.filter((p) => {
+        const tagMatch = p.spaces?.some((s) => s.toLowerCase().includes(sel)) ?? false;
+        const heuristicMatch = SPACE_FILTERS[filters.space]?.(p) ?? false;
+        return tagMatch || heuristicMatch;
+      });
     }
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));
