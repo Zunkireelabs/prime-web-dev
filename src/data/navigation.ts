@@ -1,4 +1,5 @@
 import type { NavItem, FooterColumn, FooterLink } from "./types";
+import { allProducts } from "./catalog";
 
 // ── Header Nav ──
 
@@ -24,20 +25,44 @@ export const navItems: NavItem[] = [
 ];
 
 // ── Mega Menu Data ──
+// "By Space", "Collections", and "By Finish" are derived from live Sanity
+// product data (via src/data/catalog) so the menu only ever links to values
+// that actually have products behind them.
 
-export const megaSpaces = [
-  "Living Room", "Bathroom", "Kitchen", "Bedroom",
-  "Outdoor", "Commercial", "Elevation",
+const browsableProducts = allProducts.filter((p) => p.application !== "Art Panel");
+
+// Fixed schema enum order (see src/sanity/schemas/tileProduct.ts `spaces` field),
+// filtered to values with at least one tagged product, ranked by product count.
+const SPACE_ENUM_ORDER = [
+  "Living Room", "Bedroom", "Kitchen", "Bathroom", "Dining Room", "Office",
+  "Balcony", "Outdoor", "Commercial", "Restaurant", "Hotel", "Hospital",
+  "Apartment", "Showroom", "Staircase", "Elevation", "Parking",
 ];
+
+export const megaSpaces = (() => {
+  const counts = new Map<string, number>();
+  for (const p of browsableProducts) {
+    for (const s of p.spaces ?? []) {
+      if (SPACE_ENUM_ORDER.includes(s)) counts.set(s, (counts.get(s) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8)
+    .map(([space]) => space);
+})();
 
 export const megaCollections = [
-  "Carrara", "Botticino", "Onyx",
-  "Spirit of Nepal", "Breccia", "Driftwood",
-];
+  "Spirit of Nepal", // dedicated page — not a product `collection` field value
+  ...new Set(browsableProducts.map((p) => p.collection).filter((c): c is string => !!c)),
+].sort((a, b) => (a === "Spirit of Nepal" ? -1 : b === "Spirit of Nepal" ? 1 : a.localeCompare(b)));
 
-export const megaFinishes = [
-  "Matt", "Glossy", "High Gloss", "Carving",
-];
+// Fixed schema enum order (see `finish` field), filtered to values in use.
+const FINISH_ENUM_ORDER = ["Matt", "Glossy", "High Gloss", "Carving", "Satin", "Polished"];
+
+export const megaFinishes = FINISH_ENUM_ORDER.filter((f) =>
+  browsableProducts.some((p) => p.finish === f)
+);
 
 export const megaSizes = [
   "600×1200 mm", "600×600 mm", "400×400 mm",
