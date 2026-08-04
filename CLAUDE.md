@@ -36,7 +36,7 @@ Staging (dev-primetiles.zunkireelabs.com) was decommissioned 2026-07-31 — no m
 
 ```bash
 # Redeploy self-hosted Studio (cPanel server: rara.hosting.nom, user: primeceramics)
-npx sanity build && scp -r dist/* primeceramics@27.111.18.110:/home/primeceramics/studio.primeceramics.com.np/
+npx sanity build && scp -r dist/* primeceramics@27.111.18.110:/home/primeceramics/public_html/studio.primeceramics.com.np/
 ```
 > After SCP, **clear the nginx cache** from cPanel (rara.hosting.nom:2083 → right sidebar → "Nginx Caching" → "Clear Cache"), then hard-refresh the Studio. Without this, cPanel's nginx serves stale cached Studio files.
 
