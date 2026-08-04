@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { allProducts } from "@/data/catalog";
+import { CANONICAL_SPACES } from "@/data/catalog/types";
 import ProductsFilterSidebar from "./ProductsFilterSidebar";
 import ProductsGrid from "./ProductsGrid";
 
@@ -143,7 +144,11 @@ export default function ProductsBrowser() {
       finish: sorted(productsInCurrentSize.map((p) => p.finish)),
       application: sorted(productsInCurrentSize.map((p) => p.application)),
       series: sortedCI(productsInCurrentSize.map((p) => p.series)),
-      spaces: sorted(productsInCurrentSize.flatMap((p) => p.spaces ?? [])),
+      spaces: sorted(
+        productsInCurrentSize
+          .flatMap((p) => p.spaces ?? [])
+          .filter((s) => (CANONICAL_SPACES as readonly string[]).includes(s))
+      ),
     };
   }, [productsInCurrentSize, allSizes]);
 

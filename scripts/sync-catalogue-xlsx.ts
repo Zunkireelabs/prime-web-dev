@@ -69,7 +69,10 @@ const SPACE_KEYWORDS: [RegExp, string][] = [
   [/dining/i, "Dining Room"],
   [/office|corporate|workspace/i, "Office"],
   [/balcon/i, "Balcony"],
-  [/outdoor|patio|poolside|courtyard|garden|terrace|rooftop|driveway|pool/i, "Outdoor"],
+  // Deliberately excludes bare "pool"/"poolside"/"garden" — in this dataset they
+  // almost always describe indoor rooms ("pool washroom", "garden-facing bathroom",
+  // "swimming pool changing rooms"), not an outdoor-rated tile.
+  [/\boutdoor\b|\bpatio\b|\bcourtyard\b|\bterrace\b|\brooftop\b|\bdriveway\b|\bexterior\b/i, "Outdoor"],
   [/showroom|boutique/i, "Showroom"],
   [/commercial|retail|mall/i, "Commercial"],
   [/restaurant|cafe|bar\b|banquet/i, "Restaurant"],

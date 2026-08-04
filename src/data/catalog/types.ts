@@ -43,6 +43,15 @@ export type CatalogCategory =
   | "Art"
   | "Cultural Heritage";
 
+// Fixed schema enum order — see the `spaces` field in src/sanity/schemas/tileProduct.ts.
+// Products can carry leftover freeform tags from before this enum was enforced;
+// anything filtered against this list will ignore that junk.
+export const CANONICAL_SPACES = [
+  "Living Room", "Bedroom", "Kitchen", "Bathroom", "Dining Room", "Office",
+  "Balcony", "Outdoor", "Commercial", "Restaurant", "Hotel", "Hospital",
+  "Apartment", "Showroom", "Staircase", "Elevation", "Parking",
+] as const;
+
 export interface CatalogProduct {
   name: string;
   slug: string;

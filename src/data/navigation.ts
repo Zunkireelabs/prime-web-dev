@@ -1,5 +1,6 @@
 import type { NavItem, FooterColumn, FooterLink } from "./types";
 import { allProducts } from "./catalog";
+import { CANONICAL_SPACES } from "./catalog/types";
 
 // ── Header Nav ──
 
@@ -31,19 +32,11 @@ export const navItems: NavItem[] = [
 
 const browsableProducts = allProducts.filter((p) => p.application !== "Art Panel");
 
-// Fixed schema enum order (see src/sanity/schemas/tileProduct.ts `spaces` field),
-// filtered to values with at least one tagged product, ranked by product count.
-const SPACE_ENUM_ORDER = [
-  "Living Room", "Bedroom", "Kitchen", "Bathroom", "Dining Room", "Office",
-  "Balcony", "Outdoor", "Commercial", "Restaurant", "Hotel", "Hospital",
-  "Apartment", "Showroom", "Staircase", "Elevation", "Parking",
-];
-
 export const megaSpaces = (() => {
   const counts = new Map<string, number>();
   for (const p of browsableProducts) {
     for (const s of p.spaces ?? []) {
-      if (SPACE_ENUM_ORDER.includes(s)) counts.set(s, (counts.get(s) ?? 0) + 1);
+      if ((CANONICAL_SPACES as readonly string[]).includes(s)) counts.set(s, (counts.get(s) ?? 0) + 1);
     }
   }
   return [...counts.entries()]
