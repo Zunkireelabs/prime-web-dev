@@ -12,8 +12,9 @@ import {
   TextInput,
   Select,
   Box,
+  Button,
 } from "@sanity/ui";
-import { SearchIcon } from "@sanity/icons";
+import { SearchIcon, ChevronLeftIcon, ChevronRightIcon } from "@sanity/icons";
 
 interface ProductRow {
   _id: string;
@@ -45,10 +46,13 @@ const TILE_SIZES = [
 export function ProductsTable() {
   const client = useClient({ apiVersion: "2026-04-01" });
 
+  const PAGE_SIZE = 50;
+
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sizeFilter, setSizeFilter] = useState("");
+  const [page, setPage] = useState(0);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -90,9 +94,24 @@ export function ProductsTable() {
     });
   }, [products, search, sizeFilter]);
 
+  useEffect(() => {
+    setPage(0);
+  }, [search, sizeFilter]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const paged = useMemo(
+    () => filtered.slice(currentPage * PAGE_SIZE, currentPage * PAGE_SIZE + PAGE_SIZE),
+    [filtered, currentPage]
+  );
+
   return (
-    <Card padding={4} sizing="border" style={{ height: "100%", overflow: "auto" }}>
-      <Stack space={4}>
+    <Card
+      padding={4}
+      sizing="border"
+      style={{ height: "100%", overflow: "hidden", display: "flex", flexDirection: "column" }}
+    >
+      <Stack space={4} style={{ flex: "0 0 auto" }}>
         <Stack space={3}>
           <Heading size={3}>Products</Heading>
           <Text size={1} muted>
@@ -123,15 +142,22 @@ export function ProductsTable() {
             {filtered.length} products
           </Badge>
         </Flex>
+      </Stack>
 
-        {loading ? (
-          <Flex align="center" gap={3} padding={4}>
-            <Spinner />
-            <Text size={1} muted>Loading products…</Text>
-          </Flex>
-        ) : (
-          <Card padding={0} radius={2} shadow={1} style={{ overflow: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
+      {loading ? (
+        <Flex align="center" gap={3} padding={4}>
+          <Spinner />
+          <Text size={1} muted>Loading products…</Text>
+        </Flex>
+      ) : (
+        <Card
+          padding={0}
+          radius={2}
+          shadow={1}
+          marginTop={4}
+          style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto", position: "relative" }}
+        >
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
               <thead>
                 <tr style={{ background: "var(--card-bg2-color)", position: "sticky", top: 0, zIndex: 1 }}>
                   <th style={thStyle}></th>
@@ -147,7 +173,7 @@ export function ProductsTable() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((p) => (
+                {paged.map((p) => (
                   <IntentLink
                     key={p._id}
                     intent="edit"
@@ -192,7 +218,35 @@ export function ProductsTable() {
             </table>
           </Card>
         )}
-      </Stack>
+
+      {!loading && (
+        <Flex
+          justify="space-between"
+          align="center"
+          paddingTop={3}
+          style={{ flex: "0 0 auto" }}
+        >
+          <Text size={1} muted>
+            Page {currentPage + 1} of {pageCount}
+          </Text>
+          <Flex gap={2}>
+            <Button
+              icon={ChevronLeftIcon}
+              mode="ghost"
+              fontSize={1}
+              disabled={currentPage === 0}
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+            />
+            <Button
+              icon={ChevronRightIcon}
+              mode="ghost"
+              fontSize={1}
+              disabled={currentPage >= pageCount - 1}
+              onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+            />
+          </Flex>
+        </Flex>
+      )}
     </Card>
   );
 }
