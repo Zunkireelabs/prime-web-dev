@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { allProducts } from "@/data/catalog";
-import type { CatalogProduct } from "@/data/catalog/types";
 import ProductsFilterSidebar from "./ProductsFilterSidebar";
 import ProductsGrid from "./ProductsGrid";
 
@@ -26,20 +25,6 @@ export interface ProductFilters {
 
 export type FilterKey = Exclude<keyof ProductFilters, "search" | "sort" | "page" | "outdoor" | "space">;
 
-// Maps an "Explore By Room" space to the catalogue tiles that suit it.
-const isFloor = (p: CatalogProduct) => p.application === "Floor" || p.application === "Wall & Floor";
-const isWall = (p: CatalogProduct) => p.application === "Wall" || p.application === "Wall & Floor";
-const isGlossy = (p: CatalogProduct) => p.finish === "Glossy" || p.finish === "High Gloss";
-
-const SPACE_FILTERS: Record<string, (p: CatalogProduct) => boolean> = {
-  "Living Room": (p) => isFloor(p) && isGlossy(p),
-  Bathroom: (p) => isWall(p),
-  Kitchen: (p) => isWall(p) && isGlossy(p),
-  Bedroom: (p) => isFloor(p) && p.finish === "Matt",
-  Outdoor: (p) => !!p.outdoor,
-  Commercial: (p) => p.category === "Vitrified",
-  Elevation: (p) => p.application === "Elevation",
-};
 
 const DEFAULT_SIZE = "600×1200 mm";
 
@@ -167,18 +152,10 @@ export default function ProductsBrowser() {
     let r = allProducts.filter((p) => p.application !== "Art Panel");
     if (filters.outdoor) r = r.filter((p) => p.outdoor);
     if (filters.space) {
-      // Bulk Upload's "spaces" column is freeform text (e.g. "Family Living Rooms",
-      // "luxury bathrooms"), not a fixed vocabulary, so match case-insensitively
-      // as a substring rather than requiring an exact value. Union with the
-      // heuristic rather than gating on it -- a product can have unrelated
-      // freeform tags AND still fit the heuristic (e.g. a Carving-finish tile
-      // tagged "hotel lobbies" should still count for Staircase).
+      // spaces is a controlled Sanity enum now (see tileProduct schema), matched
+      // case-insensitively as a substring to tolerate any leftover freeform tags.
       const sel = filters.space.toLowerCase();
-      r = r.filter((p) => {
-        const tagMatch = p.spaces?.some((s) => s.toLowerCase().includes(sel)) ?? false;
-        const heuristicMatch = SPACE_FILTERS[filters.space]?.(p) ?? false;
-        return tagMatch || heuristicMatch;
-      });
+      r = r.filter((p) => p.spaces?.some((s) => s.toLowerCase().includes(sel)) ?? false);
     }
     if (filters.category.length) r = r.filter((p) => filters.category.includes(p.category));
     if (filters.collection.length) r = r.filter((p) => p.collection && filters.collection.includes(p.collection));
