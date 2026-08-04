@@ -1,4 +1,5 @@
 import type { StructureBuilder } from "sanity/structure";
+import { ProductsTable } from "./plugins/bulk-upload/ProductsTable";
 
 function catalogFilter(
   S: StructureBuilder,
@@ -70,6 +71,9 @@ export const deskStructure = (S: StructureBuilder) =>
             .title("Products")
             .items([
               allProductsBySize(S),
+              S.listItem()
+                .title("Product Table")
+                .child(S.component(ProductsTable).title("Product Table")),
               S.documentTypeListItem("tileCatalog").title("Catalogs"),
             ])
         ),
