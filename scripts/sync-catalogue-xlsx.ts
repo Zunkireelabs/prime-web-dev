@@ -119,7 +119,9 @@ const FILES: FileSpec[] = [
     file: "Wall Catalogue 300x300 working.xlsx",
     cols: { name: "Product Name", size: "Size", finish: "Finishing/ Surface", spaces: "Application" },
     fuzzyName: true, // xlsx names carry a "DARK" suffix live product names mostly drop
-    application: "Wall", // Wall Catalogue — live has these mislabeled as Floor
+    // NOT "Wall" despite the filename — client confirmed 300×300mm is Floor-only,
+    // the xlsx's "Wall Catalogue" Category column was wrong. Left unset so this
+    // file's rows don't touch `application` on re-run.
     manualOverrides: {
       "TREVERTINO DARK": "Travertino Dark", // xlsx typo
       "MIRAGE DARK": "Mirag", // live product name is typo'd
