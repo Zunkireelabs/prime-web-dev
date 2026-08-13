@@ -103,6 +103,7 @@ interface FileSpec {
   };
   skipFinish?: boolean; // whole column is a uniform placeholder value, not real data
   fuzzyName?: boolean; // fall back to name matching with Dark/Light/Floor/etc suffixes stripped
+  manualOverrides?: Record<string, string>; // xlsx name (case-insensitive) -> live product name, for typo'd/renamed pairs a human confirmed
 }
 
 const FILES: FileSpec[] = [
@@ -110,6 +111,12 @@ const FILES: FileSpec[] = [
     file: "Wall Catalogue 300x300 working.xlsx",
     cols: { name: "Product Name", size: "Size", finish: "Finishing/ Surface", spaces: "Application" },
     fuzzyName: true, // xlsx names carry a "DARK" suffix live product names mostly drop
+    manualOverrides: {
+      "TREVERTINO DARK": "Travertino Dark", // xlsx typo
+      "MIRAGE DARK": "Mirag", // live product name is typo'd
+      "MOSAIC DARK": "Mosic", // live product name is typo'd
+      "KETTLE DARK": "Kettle", // ambiguous vs "Kettle Light Floor" — user confirmed Dark variant
+    },
   },
   {
     file: "300X450 mm.xlsx",
@@ -205,6 +212,10 @@ async function main() {
     for (const row of rows) {
       const key = `${row.name.trim().toLowerCase()}|${row.size}`;
       let product = productIndex.get(key);
+      const override = spec.manualOverrides?.[row.name.trim().toUpperCase()];
+      if (!product && override) {
+        product = productIndex.get(`${override.trim().toLowerCase()}|${row.size}`);
+      }
       if (!product && spec.fuzzyName) {
         const candidates = fuzzyIndex.get(`${normName(row.name)}|${row.size}`);
         if (candidates && candidates.length === 1) product = candidates[0];
