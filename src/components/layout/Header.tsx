@@ -6,7 +6,7 @@ import { Search, X, Menu, ChevronRight, ArrowRight, Facebook, Instagram, Youtube
 import {
   navItems,
   megaSpaces as spaces,
-  megaCollections as collections,
+  megaCategories as categories,
   megaFinishes as finishes,
   megaSizes as sizes,
 } from "@/data/navigation";
@@ -273,15 +273,15 @@ export default function Header() {
                     </ul>
                   </div>
 
-                  {/* By Collection */}
+                  {/* By Category (Wall / Floor Tiles) */}
                   <div>
-                    <p className="text-[0.7rem] font-medium tracking-[0.3em] uppercase text-accent/80 border-b border-accent/10" style={{ paddingBottom: "16px", marginBottom: "28px" }}>Collections</p>
+                    <p className="text-[0.7rem] font-medium tracking-[0.3em] uppercase text-accent/80 border-b border-accent/10" style={{ paddingBottom: "16px", marginBottom: "28px" }}>By Category</p>
                     <ul className="space-y-0">
-                      {collections.map((c) => (
-                        <li key={c}>
-                          <a href={c === "Spirit of Nepal" ? "/spirit-of-nepal" : `/products?search=${encodeURIComponent(c)}`} className="group flex items-center justify-between text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
+                      {categories.map((c) => (
+                        <li key={c.label}>
+                          <a href={c.href} className="group flex items-center justify-between text-[0.95rem] leading-relaxed text-ink-on-dark-light hover:text-accent-light transition-colors duration-300" style={{ padding: "14px 0" }}>
                             <div className="flex items-center gap-1.5">
-                              <span>{c}</span>
+                              <span>{c.label}</span>
                               <ArrowRight size={10} className="opacity-0 -translate-x-1 group-hover:opacity-60 group-hover:translate-x-0 transition-all duration-200 text-accent-light" />
                             </div>
                           </a>

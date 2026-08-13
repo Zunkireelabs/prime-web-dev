@@ -50,6 +50,19 @@ export const megaCollections = [
   ...new Set(browsableProducts.map((p) => p.collection).filter((c): c is string => !!c)),
 ].sort((a, b) => (a === "Spirit of Nepal" ? -1 : b === "Spirit of Nepal" ? 1 : a.localeCompare(b)));
 
+// Wall / Floor browse links → products page `application` filter. "Wall & Floor"
+// tiles (large-format 600×1200) legitimately belong under both, so each link
+// selects its own value plus the shared one via the comma-multi `?application=`.
+export const megaCategories = [
+  { label: "Wall Tiles", applications: ["Wall", "Wall & Floor"] },
+  { label: "Floor Tiles", applications: ["Floor", "Wall & Floor"] },
+]
+  .filter((c) => c.applications.some((a) => browsableProducts.some((p) => p.application === a)))
+  .map((c) => ({
+    label: c.label,
+    href: `/products?application=${c.applications.map(encodeURIComponent).join(",")}`,
+  }));
+
 // Fixed schema enum order (see `finish` field), filtered to values in use.
 const FINISH_ENUM_ORDER = ["Matt", "Glossy", "High Gloss", "Carving", "Satin", "Polished"];
 
