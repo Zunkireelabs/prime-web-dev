@@ -102,9 +102,15 @@ interface FileSpec {
     spaces: string; // header holding the freeform spaces text (may be named SPACES or Application)
   };
   skipFinish?: boolean; // whole column is a uniform placeholder value, not real data
+  fuzzyName?: boolean; // fall back to name matching with Dark/Light/Floor/etc suffixes stripped
 }
 
 const FILES: FileSpec[] = [
+  {
+    file: "Wall Catalogue 300x300 working.xlsx",
+    cols: { name: "Product Name", size: "Size", finish: "Finishing/ Surface", spaces: "Application" },
+    fuzzyName: true, // xlsx names carry a "DARK" suffix live product names mostly drop
+  },
   {
     file: "300X450 mm.xlsx",
     cols: { name: "PRODUCT_NAME", size: "SIZE", finish: "FINISH", spaces: "SPACES" },
@@ -155,6 +161,19 @@ function readFile(spec: FileSpec): Row[] {
   return out;
 }
 
+// Strips common variant suffixes (Dark/Light/Floor/HL/EC/DB) so e.g. "ALCAZAR DARK"
+// can match live product "Alcazar". Only used as a fallback — ambiguous normalized
+// keys (multiple live products collapsing to the same stripped name) are skipped.
+function normName(raw: string): string {
+  return raw
+    .trim()
+    .toLowerCase()
+    .replace(/-/g, " ")
+    .replace(/\b(dark|light|floor|hl|ec|db)\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 async function main() {
   console.log(DRY_RUN ? "DRY RUN — no writes will happen\n" : "LIVE RUN — writing patches\n");
 
@@ -163,9 +182,13 @@ async function main() {
     await client.fetch(`*[_type == "tileProduct"]{ _id, name, size, finish, spaces }`);
 
   const productIndex = new Map<string, typeof products[0]>();
+  const fuzzyIndex = new Map<string, typeof products[0][]>();
   for (const p of products) {
     const key = `${p.name.trim().toLowerCase()}|${p.size}`;
     productIndex.set(key, p);
+    const fuzzyKey = `${normName(p.name)}|${p.size}`;
+    if (!fuzzyIndex.has(fuzzyKey)) fuzzyIndex.set(fuzzyKey, []);
+    fuzzyIndex.get(fuzzyKey)!.push(p);
   }
 
   let totalMatched = 0;
@@ -181,7 +204,11 @@ async function main() {
 
     for (const row of rows) {
       const key = `${row.name.trim().toLowerCase()}|${row.size}`;
-      const product = productIndex.get(key);
+      let product = productIndex.get(key);
+      if (!product && spec.fuzzyName) {
+        const candidates = fuzzyIndex.get(`${normName(row.name)}|${row.size}`);
+        if (candidates && candidates.length === 1) product = candidates[0];
+      }
       if (!product) {
         unmatched++;
         totalUnmatched++;
