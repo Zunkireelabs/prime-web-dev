@@ -32,6 +32,7 @@ interface Props {
   activeCount: number;
   sizeCountMap: Record<string, number>;
   allSizes: string[];
+  sizeApplicationLabels: Record<string, string>;
   onToggle: (key: FilterKey, value: string) => void;
   onClearAll: () => void;
   onSearchChange: (q: string) => void;
@@ -45,6 +46,7 @@ export default function ProductsGrid({
   activeCount,
   sizeCountMap,
   allSizes,
+  sizeApplicationLabels,
   onToggle,
   onClearAll,
   onSearchChange,
@@ -327,11 +329,7 @@ export default function ProductsGrid({
                 opacity: isActive ? 0.7 : 0.5,
                 marginLeft: "4px",
               }}>
-                {size === "300\u00d7300 mm" ? "FLOOR" :
-                 size === "300\u00d7450 mm" || size === "300\u00d7600 mm" ? "WALL" :
-                 size === "400\u00d7400 mm" ? "FLOOR" :
-                 size === "600\u00d7600 mm" ? "FLOOR" :
-                 "WALL & FLOOR"}
+                {sizeApplicationLabels[size] ?? "WALL & FLOOR"}
               </span>
             </button>
           );

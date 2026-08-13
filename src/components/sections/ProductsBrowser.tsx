@@ -110,6 +110,23 @@ export default function ProductsBrowser() {
     router.replace(next, { scroll: false });
   }, [filters, router]);
 
+  // ── Wall/Floor badge per size pill (from live product data, not hardcoded) ──
+  const sizeApplicationLabels = useMemo(() => {
+    const bySize = new Map<string, Set<string>>();
+    for (const p of allProducts) {
+      if (p.application !== "Wall" && p.application !== "Floor" && p.application !== "Wall & Floor") continue;
+      if (!bySize.has(p.size)) bySize.set(p.size, new Set());
+      bySize.get(p.size)!.add(p.application);
+    }
+    const labels: Record<string, string> = {};
+    for (const [size, apps] of bySize) {
+      if (apps.size === 1 && apps.has("Wall")) labels[size] = "WALL";
+      else if (apps.size === 1 && apps.has("Floor")) labels[size] = "FLOOR";
+      else labels[size] = "WALL & FLOOR";
+    }
+    return labels;
+  }, []);
+
   // ── All available sizes (static, largest first) ──
   const SIZE_ORDER = [
     "600\u00d71200 mm", "600\u00d7600 mm", "400\u00d7400 mm",
@@ -298,6 +315,7 @@ export default function ProductsBrowser() {
             activeCount={activeCount}
             sizeCountMap={sizeCountMap}
             allSizes={allSizes}
+            sizeApplicationLabels={sizeApplicationLabels}
             onToggle={toggleMulti}
             onClearAll={clearAll}
             onSearchChange={setSearch}
