@@ -104,13 +104,22 @@ interface FileSpec {
   skipFinish?: boolean; // whole column is a uniform placeholder value, not real data
   fuzzyName?: boolean; // fall back to name matching with Dark/Light/Floor/etc suffixes stripped
   manualOverrides?: Record<string, string>; // xlsx name (case-insensitive) -> live product name, for typo'd/renamed pairs a human confirmed
+  // Site `application` value (Wall / Floor / Wall & Floor) every product in this
+  // file should carry. The xlsx type/category columns are mislabeled & swapped
+  // between files, but each file is uniform, so we hard-code the resolved value.
+  application?: "Wall" | "Floor" | "Wall & Floor";
 }
+
+// Special classifications set deliberately in Studio (HL borders shown in elevation,
+// art panels) — never clobbered by the file-level `application` remap.
+const PROTECTED_APPLICATIONS = new Set(["Art Panel", "Elevation"]);
 
 const FILES: FileSpec[] = [
   {
     file: "Wall Catalogue 300x300 working.xlsx",
     cols: { name: "Product Name", size: "Size", finish: "Finishing/ Surface", spaces: "Application" },
     fuzzyName: true, // xlsx names carry a "DARK" suffix live product names mostly drop
+    application: "Wall", // Wall Catalogue — live has these mislabeled as Floor
     manualOverrides: {
       "TREVERTINO DARK": "Travertino Dark", // xlsx typo
       "MIRAGE DARK": "Mirag", // live product name is typo'd
@@ -121,24 +130,29 @@ const FILES: FileSpec[] = [
   {
     file: "300X450 mm.xlsx",
     cols: { name: "PRODUCT_NAME", size: "SIZE", finish: "FINISH", spaces: "SPACES" },
+    application: "Wall",
   },
   {
     file: "300X600 mm.xlsx",
     cols: { name: "PRODUCT_NAME", size: "SIZE", finish: "FINISH", spaces: "SPACES" },
     skipFinish: true, // every row is "MATT/GLOSS" — not real per-product data
+    application: "Wall",
   },
   {
     file: "400X400 Floor Tiles (3).xlsx",
     cols: { name: "PRODUCT_NAME", size: "SIZE", finish: "FINISH", spaces: "Application" },
+    application: "Floor",
   },
   {
     file: "600X600 mm.xlsx",
     cols: { name: "PRODUCT_NAME", size: "SIZE", finish: "FINISH", spaces: "SPACES" },
+    application: "Floor",
   },
   {
     file: "600x1200 catalog working.xlsx",
     sheet: "600x1200 ",
     cols: { name: "Product Name", size: "Size", finish: "Finishing/ Surface", spaces: "Application" },
+    application: "Wall & Floor",
   },
 ];
 
@@ -185,8 +199,8 @@ async function main() {
   console.log(DRY_RUN ? "DRY RUN — no writes will happen\n" : "LIVE RUN — writing patches\n");
 
   // Fetch all products once
-  const products: { _id: string; name: string; size: string; finish?: string; spaces?: string[] }[] =
-    await client.fetch(`*[_type == "tileProduct"]{ _id, name, size, finish, spaces }`);
+  const products: { _id: string; name: string; size: string; finish?: string; spaces?: string[]; application?: string }[] =
+    await client.fetch(`*[_type == "tileProduct"]{ _id, name, size, finish, spaces, application }`);
 
   const productIndex = new Map<string, typeof products[0]>();
   const fuzzyIndex = new Map<string, typeof products[0][]>();
@@ -208,6 +222,7 @@ async function main() {
     let matched = 0;
     let unmatched = 0;
     let patched = 0;
+    let appPatched = 0;
 
     for (const row of rows) {
       const key = `${row.name.trim().toLowerCase()}|${row.size}`;
@@ -231,6 +246,13 @@ async function main() {
 
       const patch: Record<string, any> = {};
       if (row.finish && row.finish !== product.finish) patch.finish = row.finish;
+      if (
+        spec.application &&
+        product.application !== spec.application &&
+        !PROTECTED_APPLICATIONS.has(product.application ?? "")
+      ) {
+        patch.application = spec.application;
+      }
       if (row.spaces.length > 0) {
         const existing = product.spaces || [];
         const same =
@@ -246,10 +268,13 @@ async function main() {
       patched++;
       totalPatched++;
 
+      if (patch.application) appPatched++;
+
       if (DRY_RUN) {
         if (patched <= 5) {
           console.log(`  [${spec.file}] "${product.name}" (${product.size})`);
           if (patch.finish) console.log(`    finish: ${product.finish || "—"} → ${patch.finish}`);
+          if (patch.application) console.log(`    application: ${product.application || "—"} → ${patch.application}`);
           if (patch.spaces) console.log(`    spaces: [${(product.spaces || []).join(", ") || "—"}] → [${patch.spaces.join(", ")}]`);
         }
       } else {
@@ -257,7 +282,7 @@ async function main() {
       }
     }
 
-    console.log(`${spec.file}: ${rows.length} rows, ${matched} matched, ${unmatched} unmatched, ${patched} would patch${DRY_RUN ? "" : "d"}`);
+    console.log(`${spec.file}: ${rows.length} rows, ${matched} matched, ${unmatched} unmatched, ${patched} would patch${DRY_RUN ? "" : "d"} (${appPatched} application)`);
   }
 
   console.log(`\nTotals: ${totalMatched} matched, ${totalUnmatched} unmatched, ${totalPatched} ${DRY_RUN ? "would be " : ""}patched`);
