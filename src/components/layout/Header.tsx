@@ -65,14 +65,17 @@ export default function Header() {
             : "shadow-[0_1px_0_rgba(0,0,0,0.06)]")
         )}
       >
-        <div className="container flex items-center justify-between" style={{ height: "clamp(72px, 8vw, 88px)" }}>
+        <div className="container flex items-center justify-between" style={{ height: "clamp(64px, 7vw, 80px)" }}>
           {/* Logo */}
-          <a href="/" className="relative z-50">
+          <a href="/" className="relative z-50 h-full flex items-center">
             <img
               src="/images/prime-logo.png"
               alt="Prime Tiles"
-              className="h-12 sm:h-14 md:h-16 w-auto transition-[filter] duration-300"
-              style={blendVideo ? { filter: "brightness(0) invert(1)" } : undefined}
+              className="w-auto transition-[filter] duration-300"
+              style={{
+                height: "160%",
+                ...(blendVideo ? { filter: "brightness(0) invert(1)" } : {}),
+              }}
             />
           </a>
 
